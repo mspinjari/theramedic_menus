@@ -38,7 +38,7 @@
             margin: 0;
             margin: auto;
             padding: 0;
-            
+
         }
 
         .header {
@@ -525,7 +525,7 @@
             gap: 40px;
             justify-content: center;
             align-items: center;
-            
+
         }
 
         .desktop-nav-links>li>a {
@@ -612,21 +612,21 @@
         .mega-menu-container::after {
             content: '';
             position: absolute;
-            top:-15px;
+            top: -15px;
             left: 45%;
             width: 0;
             height: 0;
             border-left: 15px solid transparent;
             border-right: 15px solid transparent;
             border-top: 15px solid var(--blue-color);
-          
-            transform:rotate(180deg) ;
+
+            transform: rotate(180deg);
         }
+
         .mega-menu-container-2 {
             display: flex;
             width: 100%;
             justify-content: space-between;
-
             padding: 0px 0px 50px 0px;
             margin: 0px;
         }
@@ -711,7 +711,7 @@
 
         .desktop-nested-menu div:nth-child(1) h5 {
             color: var(--light-gray);
-            font-weight: 400;
+            font-weight: 600;
             padding: 30px 0px 00px 0px;
         }
 
@@ -721,6 +721,7 @@
             display: flex;
             justify-content: space-between;
             font-size: 14px;
+            text-decoration: none;
         }
 
         .desktop-nested-menu.active {
@@ -736,6 +737,12 @@
 
         .desktop-nested-menu a {
             color: var(--white-color);
+            text-decoration: none;
+        }
+
+        .desktop-nested-menu a:hover {
+            color: var(--primary-color);
+
         }
     </style>
     <link rel='stylesheet' id='e-animation-bob-css'
@@ -1084,169 +1091,169 @@
     </h1>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-    const hamburger = document.querySelector('.hamburger');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    const closeBtn = document.querySelector('.close-btn');
-    const overlay = document.querySelector('.overlay');
-    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-    const desktopDropdown = document.querySelector('.desktop-dropdown');
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburger = document.querySelector('.hamburger');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const closeBtn = document.querySelector('.close-btn');
+            const overlay = document.querySelector('.overlay');
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            const desktopDropdown = document.querySelector('.desktop-dropdown');
 
-    // Toggle mobile menu
-    hamburger.addEventListener('click', function () {
-        hamburger.classList.toggle('active');
-        mobileMenu.classList.toggle('active');
-        overlay.classList.toggle('active');
-        document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
-    });
-
-    // Close mobile menu
-    closeBtn.addEventListener('click', function () {
-        hamburger.classList.remove('active');
-        mobileMenu.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-    });
-
-    overlay.addEventListener('click', function () {
-        hamburger.classList.remove('active');
-        mobileMenu.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-    });
-
-    // Toggle dropdown menus
-    dropdownToggles.forEach(toggle => {
-        toggle.addEventListener('click', function (e) {
-            e.preventDefault();
-            const parent = this.parentElement;
-            const dropdown = this.nextElementSibling;
-
-            // Toggle the current dropdown
-            parent.classList.toggle('toggle-active');
-            dropdown.classList.toggle('active');
-
-            // Close other dropdowns
-            dropdownToggles.forEach(otherToggle => {
-                if (otherToggle !== this) {
-                    const otherParent = otherToggle.parentElement;
-                    const otherDropdown = otherToggle.nextElementSibling;
-                    otherParent.classList.remove('toggle-active');
-                    otherDropdown.classList.remove('active');
-                }
+            // Toggle mobile menu
+            hamburger.addEventListener('click', function () {
+                hamburger.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+                overlay.classList.toggle('active');
+                document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
             });
-        });
-    });
 
-    // Add handler for nested dropdowns
-    const nestedDropdownToggles = document.querySelectorAll('.nested-dropdown-toggle');
-
-    nestedDropdownToggles.forEach(toggle => {
-        toggle.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation(); // Prevent parent dropdown from closing
-
-            const parent = this.parentElement;
-            const nestedDropdown = this.nextElementSibling;
-
-            // Toggle the current nested dropdown
-            parent.classList.toggle('toggle-active');
-            nestedDropdown.classList.toggle('active');
-
-            // Close other nested dropdowns at the same level
-            const siblings = parent.parentElement.querySelectorAll('.nested-dropdown');
-            siblings.forEach(sibling => {
-                if (sibling !== parent) {
-                    sibling.classList.remove('toggle-active');
-                    sibling.querySelector('.nested-dropdown-menu')?.classList.remove('active');
-                }
+            // Close mobile menu
+            closeBtn.addEventListener('click', function () {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
             });
-        });
-    });
 
-    // Desktop nested toggle functionality
-    const desktopNestedToggles = document.querySelectorAll('.desktop-nested-toggle');
+            overlay.addEventListener('click', function () {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
 
-    desktopNestedToggles.forEach(toggle => {
-        toggle.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+            // Toggle dropdown menus
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const parent = this.parentElement;
+                    const dropdown = this.nextElementSibling;
 
-            // Get the corresponding submenu by matching the ID
-            const toggleId = this.id;
-            const submenu = document.querySelector(`.sub-menus-items#${toggleId}`);
-            if (!submenu) return;
+                    // Toggle the current dropdown
+                    parent.classList.toggle('toggle-active');
+                    dropdown.classList.toggle('active');
 
-            // Find the chevron icon within this toggle
-            const chevronIcon = this.querySelector('i.fas');
+                    // Close other dropdowns
+                    dropdownToggles.forEach(otherToggle => {
+                        if (otherToggle !== this) {
+                            const otherParent = otherToggle.parentElement;
+                            const otherDropdown = otherToggle.nextElementSibling;
+                            otherParent.classList.remove('toggle-active');
+                            otherDropdown.classList.remove('active');
+                        }
+                    });
+                });
+            });
 
-            // Close all other submenus and reset their toggles
-            document.querySelectorAll('.sub-menus-items').forEach(menu => {
-                if (menu !== submenu) {
-                    menu.classList.remove('active');
-                    const otherToggle = document.querySelector(`#${menu.id}`);
-                    if (otherToggle) {
-                        otherToggle.classList.remove('active');
-                        const otherIcon = otherToggle.querySelector('i.fas');
-                        if (otherIcon) {
-                            otherIcon.classList.remove('fa-chevron-down');
-                            otherIcon.classList.add('fa-chevron-right');
+            // Add handler for nested dropdowns
+            const nestedDropdownToggles = document.querySelectorAll('.nested-dropdown-toggle');
+
+            nestedDropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation(); // Prevent parent dropdown from closing
+
+                    const parent = this.parentElement;
+                    const nestedDropdown = this.nextElementSibling;
+
+                    // Toggle the current nested dropdown
+                    parent.classList.toggle('toggle-active');
+                    nestedDropdown.classList.toggle('active');
+
+                    // Close other nested dropdowns at the same level
+                    const siblings = parent.parentElement.querySelectorAll('.nested-dropdown');
+                    siblings.forEach(sibling => {
+                        if (sibling !== parent) {
+                            sibling.classList.remove('toggle-active');
+                            sibling.querySelector('.nested-dropdown-menu')?.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // Desktop nested toggle functionality
+            const desktopNestedToggles = document.querySelectorAll('.desktop-nested-toggle');
+
+            desktopNestedToggles.forEach(toggle => {
+                toggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Get the corresponding submenu by matching the ID
+                    const toggleId = this.id;
+                    const submenu = document.querySelector(`.sub-menus-items#${toggleId}`);
+                    if (!submenu) return;
+
+                    // Find the chevron icon within this toggle
+                    const chevronIcon = this.querySelector('i.fas');
+
+                    // Close all other submenus and reset their toggles
+                    document.querySelectorAll('.sub-menus-items').forEach(menu => {
+                        if (menu !== submenu) {
+                            menu.classList.remove('active');
+                            const otherToggle = document.querySelector(`#${menu.id}`);
+                            if (otherToggle) {
+                                otherToggle.classList.remove('active');
+                                const otherIcon = otherToggle.querySelector('i.fas');
+                                if (otherIcon) {
+                                    otherIcon.classList.remove('fa-chevron-down');
+                                    otherIcon.classList.add('fa-chevron-right');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle the active class on the current submenu and toggle element
+                    submenu.classList.toggle('active');
+                    this.classList.toggle('active');
+
+                    // Toggle the chevron icon direction
+                    if (chevronIcon) {
+                        if (submenu.classList.contains('active')) {
+                            chevronIcon.classList.remove('fa-chevron-right');
+                            chevronIcon.classList.add('fa-chevron-down');
+                        } else {
+                            chevronIcon.classList.remove('fa-chevron-down');
+                            chevronIcon.classList.add('fa-chevron-right');
                         }
                     }
+                });
+            });
+
+            // Close any open submenu when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.desktop-nested-dropdown')) {
+                    document.querySelectorAll('.sub-menus-items').forEach(menu => {
+                        menu.classList.remove('active');
+                        const toggle = document.querySelector(`#${menu.id}`);
+                        if (toggle) {
+                            toggle.classList.remove('active');
+                            const icon = toggle.querySelector('i.fas');
+                            if (icon) {
+                                icon.classList.remove('fa-chevron-down');
+                                icon.classList.add('fa-chevron-right');
+                            }
+                        }
+                    });
                 }
             });
 
-            // Toggle the active class on the current submenu and toggle element
-            submenu.classList.toggle('active');
-            this.classList.toggle('active');
-
-            // Toggle the chevron icon direction
-            if (chevronIcon) {
-                if (submenu.classList.contains('active')) {
-                    chevronIcon.classList.remove('fa-chevron-right');
-                    chevronIcon.classList.add('fa-chevron-down');
-                } else {
-                    chevronIcon.classList.remove('fa-chevron-down');
-                    chevronIcon.classList.add('fa-chevron-right');
-                }
-            }
-        });
-    });
-
-    // Close any open submenu when clicking outside
-    document.addEventListener('click', function (e) {
-        if (!e.target.closest('.desktop-nested-dropdown')) {
-            document.querySelectorAll('.sub-menus-items').forEach(menu => {
-                menu.classList.remove('active');
-                const toggle = document.querySelector(`#${menu.id}`);
-                if (toggle) {
-                    toggle.classList.remove('active');
-                    const icon = toggle.querySelector('i.fas');
-                    if (icon) {
-                        icon.classList.remove('fa-chevron-down');
-                        icon.classList.add('fa-chevron-right');
+            // Close all dropdown menus when hovering out from the desktop-dropdown
+            desktopDropdown.addEventListener('mouseleave', function () {
+                document.querySelectorAll('.sub-menus-items').forEach(menu => {
+                    menu.classList.remove('active');
+                    const toggle = document.querySelector(`#${menu.id}`);
+                    if (toggle) {
+                        toggle.classList.remove('active');
+                        const icon = toggle.querySelector('i.fas');
+                        if (icon) {
+                            icon.classList.remove('fa-chevron-down');
+                            icon.classList.add('fa-chevron-right');
+                        }
                     }
-                }
+                });
             });
-        }
-    });
-
-    // Close all dropdown menus when hovering out from the desktop-dropdown
-    desktopDropdown.addEventListener('mouseleave', function () {
-        document.querySelectorAll('.sub-menus-items').forEach(menu => {
-            menu.classList.remove('active');
-            const toggle = document.querySelector(`#${menu.id}`);
-            if (toggle) {
-                toggle.classList.remove('active');
-                const icon = toggle.querySelector('i.fas');
-                if (icon) {
-                    icon.classList.remove('fa-chevron-down');
-                    icon.classList.add('fa-chevron-right');
-                }
-            }
         });
-    });
-});
     </script>
 
 </body>
