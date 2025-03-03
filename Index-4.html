@@ -34,7 +34,11 @@
             font-family: "Quicksand", serif;
             font-optical-sizing: auto;
             font-style: normal;
-            /* font-weight: 300; */
+            max-width: 1240px;
+            margin: 0;
+            margin: auto;
+            padding: 0;
+            
         }
 
         .header {
@@ -152,7 +156,7 @@
         }
 
         .book-btn:hover {
-            background-color: --primary-color;
+            background-color: var(--primary-color);
         }
 
         .navigation {
@@ -359,8 +363,7 @@
             z-index: 10;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease-in;
-            transition: all 0.6s ease-out;
+            transition: all 0.3s ease-in, all 0.6s ease-out;
         }
 
         .overlay.active {
@@ -660,7 +663,7 @@
 
         .desktop-nested-dropdown:hover>a {
             color: var(--primary-color);
-            
+
         }
 
         .desktop-nested-toggle {
@@ -889,8 +892,6 @@
                     <i class="fas fa-map-marker-alt"></i>
                 </div>
                 <a class="pay-btn elementor-animation-bob mobile-only">Pay Your Bill</a>
-
-
 
 
                 <div class="hamburger">
