@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theramedic Rehab</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+        }
+
+        :root {
+            --primary-color: #ff6e31;
+            --blue-color: #1d3559;
+            --white-color: #ffffff;
+            --light-gray: #f5f5f5;
+        }
+
+        body {
+            overflow-x: hidden;
+            background-color: #ff6f3171;
+            font-family: "Quicksand", serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            /* background: var(--white-color); */
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-radius: 100px;
+            /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 60px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mobile-only {
+            display: block;
+        }
+
+
+
+        .icon-btn {
+            width: 30px;
+            height: 30px;
+            padding: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+
+        .icon-btn.location {
+            background-color: var(--white-color);
+            color: var(--blue-color);
+            border: 1px solid var(--blue-color);
+            font-size: 12px;
+        }
+
+        .icon-btn.location:hover {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            border: 1px solid var(--white-color);
+        }
+
+
+        .pay-btn {
+            background-color: var(--blue-color);
+            color: var(--white-color) !important;
+            border: none;
+            border-radius: 25px;
+            padding: 8px 15px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+
+        .pay-btn:hover {
+            background-color: #152a48;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 25px;
+            height: 20px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 3px;
+            background-color: var(--blue-color);
+            transition: all 0.3s ease;
+        }
+
+        /* .action-bar {
+            background-color: var(--primary-color);
+            padding: 15px 0;
+            text-align: center;
+        } */
+
+        .book-btn {
+            display: inline-block;
+            background-color: var(--blue-color);
+            color: var(--white-color);
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .book-btn:hover {
+            background-color: --primary-color;
+        }
+
+        .navigation {
+            padding: 20px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            /* padding: 0px 20px; */
+        }
+
+        .nav-item {
+            position: relative;
+
+        }
+
+        .button-cta {
+            display: flex;
+            flex-direction: row;
+            align-items: end;
+            margin-top: 10px;
+        }
+
+        .nav-link {
+            color: var(--blue-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 20px;
+            /* border-bottom: 1px solid #eee; */
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+        }
+
+        .dropdown-toggle i {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+
+        .dropdown-menu {
+            max-height: 0;
+            overflow-x: hidden;
+            overflow: scroll;
+            padding: 0 40px;
+            background-color: var(--light-gray);
+            transition: all 0.5s ease-in-out;
+            opacity: 0;
+            /* margin-right: 5px; */
+        }
+
+        .dropdown-menu.active {
+            overflow-x: hidden;
+            max-height: 500px;
+            /* Adjust based on your content */
+            padding: 30px 40px;
+            opacity: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+
+        }
+
+        /* .dropdown-menu.active::-webkit-scrollbar {
+            display: none;
+            -ms-overflow-style: none;   IE and Edge 
+            scrollbar-width: none;   Firefox
+        } */
+
+        /* .dropdown-menu.active::-webkit-scrollbar-track {
+            background-color: #F5F5F5;
+        }
+
+        .dropdown-menu.active::-webkit-scrollbar {
+            width: 5px;
+            background-color: transparent;
+        }
+
+        .dropdown-menu.active::-webkit-scrollbar-thumb {
+            background-color: #203861;
+            border-radius: 26px;
+        }
+
+        For iOS Safari
+        .dropdown-menu.active {
+            -webkit-overflow-scrolling: touch;
+        } */
+
+
+        /* Scrollbar track */
+        .dropdown-menu::-webkit-scrollbar-track {
+            background-color: #F5F5F5;
+            border-radius: 26px;
+            margin: 2px 0;
+        }
+
+        /* Scrollbar itself */
+        .dropdown-menu::-webkit-scrollbar {
+            width: 8px;
+            /* Slightly wider for better touch target */
+            background-color: transparent;
+            -webkit-appearance: none;
+        }
+
+        /* Scrollbar thumb */
+        .dropdown-menu::-webkit-scrollbar-thumb {
+            background-color: #203861;
+            border-radius: 26px;
+            border: 2px solid #F5F5F5;
+            /* Creates padding effect */
+        }
+
+        .dropdown-link {
+            color: var(--blue-color);
+            text-decoration: none;
+            display: block;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .dropdown-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nested-dropdown.toggle-active .nested-dropdown-toggle {
+            color: var(--primary-color);
+        }
+
+        .toggle-active .dropdown-toggle i.fa-plus::before {
+            content: "\f068";
+            /* fa-minus */
+            color: var(--primary-color);
+        }
+
+        .toggle-active .dropdown-toggle {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        /* .toggle-active .dropdown-toggle::after {
+            content: '';
+            position: absolute;
+            top: 29px;
+            left: 35px;
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 7px solid var(--primary-color);
+            transition: transform 0s ease;
+        } */
+        .dropdown-menu.active::after {
+            content: '';
+            position: absolute;
+            top: 29px;
+            left: 35px;
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 7px solid var(--primary-color);
+            transition: transform 0s ease;
+        }
+
+        .nested-dropdown-menu.active::after {
+            content: '';
+            position: absolute;
+            top: 39px;
+            left: 25px;
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 7px solid var(--primary-color);
+            /* transition: transform 0.3s ease; */
+        }
+
+        .toggle-active .dropdown-toggle {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin: 20px 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--blue-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blue-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background-color: var(--blue-color);
+            color: var(--white-color);
+        }
+
+        .locations {
+            margin-top: 50px;
+            margin-left: 20px;
+        }
+
+        .locations h4 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .location-links {
+            display: flex;
+            flex-wrap: wrap;
+            /* gap: 15px; */
+            margin-top: 20px;
+            justify-content: space-between;
+            padding-right: 30px
+        }
+
+        .location-link {
+            color: var(--blue-color);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 400px;
+            height: 100%;
+            background-color: var(--white-color);
+            padding: 80px 0px 80px;
+            overflow-y: auto;
+            transition: right 1s ease;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 20;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 100%;
+            width: 100%;
+            height: 100%;
+            background-color: #1d3559e5;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in;
+            transition: all 0.6s ease-out;
+        }
+
+        .overlay.active {
+            left: 0;
+            animation-delay: 500ms;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+        .close-btn:before,
+        .close-btn:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: var(--blue-color);
+            top: 50%;
+            left: 0;
+        }
+
+        .close-btn:before {
+            transform: rotate(45deg);
+        }
+
+        .close-btn:after {
+            transform: rotate(-45deg);
+        }
+
+        /* Hamburger animation */
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(8.5px) rotate(45deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-8.5px) rotate(-45deg);
+        }
+
+        /* Desktop styles */
+        @media (min-width: 1024px) {
+
+            .mobile-only {
+                display: none;
+            }
+
+            .desktop-only {
+                display: block;
+            }
+
+            .hamburger {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: none;
+            }
+
+            .navbar {
+                padding: 10px 5%;
+            }
+
+            .nav-buttons {
+                gap: 15px;
+
+            }
+
+            .navigation {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 5%;
+            }
+
+            .nav-links {
+                flex-direction: row;
+                gap: 30px;
+            }
+
+            .nav-link {
+                border-bottom: none;
+                padding: 20px 0;
+            }
+
+            .social-links {
+                margin: 0;
+            }
+
+            .locations {
+                margin-top: 0;
+            }
+
+            .hamburger,
+            .mobile-menu,
+            .overlay {
+                display: none;
+            }
+
+            .desktop-navigation {
+                display: block;
+            }
+
+
+        }
+
+        /* Mobile styles */
+        @media (max-width: 1024px) {
+            .desktop-only {
+                display: none !important;
+            }
+
+            .header {
+                background-color: var(--white-color);
+                border-radius: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .navigation {
+                display: none;
+            }
+
+
+            .book-btn {
+                padding: 8px 20px;
+                font-size: 14px;
+                margin-top: 20px;
+            }
+
+            .desktop-navigation {
+                display: none;
+            }
+        }
+
+        /* Desktop Navigation Styles */
+        .desktop-navigation {
+            /* display: none; */
+            /* background: var(--white-color); */
+            padding: 0px 5%;
+            /* border-top: 1px solid #eee; */
+        }
+
+        .desktop-nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .desktop-nav-links>li>a {
+            color: var(--blue-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 0;
+        }
+
+        .desktop-dropdown {
+            position: relative;
+        }
+
+        .desktop-dropdown:hover>a {
+            color: var(--primary-color);
+        }
+
+        .desktop-dropdown-menu {
+            position: absolute;
+            top: 40px;
+            left: -65px;
+            background: var(--white-color);
+            min-width: 250px;
+            border-top: 2px solid var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-50px);
+            transition: all 0.2s ease-in;
+            list-style: none;
+            padding: 0px;
+            z-index: 1000;
+            border-radius: 0px 0px 6px 6px;
+            text-align: center;
+        }
+
+        .desktop-dropdown:hover .desktop-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .desktop-dropdown:hover .desktop-dropdown-menu::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 118px;
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 7px solid var(--primary-color);
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
+
+
+
+        .desktop-dropdown-menu a {
+            color: var(--blue-color);
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            font-size: 14px;
+            transition: background 0.3s;
+            border-bottom: 1px solid #dedede;
+            text-align: center;
+        }
+
+        .desktop-dropdown-menu a:hover {
+            background: var(--light-gray);
+            color: var(--primary-color);
+        }
+
+        .nested-dropdown {
+            position: relative;
+        }
+
+        .nested-dropdown-toggle {
+            display: flex !important;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nested-dropdown-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding-left: 30px;
+            background-color: var(--white-color);
+        }
+
+        .nested-dropdown-menu.active {
+            max-height: 200px;
+            padding: 20px 20px 20px 30px;
+            border-top: 2px solid var(--primary-color);
+        }
+
+        .nested-dropdown.toggle-active .fa-plus::before {
+            content: "\f068";
+            color: var (--primary-color);
+        }
+
+        /* Add these styles to your existing CSS */
+        .desktop-nested-dropdown {
+            position: relative;
+            text-align: center !important;
+        }
+
+        .desktop-nested-dropdown:hover>a {
+            color: var(--primary-color);
+
+        }
+
+        .desktop-nested-toggle {
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            /* text-align: center; */
+        }
+
+        .desktop-nested-menu {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            background: var(--white-color);
+            min-width: 200px;
+            border-left: 2px solid var(--primary-color);
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-20px);
+            transition: all 0.2s ease-in;
+            list-style: none;
+            padding: 0;
+            border-radius: 0 6px 6px 0;
+            border-radius: 6px;
+            text-align: left;
+        }
+
+        .desktop-nested-dropdown:hover .desktop-nested-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        .desktop-nested-toggle::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -4px;
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 7px solid var(--blue-color);
+            transform: rotate(90deg);
+            transition: transform 0.3s ease;
+        }
+
+
+        .desktop-nested-dropdown:hover .desktop-nested-toggle::after {
+            border-top: 7px solid var(--primary-color);
+        }
+
+
+
+        /* 
+        .desktop-nested-dropdown:hover .desktop-nested-menu::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -12px;
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 7px solid var(--primary-color);
+            transform: rotate(90deg);
+            transition: transform 0.3s ease;
+        } */
+
+        .desktop-nested-menu a {
+            color: var(--blue-color);
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            font-size: 14px;
+            transition: background 0.3s;
+            border-bottom: 1px solid #dedede;
+        }
+
+        .desktop-nested-menu a:hover {
+            background: var(--light-gray);
+            color: var(--primary-color);
+        }
+
+        /* Adjust the chevron icon for nested dropdowns */
+        /* .desktop-nested-toggle .fas.fa-chevron-right {
+            font-size: 12px;
+        } */
+
+        /* Optional: Add transition for the chevron icon */
+        /* .desktop-nested-dropdown:hover .fa-chevron-right {
+            transform: rotate(90deg);
+            transition: transform 0.3s ease;
+        } */
+    </style>
+    <link rel='stylesheet' id='e-animation-bob-css'
+        href='https://zystamatic-com.stackstaging.com/theramedicrehab/wp-content/plugins/elementor/assets/lib/animations/styles/e-animation-bob.min.css?ver=3.27.6'
+        media='all' />
+
+</head>
+
+<body>
+    <!-- <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, ut accusamus laboriosam voluptatem accusantium ab
+        voluptate quae asperiores? Sit magni ipsum voluptatem cum quam incidunt labore iusto maxime quaerat voluptatum.
+    </h1> -->
+    <header class="header">
+        <div class="navbar">
+            <a href="#" class="logo">
+                <img src="https://zystamatic-com.stackstaging.com/theramedicrehab/wp-content/uploads/2025/02/WEBP_Theramedic-Logo-2025-scaled.webp"
+                    alt="Theramedic Rehab">
+            </a>
+            <nav class="desktop-navigation">
+                <ul class="desktop-nav-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li class="desktop-dropdown">
+                        <a href="#">Therapy Services <!-- <i class="fas fa-chevron-down"></i> --></a>
+                        <ul class="desktop-dropdown-menu">
+                            <li><a href="#">Physical Therapy</a></li>
+                            <li><a href="#">Occupational Therapy</a></li>
+                            <li><a href="#">Speech Therapy</a></li>
+                            <li><a href="#">Pediatric Therapy</a></li>
+                        </ul>
+                    </li>
+                    <li class="desktop-dropdown">
+                        <a href="#">Recovery Program <!-- <i class="fas fa-chevron-down"></i> --></a>
+                        <ul class="desktop-dropdown-menu">
+                            <li><a href="#">Post-Surgery Rehabilitation</a></li>
+                            <li><a href="#">Sports Injury Recovery</a></li>
+                            <li class="desktop-nested-dropdown">
+                                <a href="#" class="desktop-nested-toggle">
+                                    Chronic Pain Management&nbsp;&nbsp;&nbsp;
+                                    <!-- <i class="fas fa-chevron-right"></i> -->
+                                </a>
+                                <ul class="desktop-nested-menu">
+                                    <li><a href="#">Back Pain</a></li>
+                                    <li><a href="#">Joint Pain</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="desktop-dropdown">
+                        <a href="#">Patient Center <!-- <i class="fas fa-chevron-down"></i> --></a>
+                        <ul class="desktop-dropdown-menu">
+                            <li><a href="#">New Patient Forms</a></li>
+                            <li><a href="#">Insurance Information</a></li>
+                            <li><a href="#">Patient Resources</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+            <div class="nav-buttons">
+                <a href="#" class="book-btn elementor-animation-bob desktop-only">Book
+                    Appointment</a>
+                <div class="icon-btn location elementor-animation-bob mobile-only">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="icon-btn location elementor-animation-bob mobile-only">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <a class="pay-btn elementor-animation-bob mobile-only">Pay Your Bill</a>
+
+
+
+
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu">
+        <div class="close-btn"></div>
+        <div class="nav-links">
+            <div class="nav-item button-cta">
+                <a href="#" class="nav-link " style="padding-left: 0px;"> <a href="#"
+                        class="book-btn elementor-animation-bob">Book
+                        Appointment</a></a>
+                <a href="#" class="nav-link "> <a href="#" class="elementor-animation-bob"
+                        style="text-decoration: none;padding-bottom: 5px;">Contact us</a></a>
+
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">Home</a>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">About Us</a>
+            </div>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle">
+                    Therapy Services
+                    <i class="fas fa-plus"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-link">Physical Therapy</a>
+                    <a href="#" class="dropdown-link">Occupational Therapy</a>
+                    <a href="#" class="dropdown-link">Speech Therapy</a>
+                    <a href="#" class="dropdown-link">Pediatric Therapy</a>
+                    <a href="#" class="dropdown-link">Physical Therapy</a>
+                    <a href="#" class="dropdown-link">Occupational Therapy</a>
+                    <a href="#" class="dropdown-link">Speech Therapy</a>
+                    <a href="#" class="dropdown-link">Pediatric Therapy</a>
+                    <a href="#" class="dropdown-link">Physical Therapy</a>
+                    <a href="#" class="dropdown-link">Occupational Therapy</a>
+                    <a href="#" class="dropdown-link">Speech Therapy</a>
+                    <a href="#" class="dropdown-link">Pediatric Therapy</a>
+                    <a href="#" class="dropdown-link">Physical Therapy</a>
+                    <a href="#" class="dropdown-link">Occupational Therapy</a>
+                    <a href="#" class="dropdown-link">Speech Therapy</a>
+                    <a href="#" class="dropdown-link">Pediatric Therapy</a>
+                    <a href="#" class="dropdown-link">Physical Therapy</a>
+                    <a href="#" class="dropdown-link">Occupational Therapy</a>
+                    <a href="#" class="dropdown-link">Speech Therapy</a>
+                    <a href="#" class="dropdown-link">Pediatric Therapy</a>
+                    <a href="#" class="dropdown-link">Physical Therapy</a>
+                    <a href="#" class="dropdown-link">Occupational Therapy</a>
+                    <a href="#" class="dropdown-link">Speech Therapy</a>
+                    <a href="#" class="dropdown-link">Pediatric Therapy</a>
+                </div>
+            </div>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle">
+                    Recovery Program
+                    <i class="fas fa-plus"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-link">Post-Surgery Rehabilitation</a>
+                    <a href="#" class="dropdown-link">Sports Injury Recovery</a>
+                    <div class="nav-item nested-dropdown">
+                        <a href="#" class="dropdown-link nested-dropdown-toggle">
+                            Chronic Pain Management
+                            <i class="fas fa-plus"></i>
+                        </a>
+                        <div class="nested-dropdown-menu">
+                            <a href="Index-2-test.html" class="dropdown-link">Back Pain</a>
+                            <a href="Index-2-test.html" class="dropdown-link">Joint Pain</a>
+                        </div>
+                    </div>
+                    <div class="nav-item nested-dropdown">
+                        <a href="#" class="dropdown-link nested-dropdown-toggle">
+                            Specialized Programs
+                            <i class="fas fa-plus"></i>
+                        </a>
+                        <div class="nested-dropdown-menu">
+                            <a href="#" class="dropdown-link">Athletic Recovery</a>
+                            <a href="#" class="dropdown-link">Senior Rehabilitation</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle">
+                    Patient Center testing
+                    <i class="fas fa-plus"></i>
+                </a>
+                <div class="dropdown-menu">
+
+                    <a href="#" class="dropdown-link">New Patient Forms</a>
+                    <a href="#" class="dropdown-link">Insurance Information</a>
+                    <a href="#" class="dropdown-link">Patient Resources</a>
+                    <a href="#" class="dropdown-link">New Patient Forms</a>
+                    <a href="#" class="dropdown-link">Insurance Information</a>
+                    <a href="#" class="dropdown-link">Patient Resources</a>
+
+                    <a href="#" class="dropdown-link">New Patient Forms</a>
+                    <a href="#" class="dropdown-link">Insurance Information</a>
+                    <a href="#" class="dropdown-link">Patient Resources</a>
+                    <a href="#" class="dropdown-link">New Patient Forms</a>
+                    <a href="#" class="dropdown-link">Insurance Information</a>
+                    <a href="#" class="dropdown-link">Patient Resources</a>
+                    <a href="#" class="dropdown-link">New Patient Forms</a>
+                    <a href="#" class="dropdown-link">Insurance Information</a>
+                    <a href="#" class="dropdown-link">Patient Resources</a>
+                    <a href="#" class="dropdown-link">New Patient Forms</a>
+                    <a href="#" class="dropdown-link">Insurance Information</a>
+                    <a href="#" class="dropdown-link">Patient Resources</a>
+
+                </div>
+            </div>
+
+
+
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle">
+                    More
+                    <i class="fas fa-plus"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-link">FAQ</a>
+                    <a href="#" class="dropdown-link">Blog</a>
+                    <a href="#" class="dropdown-link">Careers</a>
+                    <a href="#" class="dropdown-link">Contact</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="social-links">
+            <a href="#" class="social-icon elementor-animation-bob">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-icon elementor-animation-bob">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#" class="social-icon elementor-animation-bob">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+
+        <div class="locations">
+            <h4>Locations</h4>
+            <div class="location-links">
+                <a href="#" class="location-link elementor-animation-bob">Stafford</a>
+                <a href="#" class="location-link elementor-animation-bob">Spring</a>
+                <a href="#" class="location-link elementor-animation-bob">Katy</a>
+                <a href="#" class="location-link elementor-animation-bob">Southfield</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay"></div>
+
+    <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, ut accusamus laboriosam voluptatem accusantium ab
+        voluptate quae asperiores? Sit magni ipsum voluptatem cum quam incidunt labore iusto maxime quaerat voluptatum.
+    </h1>
+    <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, ut accusamus laboriosam voluptatem accusantium ab
+        voluptate quae asperiores? Sit magni ipsum voluptatem cum quam incidunt labore iusto maxime quaerat voluptatum.
+    </h1>
+    <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, ut accusamus laboriosam voluptatem accusantium ab
+        voluptate quae asperiores? Sit magni ipsum voluptatem cum quam incidunt labore iusto maxime quaerat voluptatum.
+    </h1>
+    <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, ut accusamus laboriosam voluptatem accusantium ab
+        voluptate quae asperiores? Sit magni ipsum voluptatem cum quam incidunt labore iusto maxime quaerat voluptatum.
+    </h1>
+    <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, ut accusamus laboriosam voluptatem accusantium ab
+        voluptate quae asperiores? Sit magni ipsum voluptatem cum quam incidunt labore iusto maxime quaerat voluptatum.
+    </h1>
+
+    <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, ut accusamus laboriosam voluptatem accusantium ab
+        voluptate quae asperiores? Sit magni ipsum voluptatem cum quam incidunt labore iusto maxime quaerat voluptatum.
+    </h1>
+    <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, ut accusamus laboriosam voluptatem accusantium ab
+        voluptate quae asperiores? Sit magni ipsum voluptatem cum quam incidunt labore iusto maxime quaerat voluptatum.
+    </h1>
+    <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, ut accusamus laboriosam voluptatem accusantium ab
+        voluptate quae asperiores? Sit magni ipsum voluptatem cum quam incidunt labore iusto maxime quaerat voluptatum.
+    </h1>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburger = document.querySelector('.hamburger');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const closeBtn = document.querySelector('.close-btn');
+            const overlay = document.querySelector('.overlay');
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+
+            // Toggle mobile menu
+            hamburger.addEventListener('click', function () {
+                hamburger.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+                overlay.classList.toggle('active');
+                document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            });
+
+            // Close mobile menu
+            closeBtn.addEventListener('click', function () {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+
+            overlay.addEventListener('click', function () {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+
+            // Toggle dropdown menus
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const parent = this.parentElement;
+                    const dropdown = this.nextElementSibling;
+
+                    // Toggle the current dropdown
+                    parent.classList.toggle('toggle-active');
+                    dropdown.classList.toggle('active');
+
+                    // Close other dropdowns
+                    dropdownToggles.forEach(otherToggle => {
+                        if (otherToggle !== this) {
+                            const otherParent = otherToggle.parentElement;
+                            const otherDropdown = otherToggle.nextElementSibling;
+                            otherParent.classList.remove('toggle-active');
+                            otherDropdown.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // Add handler for nested dropdowns
+            const nestedDropdownToggles = document.querySelectorAll('.nested-dropdown-toggle');
+
+            nestedDropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation(); // Prevent parent dropdown from closing
+
+                    const parent = this.parentElement;
+                    const nestedDropdown = this.nextElementSibling;
+
+                    // Toggle the current nested dropdown
+                    parent.classList.toggle('toggle-active');
+                    nestedDropdown.classList.toggle('active');
+
+                    // Close other nested dropdowns at the same level
+                    const siblings = parent.parentElement.querySelectorAll('.nested-dropdown');
+                    siblings.forEach(sibling => {
+                        if (sibling !== parent) {
+                            sibling.classList.remove('toggle-active');
+                            sibling.querySelector('.nested-dropdown-menu')?.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
