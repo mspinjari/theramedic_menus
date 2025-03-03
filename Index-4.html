@@ -255,12 +255,12 @@
             font-size: 16px;
         }
 
-        .dropdown-link:hover {
+        /* .dropdown-link:hover {
             color: var(--primary-color);
-            /* border-left: 2px solid var(--primary-color);
+            border-left: 2px solid var(--primary-color);
             padding-left: 10px;
-            margin-left: -12px; */
-        }
+            margin-left: -12px;
+        } */
 
         .nested-dropdown.toggle-active .nested-dropdown-toggle {
             color: var(--primary-color);
@@ -596,12 +596,23 @@
 
         /* Ensure the mega menu container has proper spacing */
         .mega-menu-container {
-            margin: 0 auto;
+            /* margin: 0 auto; */
+            display: flex;
+            justify-content: space-between;
             width: 100%;
             max-width: 1240px;
             display: flex;
-            padding: 50px;
+            padding: 50px 50px 0px 50px;
+
+        }
+
+        .mega-menu-container-2 {
+            display: flex;
+            width: 100%;
             justify-content: space-between;
+            border-top: 2px solid var(--light-gray);
+            padding: 20px 0px 50px 0px;
+            margin: 0px;
         }
 
         /* Make sure dropdown hovers still work */
@@ -613,6 +624,7 @@
 
         .nested-dropdown {
             position: relative;
+            /* color: var(--white-color); */
         }
 
         .nested-dropdown-toggle {
@@ -666,50 +678,36 @@
         }
 
         .desktop-nested-menu {
-            /* position: absolute;
-            left: 100%;
-            top: 0; */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--white-color);
-            min-width: 200px;
-            /* border-left: 2px solid var(--primary-color); */
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(-20px);
+            display: none;
+            /* justify-content: space-between; */
+            /* display: flex; */
+            flex-direction: column;
+            width: 100%;
+            color: var(--white-color);
             transition: all 0.2s ease-in;
-            list-style: none;
-            padding: 0;
-            border-radius: 0 6px 6px 0;
-            border-radius: 6px;
-            text-align: left;
         }
 
-        .desktop-nested-dropdown:hover .desktop-nested-menu {
+        .desktop-nested-menu div:nth-child(1) {
+            width: 100%;
+            display: flex;
+            justify-content: left;
+        }
+        .desktop-nested-menu div:nth-child(2) {
+            padding:  20px 200px 0px 00px;;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .desktop-nested-menu.active {
+            display: flex;
             opacity: 1;
             visibility: visible;
             transform: translateX(0);
         }
 
-
-
         .desktop-nested-menu a {
-            color: var(--blue-color);
-            text-decoration: none;
-            padding: 15px 20px;
-            display: block;
-            font-size: 14px;
-            transition: background 0.3s;
-            border-bottom: 1px solid #dedede;
-
-        }
-
-        .desktop-nested-menu a:hover {
-            background: var(--light-gray);
-            color: var(--primary-color);
-            padding: 15px 20px 15px 17px;
+            color: var(--white-color);
         }
     </style>
     <link rel='stylesheet' id='e-animation-bob-css'
@@ -739,18 +737,36 @@
                                         1 Therapy Services</h3>
                                     <ul style="list-style: none; padding: 0;">
                                         <li class="desktop-nested-dropdown">
-                                            <a href="#" class="desktop-nested-toggle">
+                                            <a href="#" class="desktop-nested-toggle" id="sub-menus-items-1">
                                                 Chronic Pain Management&nbsp;&nbsp;&nbsp;
                                                 <i class="fas fa-chevron-right"></i>
                                             </a>
-                                            <!-- <ul class="desktop-nested-menu">
-                                                <li><a href="#">Back Pain</a></li>
-                                                <li><a href="#">Joint Pain</a></li>
-                                            </ul> -->
+
                                         </li>
-                                        <li><a href="#">Aquatic Therapy</a></li>
-                                        <li><a href="#">Pediatric Therapy</a></li>
-                                        <li><a href="#">Tele - Rehab</a></li>
+                                        <li class="desktop-nested-dropdown">
+                                            <a href="#" class="desktop-nested-toggle" id="sub-menus-items-2">
+                                                Aquatic Therapy&nbsp;&nbsp;&nbsp;
+                                                <i class="fas fa-chevron-right"></i>
+                                            </a>
+
+                                        </li>
+
+                                        <li class="desktop-nested-dropdown">
+                                            <a href="#" class="desktop-nested-toggle" id="sub-menus-items-3">
+                                                Pediatric Therapy&nbsp;&nbsp;&nbsp;
+                                                <i class="fas fa-chevron-right"></i>
+                                            </a>
+
+                                        </li>
+
+                                        <li class="desktop-nested-dropdown">
+                                            <a href="#" class="desktop-nested-toggle" id="sub-menus-items-4">
+                                                Tele - Rehab&nbsp;&nbsp;&nbsp;
+                                                <i class="fas fa-chevron-right"></i>
+                                            </a>
+
+                                        </li>
+
                                     </ul>
                                 </div>
                                 <div class="mega-menu-column">
@@ -785,14 +801,67 @@
                                 </div>
 
                             </div>
-                            <hr>
-                            <div class="mega-menu-container">
-                                <ul class="desktop-nested-menu">
-                                    <li><a href="#">Back Pain</a></li>
-                                    <li><a href="#">Joint Pain</a></li>
-                                    <li><a href="#">Joint Pain</a></li>
-                                    <li><a href="#">Joint Pain</a></li>
-                                </ul>
+
+                            <div class=" mega-menu-container">
+                                <div class="mega-menu-container-2">
+                                    <div class="desktop-nested-menu sub-menus-items" id="sub-menus-items-1">
+                                        <div>
+                                            <h5>Chronic Pain Management</h5>
+                                        </div>
+
+                                        <div>
+                                            <a href="#">1Back Pain</a>
+                                            <a href="#">Joint Pain</a>
+                                            <a href="#">knee Pain</a>
+                                            <a href="#">elbow Pain</a>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="desktop-nested-menu sub-menus-items" id="sub-menus-items-2">
+                                        <div>
+                                            <h5>Chronic Pain Management</h5>
+                                        </div>
+
+                                        <div>
+                                            <a href="#">2Back Pain</a>
+                                            <a href="#">Joint Pain</a>
+                                            <a href="#">knee Pain</a>
+                                            <a href="#">elbow Pain</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="desktop-nested-menu sub-menus-items" id="sub-menus-items-3">
+                                        <div>
+                                            <h5>Chronic Pain Management</h5>
+                                        </div>
+
+                                        <div>
+                                            <a href="#">3Back Pain</a>
+                                            <a href="#">Joint Pain</a>
+                                            <a href="#">knee Pain</a>
+                                            <a href="#">elbow Pain</a>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="desktop-nested-menu sub-menus-items" id="sub-menus-items-4">
+                                        <div>
+                                            <h5>Chronic Pain Management</h5>
+                                        </div>
+
+                                        <div>
+                                            <a href="#">4Back Pain</a>
+                                            <a href="#">Joint Pain</a>
+                                            <a href="#">knee Pain</a>
+                                            <a href="#">elbow Pain</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
                             </div>
 
                         </div>
@@ -830,14 +899,7 @@
     <div class="mobile-menu">
         <div class="close-btn"></div>
         <div class="nav-links">
-            <!-- <div class="nav-item button-cta">
-                <a href="#" class="nav-link " style="padding-left: 0px;"> <a href="#"
-                        class="book-btn elementor-animation-bob">Book
-                        Appointment</a></a>
-                <a href="#" class="nav-link "> <a href="#" class="elementor-animation-bob"
-                        style="text-decoration: none;padding-bottom: 5px;">Contact us</a></a>
 
-            </div> -->
             <div class="nav-item" style="margin-top: 50px;">
                 <a href="#" class="nav-link">Home</a>
             </div>
@@ -1073,6 +1135,75 @@
                         }
                     });
                 });
+            });
+
+            // Desktop nested toggle functionality
+            const desktopNestedToggles = document.querySelectorAll('.desktop-nested-toggle');
+
+            desktopNestedToggles.forEach(toggle => {
+                toggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Find the corresponding submenu
+                    const toggleId = this.id;
+                    const submenu = document.querySelector(`.sub-menus-items#${toggleId}`);
+
+                    // Find the chevron icon within this toggle
+                    const chevronIcon = this.querySelector('i.fas');
+
+                    if (!submenu) return;
+
+                    // Close all other submenus and reset their icons
+                    document.querySelectorAll('.sub-menus-items').forEach(menu => {
+                        if (menu !== submenu) {
+                            menu.classList.remove('active');
+                            // Reset other toggle icons
+                            const otherId = menu.id;
+                            const otherToggle = document.querySelector(`#${otherId}`);
+                            if (otherToggle) {
+                                const otherIcon = otherToggle.querySelector('i.fas');
+                                if (otherIcon) {
+                                    otherIcon.classList.remove('fa-chevron-down');
+                                    otherIcon.classList.add('fa-chevron-right');
+                                }
+                            }
+                        }
+                    });
+
+                    // Toggle the active class on the clicked submenu
+                    submenu.classList.toggle('active');
+
+                    // Toggle the chevron icon
+                    if (chevronIcon) {
+                        if (submenu.classList.contains('active')) {
+                            chevronIcon.classList.remove('fa-chevron-right');
+                            chevronIcon.classList.add('fa-chevron-down');
+                        } else {
+                            chevronIcon.classList.remove('fa-chevron-down');
+                            chevronIcon.classList.add('fa-chevron-right');
+                        }
+                    }
+                });
+            });
+
+            // Close any open submenu when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.desktop-nested-dropdown')) {
+                    document.querySelectorAll('.sub-menus-items').forEach(menu => {
+                        menu.classList.remove('active');
+                        // Reset all toggle icons
+                        const toggleId = menu.id;
+                        const toggle = document.querySelector(`#${toggleId}`);
+                        if (toggle) {
+                            const icon = toggle.querySelector('i.fas');
+                            if (icon) {
+                                icon.classList.remove('fa-chevron-down');
+                                icon.classList.add('fa-chevron-right');
+                            }
+                        }
+                    });
+                }
             });
         });
     </script>
