@@ -25,7 +25,7 @@
             --primary-color: #ff6e31;
             --blue-color: #1d3559;
             --white-color: #ffffff;
-            --light-gray: #f5f5f5;
+            --light-gray: #ADADAD;
         }
 
         body {
@@ -93,7 +93,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.5s ease;
         }
 
         .icon-btn.location {
@@ -118,7 +118,7 @@
             padding: 8px 15px;
             font-weight: 300;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.5s ease;
             font-size: 12px;
         }
 
@@ -140,7 +140,7 @@
             width: 100%;
             height: 3px;
             background-color: var(--blue-color);
-            transition: all 0.3s ease;
+            transition: all 0.5s ease;
         }
 
 
@@ -148,11 +148,11 @@
             display: inline-block;
             background-color: var(--blue-color);
             color: var(--white-color);
-            font-weight: 600;
+            font-weight: 500;
             padding: 10px 20px;
             border-radius: 25px;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.5s ease;
         }
 
         .book-btn:hover {
@@ -196,7 +196,7 @@
 
         .dropdown-toggle i {
             margin-left: 10px;
-            transition: transform 0.3s ease;
+            transition: transform 0.5s ease-in-out;
         }
 
 
@@ -261,9 +261,10 @@
         }
 
 
-        .toggle-active .dropdown-toggle i.fa-chevron-down::before {
-            content: "\f077";
+        .toggle-active .dropdown-toggle i.fa-chevron-down {
+            /* content: "\f077"; */
             /* fa chevron down */
+            transform: rotate(-180deg);
             color: var(--primary-color);
         }
 
@@ -280,7 +281,7 @@
         .social-links {
             display: flex;
             gap: 15px;
-            margin: 50px 20px;
+            margin: 40px 20px;
         }
 
         .social-icon {
@@ -293,7 +294,7 @@
             justify-content: center;
             color: var(--white-color);
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.5s ease-in-out;
         }
 
         .social-icon:hover {
@@ -302,7 +303,7 @@
         }
 
         .locations {
-            margin-top: 50px;
+            margin-top: 40px;
             margin-left: 20px;
         }
 
@@ -331,13 +332,13 @@
         .mobile-menu {
             position: fixed;
             /* top: -100%; */
-            bottom: -100vh;
+            bottom: -120%;
             right: 0;
             width: 100%;
             /* max-width: 400px; */
             height: 100vh;
             background-color: var(--blue-color);
-            padding: 80px 20px 110px;
+            padding: 110px 20px 100px;
             overflow-y: auto;
             /* transition: top 1s ease; */
             /* transition: bottom 1s ease; */
@@ -348,7 +349,8 @@
 
         .mobile-menu.active {
             /* top: 0%; */
-            bottom: -5vh;
+            /* padding: 150px 20px 100px; */
+            bottom: -5%;
         }
 
         .overlay {
@@ -530,11 +532,11 @@
             color: var(--blue-color);
             text-decoration: none;
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 500;
             display: flex;
             align-items: center;
             /* gap: 5px; */
-            padding: 10px 0;
+            padding: 15px 0;
         }
 
         .desktop-dropdown {
@@ -564,10 +566,10 @@
             display: none;
             visibility: hidden;
             transform: translateY(-50px);
-            transition: all 0.2s ease-in;
+            transition: all 0.5s ease-in-out;
             z-index: 1000;
             border-radius: 10px;
-            margin: 10px auto;
+            margin: 5px auto;
             /* right: 0; */
 
         }
@@ -585,8 +587,9 @@
             padding: 10px 0;
             display: block;
             font-size: 14px;
-            transition: all 0.3s;
+            transition: all 0.5s;
             border-left: 3px solid transparent;
+            /* width: 25%; */
         }
 
         .mega-menu-column a:hover {
@@ -607,19 +610,31 @@
 
         }
 
-        .mega-menu-container::after {
+        .desktop-dropdown:hover::after {
             content: '';
             position: absolute;
-            top: -15px;
+            top: 45px;
+            left: 30%;
+            width: 0;
+            height: 0;
+            border-left: 17px solid transparent;
+            border-right: 17px solid transparent;
+            border-top: 17px solid var(--blue-color);
+            transform: rotate(180deg);
+        }
+
+        /* .mega-menu-container::after {
+            content: '';
+            position: absolute;
+            top: -16px;
             left: 45%;
             width: 0;
             height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 15px solid var(--blue-color);
-
+            border-left: 17px solid transparent;
+            border-right: 17px solid transparent;
+            border-top: 17px solid var(--blue-color);
             transform: rotate(180deg);
-        }
+        } */
 
         .mega-menu-container-2 {
             display: flex;
@@ -656,7 +671,7 @@
         .nested-dropdown-menu {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out;
+            transition: max-height .7s cubic-bezier(0.25, 1, .25, 1);
             padding-left: 30px;
             background-color: #071C3F;
         }
@@ -667,9 +682,11 @@
 
         }
 
-        .nested-dropdown.toggle-active .fa-chevron-down::before {
-            content: "\f077";
+        .nested-dropdown.toggle-active .fa-chevron-down {
+            /* content: "\f077"; */
+            transform: rotate(-180deg);
             color: var(--primary-color);
+            transition: transform 0.5s ease-in-out;
         }
 
         /* Add these styles to your existing CSS */
@@ -685,7 +702,7 @@
 
         .desktop-nested-toggle {
             display: flex !important;
-            justify-content: space-between;
+            justify-content: left;
             align-items: center;
             /* text-align: center; */
         }
@@ -697,7 +714,7 @@
             flex-direction: column;
             width: 100%;
             color: var(--white-color);
-            transition: all 0.2s ease-in;
+            transition: all 0.5s ease-in-out;
         }
 
         .desktop-nested-menu div:nth-child(1) {
@@ -709,7 +726,7 @@
 
         .desktop-nested-menu div:nth-child(1) h5 {
             color: var(--light-gray);
-            font-weight: 600;
+            font-weight: 500;
             padding: 30px 0px 00px 0px;
         }
 
@@ -766,36 +783,39 @@
                         <div class="desktop-dropdown-menu">
                             <div class="mega-menu-container">
                                 <div class="mega-menu-column">
-                                    <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px;">
-                                        1 Therapy Services</h3>
+                                    <a href="#">
+                                        <h3
+                                            style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px; text-decoration: underline;">
+                                            1 Therapy Services</h3>
+                                    </a>
                                     <ul style="list-style: none; padding: 0;">
                                         <li class="desktop-nested-dropdown">
                                             <a href="#" class="desktop-nested-toggle" id="sub-menus-items-1">
-                                                Chronic Pain Management&nbsp;
-                                                <i class="fas fa-chevron-right"></i>
+                                                Chronic Pain Management&nbsp;&nbsp;
+                                                <i class="fas fa-chevron-up"></i>
                                             </a>
 
                                         </li>
                                         <li class="desktop-nested-dropdown">
                                             <a href="#" class="desktop-nested-toggle" id="sub-menus-items-2">
-                                                Aquatic Therapy
-                                                <i class="fas fa-chevron-right"></i>
+                                                Aquatic Therapy&nbsp;&nbsp;
+                                                <i class="fas fa-chevron-up"></i>
                                             </a>
 
                                         </li>
 
                                         <li class="desktop-nested-dropdown">
                                             <a href="#" class="desktop-nested-toggle" id="sub-menus-items-3">
-                                                Pediatric Therapy
-                                                <i class="fas fa-chevron-right"></i>
+                                                Pediatric Therapy&nbsp;&nbsp;
+                                                <i class="fas fa-chevron-up"></i>
                                             </a>
 
                                         </li>
 
                                         <li class="desktop-nested-dropdown">
                                             <a href="#" class="desktop-nested-toggle" id="sub-menus-items-4">
-                                                Tele - Rehab
-                                                <i class="fas fa-chevron-right"></i>
+                                                Tele - Rehab&nbsp;&nbsp;
+                                                <i class="fas fa-chevron-up"></i>
                                             </a>
 
                                         </li>
@@ -803,8 +823,12 @@
                                     </ul>
                                 </div>
                                 <div class="mega-menu-column">
-                                    <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px;">Rehab
-                                        Solutions</h3>
+                                    <a href="#">
+                                        <h3
+                                            style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px; text-decoration: underline;">
+                                            Rehab
+                                            Solutions</h3>
+                                    </a>
                                     <ul style="list-style: none; padding: 0;">
                                         <li><a href="#">Auto Injury Rehab</a></li>
                                         <li><a href="#">Work Injury</a></li>
@@ -812,9 +836,11 @@
                                         <li><a href="#">Traumatic Brain Injury</a></li>
                                     </ul>
                                 </div>
-                                <div class="mega-menu-column">
-                                    <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px;">
-                                        &nbsp;</h3>
+                                <div class="mega-menu-column" style="margin-left: -75px;">
+                                    <a href="#">
+                                        <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px;">
+                                            &nbsp;</h3>
+                                    </a>
                                     <ul style="list-style: none; padding: 0;">
                                         <li><a href="#">Dry Needling Therapy</a></li>
                                         <li><a href="#">Cupping Therapy</a></li>
@@ -823,8 +849,12 @@
                                     </ul>
                                 </div>
                                 <div class="mega-menu-column">
-                                    <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px;">
-                                        Recovery Programs</h3>
+                                    <a href="#">
+                                        <h3
+                                            style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px; text-decoration: underline;">
+                                            Recovery Programs
+                                        </h3>
+                                    </a>
                                     <ul style="list-style: none; padding: 0;">
                                         <li><a href="#">Dry Needling Therapy</a></li>
                                         <li><a href="#">Cupping Therapy</a></li>
@@ -899,6 +929,60 @@
 
                         </div>
                     </li>
+                    <li class="desktop-dropdown">
+                        <a href="#">Pain Area</a>
+                        <div class="desktop-dropdown-menu">
+                            <div class="mega-menu-container" style="padding-bottom: 80px;">
+                                <div class="mega-menu-column">
+                                    <a href="#">
+                                        <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px; ">
+                                            Area of Pain</h3>
+                                    </a>
+                                    <ul style="list-style: none; padding: 0;">
+                                        <li><a href="#">Head Pain</a></li>
+                                        <li><a href="#">Neck Pain</a></li>
+                                        <li><a href="#">Back Pain</a></li>
+                                        <li><a href="#">Shoulder Pain</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mega-menu-column">
+                                    <a href="#">
+                                        <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px;">
+                                            &nbsp;</h3>
+                                    </a>
+                                    <ul style="list-style: none; padding: 0;">
+                                        <li><a href="#">Elbow Pain</a></li>
+                                        <li><a href="#">Hip Pain</a></li>
+                                        <li><a href="#">Pelvic Floor</a></li>
+                                        <li><a href="#">Hand/Wrist Pain</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mega-menu-column">
+                                    <a href="#">
+                                        <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px;">
+                                            &nbsp;</h3>
+                                    </a>
+                                    <ul style="list-style: none; padding: 0;">
+                                        <li><a href="#">Knee Pain</a></li>
+                                        <li><a href="#">Foot/Ankle Pain</a></li>
+
+                                    </ul>
+                                </div>
+                                <div class="mega-menu-column" style="width: 30%;">
+                                    <a href="#">
+                                        <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px;">
+                                            &nbsp;</h3>
+                                    </a>
+                                    <p style="color: var(--light-gray);">Every pain has a place — let us know where
+                                        yours is by selecting from the list of body parts. This helps us understand your
+                                        symptoms and create a care plan just for you.</p>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </li>
                     <li><a href="#">Patient Center</a></li>
                     <li><a href="#">More</a></li>
 
@@ -936,6 +1020,25 @@
             </div>
             <div class="nav-item">
                 <a href="#" class="nav-link">About Us</a>
+            </div>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle">
+                    Pain Area
+                    <i class="fas fa-chevron-down"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-link" href="#">Head Pain</a>
+                    <a class="dropdown-link" href="#">Neck Pain</a>
+                    <a class="dropdown-link" href="#">Back Pain</a>
+                    <a class="dropdown-link" href="#">Shoulder Pain</a>
+                    <a class="dropdown-link" href="#">Elbow Pain</a>
+                    <a class="dropdown-link" href="#">Hip Pain</a>
+                    <a class="dropdown-link" href="#">Pelvic Floor</a>
+                    <a class="dropdown-link" href="#">Hand/Wrist Pain</a>
+                    <a class="dropdown-link" href="#">Knee Pain</a>
+                    <a class="dropdown-link" href="#">Foot/Ankle Pain</a>
+
+                </div>
             </div>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle">
@@ -981,8 +1084,8 @@
                             <i class="fas fa-chevron-down"></i>
                         </a>
                         <div class="nested-dropdown-menu">
-                            <a href="Index-2-test.html" class="dropdown-link">Back Pain</a>
-                            <a href="Index-2-test.html" class="dropdown-link">Joint Pain</a>
+                            <a href="index-4.html" class="dropdown-link">Back Pain</a>
+                            <a href="index-4.html" class="dropdown-link">Joint Pain</a>
                         </div>
                     </div>
                     <div class="nav-item nested-dropdown">
@@ -1127,11 +1230,9 @@
                     const parent = this.parentElement;
                     const dropdown = this.nextElementSibling;
 
-                    // Toggle the current dropdown
                     parent.classList.toggle('toggle-active');
                     dropdown.classList.toggle('active');
 
-                    // Close other dropdowns
                     dropdownToggles.forEach(otherToggle => {
                         if (otherToggle !== this) {
                             const otherParent = otherToggle.parentElement;
@@ -1149,16 +1250,14 @@
             nestedDropdownToggles.forEach(toggle => {
                 toggle.addEventListener('click', function (e) {
                     e.preventDefault();
-                    e.stopPropagation(); // Prevent parent dropdown from closing
+                    e.stopPropagation();
 
                     const parent = this.parentElement;
                     const nestedDropdown = this.nextElementSibling;
 
-                    // Toggle the current nested dropdown
                     parent.classList.toggle('toggle-active');
                     nestedDropdown.classList.toggle('active');
 
-                    // Close other nested dropdowns at the same level
                     const siblings = parent.parentElement.querySelectorAll('.nested-dropdown');
                     siblings.forEach(sibling => {
                         if (sibling !== parent) {
@@ -1177,15 +1276,12 @@
                     e.preventDefault();
                     e.stopPropagation();
 
-                    // Get the corresponding submenu by matching the ID
                     const toggleId = this.id;
                     const submenu = document.querySelector(`.sub-menus-items#${toggleId}`);
                     if (!submenu) return;
 
-                    // Find the chevron icon within this toggle
                     const chevronIcon = this.querySelector('i.fas');
 
-                    // Close all other submenus and reset their toggles
                     document.querySelectorAll('.sub-menus-items').forEach(menu => {
                         if (menu !== submenu) {
                             menu.classList.remove('active');
@@ -1194,26 +1290,19 @@
                                 otherToggle.classList.remove('active');
                                 const otherIcon = otherToggle.querySelector('i.fas');
                                 if (otherIcon) {
-                                    otherIcon.classList.remove('fa-chevron-down');
-                                    otherIcon.classList.add('fa-chevron-right');
+                                    otherIcon.style.transform = 'rotate(0deg)';
                                 }
                             }
                         }
                     });
 
-                    // Toggle the active class on the current submenu and toggle element
                     submenu.classList.toggle('active');
                     this.classList.toggle('active');
 
-                    // Toggle the chevron icon direction
                     if (chevronIcon) {
-                        if (submenu.classList.contains('active')) {
-                            chevronIcon.classList.remove('fa-chevron-right');
-                            chevronIcon.classList.add('fa-chevron-down');
-                        } else {
-                            chevronIcon.classList.remove('fa-chevron-down');
-                            chevronIcon.classList.add('fa-chevron-right');
-                        }
+                        chevronIcon.style.transition = 'transform 0.5s ease-in-out';
+                        chevronIcon.style.transform = submenu.classList.contains('active') ?
+                            'rotate(180deg)' : 'rotate(0deg)';
                     }
                 });
             });
@@ -1228,8 +1317,7 @@
                             toggle.classList.remove('active');
                             const icon = toggle.querySelector('i.fas');
                             if (icon) {
-                                icon.classList.remove('fa-chevron-down');
-                                icon.classList.add('fa-chevron-right');
+                                icon.style.transform = 'rotate(0deg)';
                             }
                         }
                     });
@@ -1245,13 +1333,13 @@
                         toggle.classList.remove('active');
                         const icon = toggle.querySelector('i.fas');
                         if (icon) {
-                            icon.classList.remove('fa-chevron-down');
-                            icon.classList.add('fa-chevron-right');
+                            icon.style.transform = 'rotate(0deg)';
                         }
                     }
                 });
             });
         });
+
     </script>
 
 </body>
