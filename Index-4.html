@@ -202,8 +202,7 @@
 
         .dropdown-menu {
             max-height: 0;
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow: hidden;
             padding: 0 40px;
             background-color: var(--blue-color);
             transition: all 0.5s ease-in-out;
@@ -213,13 +212,11 @@
         }
 
         .dropdown-menu.active {
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow: hidden;
             background-color: #112850;
-            /* max-height: 200px; */
             max-height: 900px;
             /* Adjust based on your content */
-            padding: 10px 40px;
+            padding: 20px 40px;
             opacity: 1;
             /* -webkit-overflow-scrolling: touch; */
             margin-top: 10px;
@@ -228,27 +225,27 @@
 
 
         /* Scrollbar track */
-        .dropdown-menu::-webkit-scrollbar-track {
+        /* .dropdown-menu::-webkit-scrollbar-track {
             background-color: #F5F5F5;
             border-radius: 26px;
             margin: 2px 0;
-        }
+        } */
 
         /* Scrollbar itself */
-        .dropdown-menu::-webkit-scrollbar {
+        /* Slightly wider width for better touch target */
+        /* .dropdown-menu::-webkit-scrollbar {
             width: 8px;
-            /* Slightly wider for better touch target */
             background-color: transparent;
             -webkit-appearance: none;
-        }
+        } */
 
         /* Scrollbar thumb */
-        .dropdown-menu::-webkit-scrollbar-thumb {
+        /* Creates padding effect border*/
+        /* .dropdown-menu::-webkit-scrollbar-thumb {
             background-color: #203861;
             border-radius: 26px;
             border: 2px solid #F5F5F5;
-            /* Creates padding effect */
-        }
+        } */
 
         .dropdown-link {
             color: var(--white-color);
@@ -947,7 +944,7 @@
                 </a>
                 <div class="dropdown-menu">
                     <a href="#" class="nav-link"
-                        style="margin-left: -20px;margin-top: 20px; text-decoration: underline;font-size: 20px;">Home</a>
+                        style="margin-left: -20px;text-decoration: underline;font-size: 20px;">Home</a>
                     <a href="#" class="dropdown-link">Physical Therapy</a>
                     <a href="#" class="dropdown-link">Occupational Therapy</a>
                     <a href="#" class="dropdown-link">Speech Therapy</a>
