@@ -203,7 +203,7 @@
         .dropdown-menu {
             max-height: 0;
             overflow-x: hidden;
-            overflow-y: scroll;
+            overflow-y: auto;
             padding: 0 40px;
             background-color: var(--blue-color);
             transition: all 0.5s ease-in-out;
@@ -214,14 +214,14 @@
 
         .dropdown-menu.active {
             overflow-x: hidden;
+            overflow-y: auto;
             background-color: #112850;
             /* max-height: 200px; */
             max-height: 900px;
             /* Adjust based on your content */
             padding: 10px 40px;
             opacity: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            /* -webkit-overflow-scrolling: touch; */
             margin-top: 10px;
 
         }
