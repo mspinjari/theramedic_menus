@@ -266,6 +266,7 @@
             /* fa chevron down */
             transform: rotate(-180deg);
             color: var(--primary-color);
+
         }
 
         .toggle-active .dropdown-toggle {
@@ -569,7 +570,7 @@
             transition: all 0.5s ease-in-out;
             z-index: 1000;
             border-radius: 10px;
-            margin: 5px auto;
+            margin: 0px auto;
             /* right: 0; */
 
         }
@@ -579,6 +580,7 @@
             position: relative;
             /* padding:  10px 0px 0px 0px; */
         }
+
 
         /* Style for the mega menu columns */
         .mega-menu-column a {
@@ -687,6 +689,7 @@
             transform: rotate(-180deg);
             color: var(--primary-color);
             transition: transform 0.5s ease-in-out;
+
         }
 
         /* Add these styles to your existing CSS */
@@ -776,8 +779,45 @@
             </a>
             <nav class="desktop-navigation">
                 <ul class="desktop-nav-links">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About Us</a></li>
+                    <!-- <li><a href="#">Home</a></li> -->
+                    <!-- <li><a href="#">About Us</a></li> -->
+                    <li class="desktop-dropdown">
+                        <a href="#">About Us</a>
+                        <div class="desktop-dropdown-menu">
+                            <div class="mega-menu-container" style="padding-bottom: 30px;">
+                                <div class="mega-menu-column">
+
+                                    <a href="#">
+                                        <h3 style=" margin-bottom: 20px; font-size: 16px;">
+                                            About Us</h3>
+                                    </a>
+                                </div>
+                                <div class="mega-menu-column">
+                                    <a href="#">
+                                        <h3 style=" margin-bottom: 20px; font-size: 16px;">
+                                            Careers</h3>
+                                    </a>
+
+                                </div>
+                                <div class="mega-menu-column">
+                                    <a href="#">
+                                        <h3 style=" margin-bottom: 20px; font-size: 16px;">
+                                            Blogs</h3>
+                                    </a>
+
+                                </div>
+                                <div class="mega-menu-column">
+                                    <a href="#">
+                                        <h3 style=" margin-bottom: 20px; font-size: 16px; ">
+                                            Contact Us</h3>
+                                    </a>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </li>
                     <li class="desktop-dropdown">
                         <a href="#">Services</a>
                         <div class="desktop-dropdown-menu">
@@ -786,20 +826,20 @@
                                     <a href="#">
                                         <h3
                                             style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px; text-decoration: underline;">
-                                            1 Therapy Services</h3>
+                                            Therapy Services</h3>
                                     </a>
                                     <ul style="list-style: none; padding: 0;">
                                         <li class="desktop-nested-dropdown">
                                             <a href="#" class="desktop-nested-toggle" id="sub-menus-items-1">
-                                                Chronic Pain Management&nbsp;&nbsp;
-                                                <i class="fas fa-chevron-up"></i>
+                                                Physical Therapy&nbsp;&nbsp;
+                                                <i class="fas fa-chevron-down"></i>
                                             </a>
 
                                         </li>
                                         <li class="desktop-nested-dropdown">
                                             <a href="#" class="desktop-nested-toggle" id="sub-menus-items-2">
                                                 Aquatic Therapy&nbsp;&nbsp;
-                                                <i class="fas fa-chevron-up"></i>
+                                                <i class="fas fa-chevron-down"></i>
                                             </a>
 
                                         </li>
@@ -807,15 +847,15 @@
                                         <li class="desktop-nested-dropdown">
                                             <a href="#" class="desktop-nested-toggle" id="sub-menus-items-3">
                                                 Pediatric Therapy&nbsp;&nbsp;
-                                                <i class="fas fa-chevron-up"></i>
+                                                <i class="fas fa-chevron-down"></i>
                                             </a>
 
                                         </li>
 
                                         <li class="desktop-nested-dropdown">
                                             <a href="#" class="desktop-nested-toggle" id="sub-menus-items-4">
-                                                Tele - Rehab&nbsp;&nbsp;
-                                                <i class="fas fa-chevron-up"></i>
+                                                Tele-Rehab&nbsp;&nbsp;
+                                                <i class="fas fa-chevron-down"></i>
                                             </a>
 
                                         </li>
@@ -837,15 +877,15 @@
                                     </ul>
                                 </div>
                                 <div class="mega-menu-column" style="margin-left: -75px;">
-                                    <a href="#">
-                                        <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px;">
-                                            &nbsp;</h3>
-                                    </a>
+
+                                    <h3 style="color: var(--primary-color); margin-bottom: 40px; font-size: 16px;">
+                                        &nbsp;</h3>
+
                                     <ul style="list-style: none; padding: 0;">
-                                        <li><a href="#">Dry Needling Therapy</a></li>
-                                        <li><a href="#">Cupping Therapy</a></li>
-                                        <li><a href="#">Paraffin Wax Therapy</a></li>
-                                        <li><a href="#">Normatech Compression Therapy</a></li>
+                                        <li><a href="#">Vestibular Rehab</a></li>
+                                        <li><a href="#">FCE</a></li>
+                                        <li><a href="#">Stroke Rehab</a></li>
+                                        <li><a href="#">Cognitive Rehab</a></li>
                                     </ul>
                                 </div>
                                 <div class="mega-menu-column">
@@ -869,7 +909,7 @@
                                 <div class="mega-menu-container-2">
                                     <div class="desktop-nested-menu sub-menus-items" id="sub-menus-items-1">
                                         <div>
-                                            <h5>Chronic Pain Management</h5>
+                                            <h5>Physical Therapy</h5>
                                         </div>
 
                                         <div>
@@ -934,10 +974,10 @@
                         <div class="desktop-dropdown-menu">
                             <div class="mega-menu-container" style="padding-bottom: 80px;">
                                 <div class="mega-menu-column">
-                                    <a href="#">
-                                        <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px; ">
+                                 
+                                        <h3 style="color: var(--primary-color); margin-bottom: 40px; font-size: 16px; ">
                                             Area of Pain</h3>
-                                    </a>
+                                  
                                     <ul style="list-style: none; padding: 0;">
                                         <li><a href="#">Head Pain</a></li>
                                         <li><a href="#">Neck Pain</a></li>
@@ -946,10 +986,10 @@
                                     </ul>
                                 </div>
                                 <div class="mega-menu-column">
-                                    <a href="#">
-                                        <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px;">
-                                            &nbsp;</h3>
-                                    </a>
+
+                                    <h3 style="color: var(--primary-color); margin-bottom: 40px; font-size: 16px;">
+                                        &nbsp;</h3>
+
                                     <ul style="list-style: none; padding: 0;">
                                         <li><a href="#">Elbow Pain</a></li>
                                         <li><a href="#">Hip Pain</a></li>
@@ -958,10 +998,10 @@
                                     </ul>
                                 </div>
                                 <div class="mega-menu-column">
-                                    <a href="#">
-                                        <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px;">
-                                            &nbsp;</h3>
-                                    </a>
+
+                                    <h3 style="color: var(--primary-color); margin-bottom: 40px; font-size: 16px;">
+                                        &nbsp;</h3>
+
                                     <ul style="list-style: none; padding: 0;">
                                         <li><a href="#">Knee Pain</a></li>
                                         <li><a href="#">Foot/Ankle Pain</a></li>
@@ -969,10 +1009,10 @@
                                     </ul>
                                 </div>
                                 <div class="mega-menu-column" style="width: 30%;">
-                                    <a href="#">
-                                        <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 16px;">
-                                            &nbsp;</h3>
-                                    </a>
+
+                                    <h3 style="color: var(--primary-color); margin-bottom: 40px; font-size: 16px;">
+                                        &nbsp;</h3>
+
                                     <p style="color: var(--light-gray);">Every pain has a place — let us know where
                                         yours is by selecting from the list of body parts. This helps us understand your
                                         symptoms and create a care plan just for you.</p>
@@ -983,7 +1023,50 @@
 
                         </div>
                     </li>
-                    <li><a href="#">Patient Center</a></li>
+                    <li class="desktop-dropdown">
+                        <a href="#">Patient Center</a>
+                        <div class="desktop-dropdown-menu">
+                            <div class="mega-menu-container" style="padding-bottom: 30px;">
+                                <div class="mega-menu-column">
+                                    <a href="#">
+                                        <h3 style=" margin-bottom: 20px; font-size: 16px; ">
+                                            Patient Center</h3>
+                                    </a>
+                                    <a href="#">
+                                        <h3 style="margin-bottom: 20px; font-size: 16px; ">
+                                            Book Appointment</h3>
+                                    </a>
+                                </div>
+                                <div class="mega-menu-column">
+                                    <a href="#">
+                                        <h3 style=" margin-bottom: 20px; font-size: 16px;">
+                                            Insurance Information</h3>
+                                    </a>
+                                    <a href="#">
+                                        <h3 style=" margin-bottom: 20px; font-size: 16px; ">
+                                            Locations</h3>
+                                    </a>
+                                </div>
+                                <div class="mega-menu-column">
+                                    <a href="#">
+                                        <h3 style=" margin-bottom: 20px; font-size: 16px;">
+                                            Refer-a-Friend</h3>
+                                    </a>
+
+                                </div>
+                                <div class="mega-menu-column">
+                                    <a href="#">
+                                        <h3 style=" margin-bottom: 20px; font-size: 16px;">
+                                            Leave a Review</h3>
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </li>
                     <li><a href="#">More</a></li>
 
                 </ul>
@@ -1015,11 +1098,97 @@
         <div class="close-btn"></div>
         <div class="nav-links">
 
-            <div class="nav-item" style="margin-top: 50px;">
+            <!-- <div class="nav-item" style="margin-top: 50px;">
                 <a href="#" class="nav-link">Home</a>
-            </div>
-            <div class="nav-item">
+            </div> -->
+            <!-- <div class="nav-item">
                 <a href="#" class="nav-link">About Us</a>
+            </div> -->
+            <div class="nav-item dropdown" style="margin-top: 50px;">
+                <a href="#" class="nav-link dropdown-toggle">
+                    About Us
+                    <i class="fas fa-chevron-down"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-link" href="#">About Us</a>
+                    <a class="dropdown-link" href="#">Contact Us</a>
+                    <a class="dropdown-link" href="#">Careers</a>
+                    <a class="dropdown-link" href="#">Blogs</a>
+                </div>
+            </div>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle">
+                    Services
+                    <i class="fas fa-chevron-down"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="#" class="nav-link"
+                        style="margin-left: -20px;text-decoration: underline;font-size: 20px;">Therapy Services</a>
+
+                    <div class="nav-item nested-dropdown">
+                        <a href="#" class="dropdown-link nested-dropdown-toggle">
+                            Physical Therapy&nbsp;&nbsp;&nbsp;
+                            <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="nested-dropdown-menu">
+                            <a href="#" class="dropdown-link">1-Athletic Recovery</a>
+                            <a href="#" class="dropdown-link">2-Senior Rehabilitation</a>
+                        </div>
+                    </div>
+                    <div class="nav-item nested-dropdown">
+                        <a href="#" class="dropdown-link nested-dropdown-toggle">
+                            Aquatic Therapy&nbsp;&nbsp;&nbsp;
+                            <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="nested-dropdown-menu">
+                            <a href="#" class="dropdown-link">1-Athletic Recovery</a>
+                            <a href="#" class="dropdown-link">2-Senior Rehabilitation</a>
+                        </div>
+                    </div>
+                    <div class="nav-item nested-dropdown">
+                        <a href="#" class="dropdown-link nested-dropdown-toggle">
+                            Pediatric Therapy&nbsp;&nbsp;&nbsp;
+                            <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="nested-dropdown-menu">
+                            <a href="#" class="dropdown-link">1-Athletic Recovery</a>
+                            <a href="#" class="dropdown-link">2-Senior Rehabilitation</a>
+                        </div>
+                    </div>
+                    <div class="nav-item nested-dropdown">
+                        <a href="#" class="dropdown-link nested-dropdown-toggle">
+                            Tele-Rehab&nbsp;&nbsp;&nbsp;
+                            <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="nested-dropdown-menu">
+                            <a href="#" class="dropdown-link">1-Athletic Recovery</a>
+                            <a href="#" class="dropdown-link">2-Senior Rehabilitation</a>
+                        </div>
+                    </div>
+
+                    <a href="#" class="nav-link"
+                        style="margin-left: -20px;margin-top: 20px; text-decoration: underline; font-size: 20px;">Rehab
+                        Solutions</a>
+                    <a href="#" class="dropdown-link">Rehab Solutions</a>
+                    <a href="#" class="dropdown-link">Auto Injury Rehab</a>
+                    <a href="#" class="dropdown-link">Work Injury</a>
+                    <a href="#" class="dropdown-link">Sports Injury</a>
+                    <a href="#" class="dropdown-link">Traumatic Brain Injury</a>
+                    <a href="#" class="dropdown-link">Vestibular Rehab</a>
+                    <a href="#" class="dropdown-link">FCE</a>
+                    <a href="#" class="dropdown-link">Stroke Rehab</a>
+                    <a href="#" class="dropdown-link">Cognitive Rehab</a>
+
+                    <a href="#" class="nav-link"
+                        style="margin-left: -20px;margin-top: 20px; text-decoration: underline;font-size: 20px;">Recovery
+                        Programs</a>
+                    <a href="#" class="dropdown-link">Dry Needling Therapy</a>
+                    <a href="#" class="dropdown-link">Cupping Therapy</a>
+                    <a href="#" class="dropdown-link">Paraffin Wax Therapy</a>
+                    <a href="#" class="dropdown-link">Normatech Compression Therapy</a>
+
+
+                </div>
             </div>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle">
@@ -1040,37 +1209,8 @@
 
                 </div>
             </div>
-            <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle">
-                    Services
-                    <i class="fas fa-chevron-down"></i>
-                </a>
-                <div class="dropdown-menu">
-                    <a href="#" class="nav-link"
-                        style="margin-left: -20px;text-decoration: underline;font-size: 20px;">Home</a>
-                    <a href="#" class="dropdown-link">Physical Therapy</a>
-                    <a href="#" class="dropdown-link">Occupational Therapy</a>
-                    <a href="#" class="dropdown-link">Speech Therapy</a>
-                    <a href="#" class="dropdown-link">Pediatric Therapy</a>
 
-                    <a href="#" class="nav-link"
-                        style="margin-left: -20px;margin-top: 20px; text-decoration: underline; font-size: 20px;">Home</a>
-                    <a href="#" class="dropdown-link">Physical Therapy</a>
-                    <a href="#" class="dropdown-link">Occupational Therapy</a>
-                    <a href="#" class="dropdown-link">Speech Therapy</a>
-                    <a href="#" class="dropdown-link">Pediatric Therapy</a>
-
-                    <a href="#" class="nav-link"
-                        style="margin-left: -20px;margin-top: 20px; text-decoration: underline;font-size: 20px;">Home</a>
-                    <a href="#" class="dropdown-link">Physical Therapy</a>
-                    <a href="#" class="dropdown-link">Occupational Therapy</a>
-                    <a href="#" class="dropdown-link">Speech Therapy</a>
-                    <a href="#" class="dropdown-link">Pediatric Therapy</a>
-
-
-                </div>
-            </div>
-            <div class="nav-item dropdown">
+            <!-- <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle">
                     Recovery Program
                     <i class="fas fa-chevron-down"></i>
@@ -1099,28 +1239,19 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle">
-                    Patient Center testing
+                    Patient Center
                     <i class="fas fa-chevron-down"></i>
                 </a>
                 <div class="dropdown-menu">
-
-                    <a href="#" class="dropdown-link">New Patient Forms</a>
+                    <a href="#" class="dropdown-link">Patient Center</a>
                     <a href="#" class="dropdown-link">Insurance Information</a>
-                    <a href="#" class="dropdown-link">Patient Resources</a>
-                    <a href="#" class="dropdown-link">New Patient Forms</a>
-                    <a href="#" class="dropdown-link">Insurance Information</a>
-                    <a href="#" class="dropdown-link">Patient Resources</a>
-                    <a href="#" class="dropdown-link">New Patient Forms</a>
-                    <a href="#" class="dropdown-link">Insurance Information</a>
-                    <a href="#" class="dropdown-link">Patient Resources</a>
-                    <a href="#" class="dropdown-link">New Patient Forms</a>
-                    <a href="#" class="dropdown-link">Insurance Information</a>
-                    <a href="#" class="dropdown-link">Patient Resources</a>
-
-
+                    <a href="#" class="dropdown-link">Refer-a-Friend</a>
+                    <a href="#" class="dropdown-link">Leave a Review</a>
+                    <a href="#" class="dropdown-link">Book Appointment</a>
+                    <a href="#" class="dropdown-link">Locations</a>
                 </div>
             </div>
 
@@ -1302,7 +1433,7 @@
                     if (chevronIcon) {
                         chevronIcon.style.transition = 'transform 0.5s ease-in-out';
                         chevronIcon.style.transform = submenu.classList.contains('active') ?
-                            'rotate(180deg)' : 'rotate(0deg)';
+                            'rotate(-180deg)' : 'rotate(0deg)';
                     }
                 });
             });
