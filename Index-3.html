@@ -112,7 +112,7 @@
             border: none;
             border-radius: 25px;
             padding: 8px 15px;
-            font-weight: 300;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 12px;
@@ -149,7 +149,7 @@
             display: inline-block;
             background-color: var(--blue-color);
             color: var(--white-color);
-            font-weight: 600;
+            font-weight: 500;
             padding: 10px 20px;
             border-radius: 25px;
             text-decoration: none;
@@ -616,7 +616,7 @@
         .desktop-nav-links>li>a {
             color: var(--blue-color);
             text-decoration: none;
-            font-size: 14px;
+            font-size: 18px;
             font-weight: 500;
             display: flex;
             align-items: center;
@@ -856,25 +856,57 @@
             </a>
             <nav class="desktop-navigation">
                 <ul class="desktop-nav-links">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About Us</a></li>
+                    <!-- <li><a href="#">Home</a></li> -->
+                    <!-- <li><a href="#">About Us</a></li> -->
                     <li class="desktop-dropdown">
-                        <a href="#">Therapy Services <!-- <i class="fas fa-chevron-down"></i> --></a>
+                        <a href="#">About Us </a>
                         <ul class="desktop-dropdown-menu">
-                            <li><a href="#">Physical Therapy</a></li>
-                            <li><a href="#">Occupational Therapy</a></li>
-                            <li><a href="#">Speech Therapy</a></li>
-                            <li><a href="#">Pediatric Therapy</a></li>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Blogs</a></li>
+                            <li><a href="#">Contact Us</a></li>
                         </ul>
                     </li>
                     <li class="desktop-dropdown">
-                        <a href="#">Recovery Program <!-- <i class="fas fa-chevron-down"></i> --></a>
+                        <a href="#">Therapy Services </a>
                         <ul class="desktop-dropdown-menu">
-                            <li><a href="#">Post-Surgery Rehabilitation</a></li>
-                            <li><a href="#">Sports Injury Recovery</a></li>
+
                             <li class="desktop-nested-dropdown">
                                 <a href="#" class="desktop-nested-toggle">
-                                    Chronic Pain Management
+                                    Physical Therapy
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                                <ul class="desktop-nested-menu">
+                                    <li><a href="#">Back Pain</a></li>
+                                    <li><a href="#">Joint Pain</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="desktop-nested-dropdown">
+                                <a href="#" class="desktop-nested-toggle">
+                                    COccupational Therapy
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                                <ul class="desktop-nested-menu">
+                                    <li><a href="#">Back Pain</a></li>
+                                    <li><a href="#">Joint Pain</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="desktop-nested-dropdown">
+                                <a href="#" class="desktop-nested-toggle">
+                                    Speech Therapy
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                                <ul class="desktop-nested-menu">
+                                    <li><a href="#">Back Pain</a></li>
+                                    <li><a href="#">Joint Pain</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="desktop-nested-dropdown">
+                                <a href="#" class="desktop-nested-toggle">
+                                    Pediatric Therapy
                                     <i class="fas fa-chevron-right"></i>
                                 </a>
                                 <ul class="desktop-nested-menu">
@@ -885,14 +917,39 @@
                         </ul>
                     </li>
                     <li class="desktop-dropdown">
-                        <a href="#">Patient Center <!-- <i class="fas fa-chevron-down"></i> --></a>
+                        <a href="#">Rehab Solutions</a>
                         <ul class="desktop-dropdown-menu">
-                            <li><a href="#">New Patient Forms</a></li>
-                            <li><a href="#">Insurance Information</a></li>
-                            <li><a href="#">Patient Resources</a></li>
+                            <li><a href="#">Auto Injury Rehab</a></li>
+                            <li><a href="#">Work Injury</a></li>
+                            <li><a href="#">Sports Injury</a></li>
+                            <li><a href="#">Traumatic Brain Injury</a></li>
+                            <li><a href="#">Vestibular Rehab</a></li>
+                            <li><a href="#">FCE</a></li>
+                            <li><a href="#">Stroke Rehab</a></li>
+                            <li><a href="#">Cognitive Rehab</a></li>
                         </ul>
                     </li>
-
+                    <li class="desktop-dropdown">
+                        <a href="#">Recovery Programs</a>
+                        <ul class="desktop-dropdown-menu">
+                            <li><a href="#">Dry Needling Therapy</a></li>
+                            <li><a href="#">Cupping Therapy</a></li>
+                            <li><a href="#">Paraffin Wax Therapy</a></li>
+                            <li><a href="#">Normatech Compression Therapy</a></li>
+                        </ul>
+                    </li>
+                    <li class="desktop-dropdown">
+                        <a href="#">Patient Center </a>
+                        <ul class="desktop-dropdown-menu">
+                            <a href="#">Patient Center</a>
+                            <a href="#">Insurance Information</a>
+                            <a href="#">Refer-a-Friend</a>
+                            <a href="#">Leave a Review</a>
+                            <a href="#">Book Appointment</a>
+                            <a href="#">Locations</a>
+                        </ul>
+                    </li>
+                    <!-- <li><a href="#">More</a></li> -->
                 </ul>
 
             </nav>
