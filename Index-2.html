@@ -213,6 +213,7 @@
             overflow-x: hidden;
             overflow-y: auto;
             padding: 0 40px;
+          
             background-color: var(--light-gray);
             transition: all 0.5s ease-in-out;
             opacity: 0;
@@ -222,6 +223,7 @@
         .dropdown-menu.active {
             overflow-x: hidden;
             max-height: 500px;
+            
             /* Adjust based on your content */
             padding: 30px 40px;
             opacity: 1;
@@ -687,13 +689,15 @@
         .nested-dropdown-menu {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out;
+            transition: all 0.5s ease-in-out;
             padding-left: 30px;
             background-color: var(--white-color);
+            opacity: 0;
         }
 
         .nested-dropdown-menu.active {
             max-height: 200px;
+            opacity: 1;
             padding: 10px 20px 10px 30px;
             border-top: 2px solid var(--primary-color);
         }

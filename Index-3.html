@@ -713,13 +713,15 @@
         .nested-dropdown-menu {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out;
+            opacity: 0;
+            transition: all 0.5s ease-in-out;
             padding-left: 30px;
             background-color: var(--white-color);
             color: var(--blue-color);
         }
 
         .nested-dropdown-menu.active {
+            opacity: 1;
             max-height: 200px;
             padding: 10px 20px 10px 30px;
         }
