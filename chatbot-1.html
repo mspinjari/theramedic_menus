@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #pt-chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+        }
+
+        .pt-chatbot-wrapper {
+            width: 300px;
+        }
+
+        .pt-chatbot {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .pt-chatbot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #3B82F6;
+            color: white;
+        }
+
+        .pt-chatbot-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .pt-close-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .pt-chatbot-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pt-bot-message,
+        .pt-user-message {
+            max-width: 80%;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .pt-bot-message {
+            background-color: #E5F2FF;
+            color: #333;
+            align-self: flex-start;
+        }
+
+        .pt-user-message {
+            background-color: #3B82F6;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .pt-chatbot-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .pt-chatbot-input input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .pt-send-button {
+            background-color: #3B82F6;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .pt-chatbot-toggle {
+            background-color: #3B82F6;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="pt-chatbot-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Configuration
+            const LOCATIONS = {
+                STAFFORD: {
+                    name: "STAFFORD/SUGAR LAND",
+                    address: "12603 Southwest Fwy Ste 101, Stafford, TX 77477",
+                    zip: "77477"
+                },
+                SPRING: {
+                    name: "SPRING",
+                    address: "17320 Red Oak Dr, Ste 102, Houston, TX 77090",
+                    zip: "77090"
+                },
+                KATY: {
+                    name: "KATY",
+                    address: "24217 Kingsland Blvd, Katy, TX 77494",
+                    zip: "77494"
+                },
+                SOUTHFIELD: {
+                    name: "SOUTHFIELD",
+                    address: "26400 W 12 Mile Rd Ste 25, Southfield, MI 48034",
+                    zip: "48034"
+                }
+            };
+
+            // Define pain areas (9 areas as provided)
+            const PAIN_AREAS = [
+                "head pain",
+                "back pain",
+                "neck pain",
+                "hip pain",
+                "elbow pain",
+                "pelvic floor",
+                "hand/wrist pain",
+                "knee pain",
+                "foot/ankle pain"
+            ];
+
+            // FAQ responses
+            const FAQs = {
+                greeting: [
+                    "Hello! Welcome to our Physical Therapy Clinic. How can I help you today?",
+                    "Hi there! I'm here to assist you with information about our physical therapy services."
+                ],
+                services: [
+                    "We offer a range of physical therapy services including:",
+                    "- Orthopedic Rehabilitation",
+                    "- Sports Injury Treatment",
+                    "- Post-Surgical Recovery",
+                    "- Chronic Pain Management",
+                    "- Pediatric Physical Therapy"
+                ],
+                hours: [
+                    "Our clinic hours are:",
+                    "Monday-Friday: 9:00 AM - 6:00 PM",
+                    "Saturday: Closed",
+                    "Sunday: Closed"
+                ],
+                insurance: [
+                    "We accept most major insurance providers including:",
+                    "- Blue Cross Blue Shield",
+                    "- Aetna",
+                    "- United Healthcare",
+                    "- Cigna",
+                    "- Medicare"
+                ],
+                locations: [
+                    "We have clinics in these locations:",
+                    "1. STAFFORD/SUGAR LAND:<br> 12603 Southwest Fwy Ste 101,<br> Stafford, TX 77477",
+                    "2. SPRING:<br> 17320 Red Oak Dr, Ste 102,<br> Houston, TX 77090",
+                    "3. KATY:<br>24217 Kingsland Blvd,<br> Katy, TX 77494",
+                    "4. SOUTHFIELD:<br> 26400 W 12 Mile Rd Ste 25,<br> Southfield, MI 48034"
+                ]
+            };
+
+            // Spelling correction map
+            const SPELLING_CORRECTIONS = {
+                "physio": "physical therapy",
+                "physioterapy": "physical therapy",
+                "fisiotherapy": "physical therapy",
+                "fisiotherapi": "physical therapy",
+                "physiotherapy": "physical therapy",
+                "therapy": "physical therapy",
+                "therapist": "physical therapist",
+                "appointment": "appointment",
+                "appoitment": "appointment",
+                "apointment": "appointment",
+                "apoinment": "appointment",
+                "schedual": "schedule",
+                "shedule": "schedule",
+                "scedule": "schedule",
+                "scehdule": "schedule",
+                "insuranse": "insurance",
+                "insurence": "insurance",
+                "insurnce": "insurance",
+                "offise": "office",
+                "ofise": "office",
+                "ofice": "office",
+                "locatoin": "location",
+                "lokation": "location",
+                "addres": "address",
+                "time": "hours",
+                "working": "hours",
+                "local visit": "hours",
+                "tim": "hours",
+                "clock": "hours",
+                "tame": "hours",
+                "tam": "hours"
+            };
+
+            // Create chatbot HTML structure
+            function createChatbotHTML() {
+                const chatbotContainer = document.getElementById('pt-chatbot-container');
+                if (!chatbotContainer) return;
+
+                // Create the HTML structure
+                chatbotContainer.innerHTML = `
+            <div class="pt-chatbot-wrapper">
+              <div class="pt-chatbot" style="display: none;">
+                <div class="pt-chatbot-header">
+                  <h3>PT Clinic Assistance</h3>
+                  <button class="pt-close-button">&times;</button>
+                </div>
+                <div class="pt-chatbot-messages"></div>
+                <div class="pt-chatbot-input">
+                  <input type="text" placeholder="Type your message...">
+                  <button class="pt-send-button">Send</button>
+                </div>
+              </div>
+              <button class="pt-chatbot-toggle">Chat</button>
+            </div>
+          `;
+
+                // Initialize chatbot functionality
+                initializeChatbot();
+            }
+
+            // Initialize chatbot functionality
+            function initializeChatbot() {
+                const chatbot = document.querySelector('.pt-chatbot');
+                const toggleButton = document.querySelector('.pt-chatbot-toggle');
+                const closeButton = document.querySelector('.pt-close-button');
+                const sendButton = document.querySelector('.pt-send-button');
+                const inputField = document.querySelector('.pt-chatbot-input input');
+                const messagesContainer = document.querySelector('.pt-chatbot-messages');
+
+                // Chat state
+                let appointmentStage = null;
+                let appointmentDetails = {
+                    name: '',
+                    phone: '',
+                    email: '',
+                    location: ''
+                };
+
+                // Toggle chatbot visibility
+                toggleButton.addEventListener('click', () => {
+                    chatbot.style.display = 'flex';
+                    toggleButton.style.display = 'none';
+
+                    // Add initial greeting if there are no messages
+                    if (messagesContainer.children.length === 0) {
+                        const randomGreeting = FAQs.greeting[Math.floor(Math.random() * FAQs.greeting.length)];
+                        addBotMessage(randomGreeting);
+                    }
+                });
+
+                // Close chatbot
+                closeButton.addEventListener('click', () => {
+                    chatbot.style.display = 'none';
+                    toggleButton.style.display = 'block';
+                });
+
+                // Send message
+                sendButton.addEventListener('click', sendUserMessage);
+
+                // Send message on Enter key
+                inputField.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        sendUserMessage();
+                    }
+                });
+
+                // Function to send user message
+                function sendUserMessage() {
+                    const message = inputField.value.trim();
+                    if (!message) return;
+
+                    // Add user message to chat
+                    addUserMessage(message);
+
+                    // Handle user message
+                    handleUserMessage(message);
+
+                    // Clear input field
+                    inputField.value = '';
+                }
+
+                // Add bot message to chat
+                function addBotMessage(message) {
+                    if (Array.isArray(message)) {
+                        message.forEach(msg => {
+                            const messageElement = document.createElement('div');
+                            messageElement.className = 'pt-bot-message';
+                            messageElement.textContent = msg;
+                            messagesContainer.appendChild(messageElement);
+                        });
+                    } else {
+                        const messageElement = document.createElement('div');
+                        messageElement.className = 'pt-bot-message';
+                        messageElement.textContent = message;
+                        messagesContainer.appendChild(messageElement);
+                    }
+
+                    // Scroll to bottom
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+
+                // Add user message to chat
+                function addUserMessage(message) {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'pt-user-message';
+                    messageElement.textContent = message;
+                    messagesContainer.appendChild(messageElement);
+
+                    // Scroll to bottom
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+
+                // Correct spelling in user message
+                function correctSpelling(text) {
+                    let correctedText = text.toLowerCase();
+
+                    // Apply spelling corrections
+                    Object.keys(SPELLING_CORRECTIONS).forEach(misspelled => {
+                        const regex = new RegExp(`\\b${misspelled}\\b`, 'gi');
+                        correctedText = correctedText.replace(regex, SPELLING_CORRECTIONS[misspelled]);
+                    });
+
+                    return correctedText;
+                }
+
+                // Handle user message
+                function handleUserMessage(message) {
+                    // Apply spelling correction
+                    const correctedMessage = correctSpelling(message);
+                    const lowerMessage = correctedMessage.toLowerCase();
+
+                    // If not in appointment flow, check for pain area inquiries
+                    if (!appointmentStage) {
+                        for (const pain of PAIN_AREAS) {
+                            if (lowerMessage.includes(pain)) {
+                                addBotMessage(`Yes, we treat ${pain}. Kindly schedule an appointment.`);
+                                return;
+                            }
+                        }
+                    }
+
+                    // Handle appointment flow
+                    if (appointmentStage) {
+                        handleAppointmentFlow(message);
+                        return;
+                    }
+
+                    // Handle FAQs
+                    if (lowerMessage.includes('service') || lowerMessage.includes('what do you do')) {
+                        addBotMessage(FAQs.services);
+                    } else if (lowerMessage.includes('hour') || lowerMessage.includes('open')) {
+                        addBotMessage(FAQs.hours);
+                    } else if (lowerMessage.includes('insurance') || lowerMessage.includes('pay')) {
+                        addBotMessage(FAQs.insurance);
+                    } else if (lowerMessage.includes('location') || lowerMessage.includes('address') || lowerMessage.includes('where')) {
+                        addBotMessage(FAQs.locations);
+                    } else if (lowerMessage.includes('appointment') || lowerMessage.includes('schedule')) {
+                        startAppointmentScheduling();
+                    } else {
+                        addBotMessage([
+                            "I'm not sure I understand. Could you rephrase that?",
+                            "Would you like to schedule an appointment or learn about our services?"
+                        ]);
+                    }
+                }
+
+                // Start appointment scheduling
+                function startAppointmentScheduling() {
+                    appointmentStage = 'name';
+                    addBotMessage("Great! Let's schedule your appointment. What is your full name?");
+                }
+
+                // Validate US phone number
+                function validatePhoneNumber(phone) {
+                    const digits = phone.replace(/\D/g, '');
+                    return digits.length === 10;
+                }
+
+                // Format phone number
+                function formatPhoneNumber(phone) {
+                    const digits = phone.replace(/\D/g, '');
+                    if (digits.length !== 10) return phone;
+
+                    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+                }
+
+                // Validate email
+                function validateEmail(email) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    return emailRegex.test(email);
+                }
+
+                // Handle appointment flow
+                function handleAppointmentFlow(message) {
+                    switch (appointmentStage) {
+                        case 'name':
+                            appointmentDetails.name = message;
+                            appointmentStage = 'phone';
+                            addBotMessage(`Thank you, ${message}. What is your phone number?`);
+                            break;
+
+                        case 'phone':
+                            if (!validatePhoneNumber(message)) {
+                                addBotMessage("Please enter a valid 10-digit US phone number (e.g., 1234567890 or (123) 456-7890).");
+                            } else {
+                                const formattedPhone = formatPhoneNumber(message);
+                                appointmentDetails.phone = formattedPhone;
+                                appointmentStage = 'email';
+                                addBotMessage("What is your email address?");
+                            }
+                            break;
+
+                        case 'email':
+                            if (!validateEmail(message)) {
+                                addBotMessage("Please enter a valid email address (e.g., name@example.com).");
+                            } else {
+                                appointmentDetails.email = message;
+                                appointmentStage = 'location';
+                                addBotMessage("Please select one of our locations for your appointment:");
+                                displayLocationSelect();
+                            }
+                            break;
+
+                        case 'location':
+                            // If the user types anything during location selection, prompt them to use the dropdown.
+                            addBotMessage("Please select a location from the dropdown menu above.");
+                            break;
+                    }
+                }
+
+                // Display the location selection dropdown using a <select> element
+                function displayLocationSelect() {
+                    // Hide the standard text input to prevent conflicting entries
+                    inputField.style.display = 'none';
+
+                    // Create the select element and a container for it
+                    const selectElement = document.createElement('select');
+                    selectElement.id = 'location-select';
+                    // Add a default option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = "";
+                    defaultOption.text = "Select a location...";
+                    selectElement.appendChild(defaultOption);
+
+                    // Populate select options from LOCATIONS
+                    for (const key in LOCATIONS) {
+                        if (LOCATIONS.hasOwnProperty(key)) {
+                            const option = document.createElement('option');
+                            option.value = key;
+                            option.text = `${LOCATIONS[key].name} (${LOCATIONS[key].address})`;
+                            selectElement.appendChild(option);
+                        }
+                    }
+
+                    // Wrap the select element in a container styled as a bot message
+                    const selectContainer = document.createElement('div');
+                    selectContainer.className = 'pt-bot-message';
+                    selectContainer.appendChild(selectElement);
+                    messagesContainer.appendChild(selectContainer);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                    // Listen for the change event on the select element
+                    selectElement.addEventListener('change', function () {
+                        const selectedKey = selectElement.value;
+                        if (selectedKey && LOCATIONS[selectedKey]) {
+                            completeAppointmentScheduling(LOCATIONS[selectedKey]);
+                            // Remove the select element and re-display the text input
+                            selectContainer.remove();
+                            inputField.style.display = 'block';
+                        }
+                    });
+                }
+
+                // Complete appointment scheduling
+                function completeAppointmentScheduling(location) {
+                    addBotMessage([
+                        "Thank you for providing your details!",
+                        `Name: ${appointmentDetails.name}`,
+                        `Phone: ${appointmentDetails.phone}`,
+                        `Email: ${appointmentDetails.email}`,
+                        `Location: ${location.name}`,
+                        `Address: ${location.address}`,
+                        "Our team will contact you soon to confirm your appointment details."
+                    ]);
+
+                    // Submit appointment to server
+                    submitAppointment(appointmentDetails);
+
+                    // Reset appointment stage
+                    appointmentStage = null;
+                }
+
+                // Submit appointment to server
+                function submitAppointment(details) {
+                    const formData = new FormData();
+                    formData.append('action', 'pt_chatbot_appointment');
+                    formData.append('nonce', ptChatbotData.nonce);
+                    formData.append('name', details.name);
+                    formData.append('phone', details.phone);
+                    formData.append('email', details.email);
+                    formData.append('location', details.location);
+                    formData.append('address', details.address);
+
+                    fetch(ptChatbotData.ajaxurl, {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Appointment submitted:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error submitting appointment:', error);
+                        });
+                }
+            }
+
+            // Initialize chatbot
+            createChatbotHTML();
+        });
+
+    </script>
+</body>
+
+</html>

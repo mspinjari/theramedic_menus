@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #pt-chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+        }
+
+        .pt-chatbot-wrapper {
+            width: 300px;
+        }
+
+        .pt-chatbot {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .pt-chatbot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #3B82F6;
+            color: white;
+        }
+
+        .pt-chatbot-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .pt-close-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .pt-chatbot-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pt-bot-message,
+        .pt-user-message {
+            max-width: 80%;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .pt-bot-message {
+            background-color: #E5F2FF;
+            color: #333;
+            align-self: flex-start;
+        }
+
+        .pt-user-message {
+            background-color: #3B82F6;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .pt-chatbot-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .pt-chatbot-input input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .pt-send-button {
+            background-color: #3B82F6;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .pt-chatbot-toggle {
+            background-color: #3B82F6;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .pt-bot-message button {
+            transition: opacity 0.2s;
+            width: 100%;
+            text-align: left;
+        }
+
+        .pt-bot-message button:hover {
+            opacity: 0.9;
+        }
+
+        form label {
+            font-size: 14px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        form textarea {
+            resize: vertical;
+            min-height: 60px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        form input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .end-chat-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .end-chat-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .end-chat-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="pt-chatbot-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Configuration
+            const LOCATIONS = {
+                STAFFORD: {
+                    name: "STAFFORD/SUGAR LAND",
+                    address: "12603 Southwest Fwy Ste 101, Stafford, TX 77477",
+                    zip: "77477"
+                },
+                SPRING: {
+                    name: "SPRING",
+                    address: "17320 Red Oak Dr, Ste 102, Houston, TX 77090",
+                    zip: "77090"
+                },
+                KATY: {
+                    name: "KATY",
+                    address: "24217 Kingsland Blvd, Katy, TX 77494",
+                    zip: "77494"
+                },
+                SOUTHFIELD: {
+                    name: "SOUTHFIELD",
+                    address: "26400 W 12 Mile Rd Ste 25, Southfield, MI 48034",
+                    zip: "48034"
+                }
+            };
+
+            // Enhanced pain areas with more detailed information and treatment descriptions
+            const PAIN_AREAS = {
+                "head_pain": {
+                    display: "Head Pain",
+                    icon: "🧠",
+                    treatments: ["Manual therapy", "Exercise therapy", "Posture correction"],
+                    description: "Our specialists address headaches, migraines, and TMJ disorders with targeted treatments."
+                },
+                "back_pain": {
+                    display: "Back Pain",
+                    icon: "⬆️",
+                    treatments: ["Spinal mobilization", "Core strengthening", "Postural education"],
+                    description: "Our comprehensive approach targets both relief and prevention of recurring back pain."
+                },
+                "neck_pain": {
+                    display: "Neck Pain",
+                    icon: "↕️",
+                    treatments: ["Manual therapy", "Therapeutic exercise", "Ergonomic training"],
+                    description: "We address pain from tech neck, whiplash, and chronic conditions with specialized care."
+                },
+                "hip_pain": {
+                    display: "Hip Pain",
+                    icon: "🦵",
+                    treatments: ["Joint mobilization", "Strengthening", "Movement retraining"],
+                    description: "Our therapists specialize in improving mobility and reducing hip discomfort."
+                },
+                "elbow_pain": {
+                    display: "Elbow Pain",
+                    icon: "💪",
+                    treatments: ["Manual therapy", "Eccentric training", "Activity modification"],
+                    description: "We provide effective treatment for tennis elbow, golfer's elbow and other conditions."
+                },
+                "pelvic_floor": {
+                    display: "Pelvic Floor",
+                    icon: "⚠️",
+                    treatments: ["Muscle retraining", "Biofeedback", "Behavioral strategies"],
+                    description: "Our specialized therapists address pelvic pain and dysfunction with expert care."
+                },
+                "hand_wrist_pain": {
+                    display: "Hand/Wrist Pain",
+                    icon: "✋",
+                    treatments: ["Joint mobilization", "Nerve gliding", "Therapeutic exercise"],
+                    description: "We treat carpal tunnel, arthritis, and post-surgical conditions of the hand and wrist."
+                },
+                "knee_pain": {
+                    display: "Knee Pain",
+                    icon: "🦿",
+                    treatments: ["Joint mobilization", "Strengthening", "Movement retraining"],
+                    description: "Our therapists address injuries, arthritis, and post-surgical recovery with specialized care."
+                },
+                "foot_ankle_pain": {
+                    display: "Foot/Ankle Pain",
+                    icon: "👣",
+                    treatments: ["Joint mobilization", "Balance training", "Gait analysis"],
+                    description: "We provide effective treatment for plantar fasciitis, sprains, and chronic instability."
+                }
+            };
+
+            // Optimized FAQ responses - more conversational and concise
+            const FAQs = {
+                greeting: [
+                    "👋 Hi there! I'm your Theramedic Rehab! assistant. How can I help you feel better today?",
+                    "🤖 Welcome to our Theramedic Rehab! What brings you in today?"
+                ],
+                services: [
+                    "We offer specialized treatment for:",
+                    "• 🦴 Joint & muscle rehabilitation",
+                    "• 🏃‍♂️ Sports injuries",
+                    "• 🩺 Post-surgery recovery",
+                    "• 😌 Chronic pain management",
+                    "• 👶 Pediatric therapy",
+                    "Ready to feel better? Let's set up your appointment!"
+                ],
+                hours: [
+                    "⏰ We're here for you:",
+                    "Monday-Friday: 9:00 AM - 6:00 PM",
+                    "Weekends: Closed"
+                ],
+                insurance: [
+                    "We accept most major insurance plans including Blue Cross, Aetna, UnitedHealthcare, Cigna, and Medicare.",
+                    "To check your coverage, I'll need a few quick details."
+                ],
+                locations: [
+                    "We have 4 convenient locations to serve you:",
+                    "🏢 STAFFORD/SUGAR LAND: 12603 Southwest Fwy",
+                    "🏢 SPRING: 17320 Red Oak Dr",
+                    "🏢 KATY: 24217 Kingsland Blvd",
+                    "🏢 SOUTHFIELD: 26400 W 12 Mile Rd",
+                    "Which is most convenient for you?"
+                ],
+                painResponse: [
+                    "We specialize in treating your specific condition. Our therapists have extensive experience with this type of pain.",
+                    "Let's schedule you with the right specialist who can help you get relief quickly."
+                ]
+            };
+
+            // Spelling correction map
+            const SPELLING_CORRECTIONS = {
+                "physio": "physical therapy",
+                "physioterapy": "physical therapy",
+                "fisiotherapy": "physical therapy",
+                "fisiotherapi": "physical therapy",
+                "physiotherapy": "physical therapy",
+                "therapy": "physical therapy",
+                "therapist": "physical therapist",
+                "appointment": "appointment",
+                "appoitment": "appointment",
+                "apointment": "appointment",
+                "apoinment": "appointment",
+                "schedual": "schedule",
+                "shedule": "schedule",
+                "scedule": "schedule",
+                "scehdule": "schedule",
+                "insuranse": "insurance",
+                "insurence": "insurance",
+                "insurnce": "insurance",
+                "offise": "office",
+                "ofise": "office",
+                "ofice": "office",
+                "locatoin": "location",
+                "lokation": "location",
+                "addres": "address",
+                "time": "hours",
+                "working": "hours",
+                "local visit": "hours",
+                "tim": "hours",
+                "clock": "hours",
+                "tame": "hours",
+                "tam": "hours",
+                "headake": "head pain",
+                "migraines": "head pain",
+                "migrane": "head pain",
+                "backpain": "back pain",
+                "sore back": "back pain",
+                "backache": "back pain",
+                "neckpain": "neck pain",
+                "sore neck": "neck pain"
+            };
+
+            // Generate pain area buttons
+            function generatePainAreaButtons(detectedAreas = null) {
+                // If specific areas were detected, prioritize those
+                if (detectedAreas && detectedAreas.length > 0) {
+                    return detectedAreas.map(({ key, data }) => ({
+                        text: `${data.icon} ${data.display}`,
+                        type: "pain",
+                        area: key,
+                        description: data.description
+                    }));
+                }
+
+                // Otherwise show all pain areas (limited to 5 at a time for UI purposes)
+                return Object.entries(PAIN_AREAS)
+                    .slice(0, 5) // Limit to first 5 areas for better UI
+                    .map(([key, data]) => ({
+                        text: `${data.icon} ${data.display}`,
+                        type: "pain",
+                        area: key,
+                        description: data.description
+                    }));
+            }
+
+            // Button options with improved text
+            const BUTTON_OPTIONS = {
+                main: [
+                    { text: "📅 Book Appointment", type: "appointment" },
+                    { text: "👩‍⚕️ Speak with Therapist", type: "staff" },
+                    { text: "❓ Ask PT Questions", type: "questions" },
+                    { text: "🏥 Clinic Info", type: "locations" }
+                ],
+                painAreas: generatePainAreaButtons()
+            };
+
+            // Create chatbot HTML structure
+            function createChatbotHTML() {
+                const chatbotContainer = document.getElementById('pt-chatbot-container');
+                if (!chatbotContainer) return;
+
+                // Create the HTML structure
+                chatbotContainer.innerHTML = `
+        <div class="pt-chatbot-wrapper">
+          <div class="pt-chatbot" style="display: none;">
+            <div class="pt-chatbot-header">
+              <h3>PT Clinic Assistance</h3>
+              <button class="pt-close-button">&times;</button>
+            </div>
+            <div class="pt-chatbot-messages"></div>
+            <div class="pt-chatbot-input">
+              <input type="text" placeholder="Type your message...">
+              <button class="pt-send-button">Send</button>
+            </div>
+          </div>
+          <button class="pt-chatbot-toggle">Chat</button>
+        </div>
+    `;
+
+                // Add end chat modal
+                const endChatModal = document.createElement('div');
+                endChatModal.className = 'end-chat-modal';
+                endChatModal.innerHTML = `
+        <div class="end-chat-content">
+            <h3>Do you want to leave current chat?</h3>
+            <div class="end-chat-buttons">
+                <button id="confirmEndChat" class="pt-send-button">END CHAT</button>
+                <button id="cancelEndChat" style="background-color: #ddd">Cancel</button>
+            </div>
+        </div>
+    `;
+                document.body.appendChild(endChatModal);
+
+                // Add typing indicator style
+                const style = document.createElement('style');
+                style.textContent = `
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            float: left;
+            margin: 0 1px;
+            background-color: #3B82F6;
+            display: block;
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+        .typing-indicator span:nth-of-type(1) {
+            animation: 1s blink infinite 0.3333s;
+        }
+        .typing-indicator span:nth-of-type(2) {
+            animation: 1s blink infinite 0.6666s;
+        }
+        .typing-indicator span:nth-of-type(3) {
+            animation: 1s blink infinite 0.9999s;
+        }
+        @keyframes blink {
+            50% {
+                opacity: 1;
+            }
+        }
+    `;
+                document.head.appendChild(style);
+
+                // Initialize chatbot functionality
+                initializeChatbot();
+            }
+
+            // Initialize chatbot functionality
+            function initializeChatbot() {
+                const chatbot = document.querySelector('.pt-chatbot');
+                const toggleButton = document.querySelector('.pt-chatbot-toggle');
+                const closeButton = document.querySelector('.pt-close-button');
+                const sendButton = document.querySelector('.pt-send-button');
+                const inputField = document.querySelector('.pt-chatbot-input input');
+                const messagesContainer = document.querySelector('.pt-chatbot-messages');
+
+                // Chat state
+                let appointmentStage = null;
+                let appointmentDetails = {
+                    name: '',
+                    phone: '',
+                    email: '',
+                    location: ''
+                };
+
+                // Add conversation state
+                let conversationState = {
+                    currentFlow: null,
+                    lastPainArea: null,
+                    formData: {}
+                };
+
+                // Toggle chatbot visibility
+                toggleButton.addEventListener('click', () => {
+                    chatbot.style.display = 'flex';
+                    toggleButton.style.display = 'none';
+
+                    // Add initial greeting if there are no messages
+                    if (messagesContainer.children.length === 0) {
+                        const randomGreeting = FAQs.greeting[Math.floor(Math.random() * FAQs.greeting.length)];
+                        showTypingIndicator()
+                            .then(() => addBotMessage(randomGreeting))
+                            .then(() => showOptions(BUTTON_OPTIONS.main));
+                    }
+                });
+
+                // Close chatbot
+                closeButton.addEventListener('click', () => {
+                    document.querySelector('.end-chat-modal').style.display = 'flex';
+                });
+
+                // Add end chat handlers
+                document.getElementById('cancelEndChat')?.addEventListener('click',
+                    () => document.querySelector('.end-chat-modal').style.display = 'none');
+                document.getElementById('confirmEndChat')?.addEventListener('click', () => {
+                    chatbot.style.display = 'none';
+                    toggleButton.style.display = 'block';
+                    document.querySelector('.end-chat-modal').style.display = 'none';
+                    clearConversation();
+                });
+
+                // Send message
+                sendButton.addEventListener('click', sendUserMessage);
+
+                // Send message on Enter key
+                inputField.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        sendUserMessage();
+                    }
+                });
+
+                // Function to send user message
+                function sendUserMessage() {
+                    const message = inputField.value.trim();
+                    if (!message) return;
+
+                    // Add user message to chat
+                    addUserMessage(message);
+
+                    // Show typing indicator before response
+                    showTypingIndicator().then(() => {
+                        // Handle user message
+                        handleUserMessage(message);
+                    });
+
+                    // Clear input field
+                    inputField.value = '';
+                }
+
+                // Add typing indicator
+                function showTypingIndicator() {
+                    return new Promise(resolve => {
+                        const indicator = document.createElement('div');
+                        indicator.className = 'typing-indicator pt-bot-message';
+                        indicator.innerHTML = '<span></span><span></span><span></span>';
+                        messagesContainer.appendChild(indicator);
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                        // Remove typing indicator after random time between 1-2 seconds
+                        setTimeout(() => {
+                            indicator.remove();
+                            resolve();
+                        }, Math.random() * 1000 + 1000);
+                    });
+                }
+
+                // Add bot message with typing effect
+                function addBotMessage(message, speed = 30) {
+                    if (Array.isArray(message)) {
+                        let chainPromise = Promise.resolve();
+                        message.forEach(msg => {
+                            chainPromise = chainPromise.then(() => {
+                                return new Promise(resolve => {
+                                    const messageElement = document.createElement('div');
+                                    messageElement.className = 'pt-bot-message';
+                                    messagesContainer.appendChild(messageElement);
+
+                                    // Type out the message
+                                    typeText(messageElement, msg, speed).then(resolve);
+                                });
+                            });
+                        });
+                        return chainPromise;
+                    } else {
+                        return new Promise(resolve => {
+                            const messageElement = document.createElement('div');
+                            messageElement.className = 'pt-bot-message';
+                            messagesContainer.appendChild(messageElement);
+
+                            // Type out the message
+                            typeText(messageElement, message, speed).then(resolve);
+                        });
+                    }
+                }
+
+                // Type text effect
+                function typeText(element, text, speed) {
+                    return new Promise(resolve => {
+                        let i = 0;
+                        const interval = setInterval(() => {
+                            if (i < text.length) {
+                                element.textContent += text.charAt(i);
+                                i++;
+                                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                            } else {
+                                clearInterval(interval);
+                                resolve();
+                            }
+                        }, speed);
+                    });
+                }
+
+                // Add user message to chat
+                function addUserMessage(message) {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'pt-user-message';
+                    messageElement.textContent = message;
+                    messagesContainer.appendChild(messageElement);
+
+                    // Scroll to bottom
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+
+                // Correct spelling in user message
+                function correctSpelling(text) {
+                    let correctedText = text.toLowerCase();
+
+                    // Apply spelling corrections
+                    Object.keys(SPELLING_CORRECTIONS).forEach(misspelled => {
+                        const regex = new RegExp(`\\b${misspelled}\\b`, 'gi');
+                        correctedText = correctedText.replace(regex, SPELLING_CORRECTIONS[misspelled]);
+                    });
+
+                    return correctedText;
+                }
+
+                // Enhanced pain detection function
+                function detectPainAreas(message) {
+                    const lowerMessage = message.toLowerCase();
+                    const detectedAreas = new Set();
+
+                    // Common pain-related words
+                    const painWords = ['pain', 'ache', 'hurt', 'sore', 'stiff', 'discomfort'];
+                    const hasGeneralPain = painWords.some(word => lowerMessage.includes(word));
+
+                    // Direct area mentions
+                    Object.entries(PAIN_AREAS).forEach(([key, data]) => {
+                        const searchTerms = [
+                            key.replace('_', ' '),
+                            data.display.toLowerCase(),
+                            ...data.treatments.map(t => t.toLowerCase())
+                        ];
+                        if (searchTerms.some(term => lowerMessage.includes(term))) {
+                            detectedAreas.add({ key, data });
+                        }
+                    });
+
+                    // Specific condition mapping
+                    const conditionMap = {
+                        'head_pain': ['headache', 'migraine', 'tmj', 'jaw', 'temple'],
+                        'back_pain': ['sciatica', 'lumbar', 'spine', 'spinal', 'lower back', 'upper back'],
+                        'neck_pain': ['whiplash', 'cervical', 'tech neck', 'shoulder'],
+                        'hand_wrist_pain': ['carpal', 'tunnel', 'wrist', 'finger', 'thumb'],
+                        'foot_ankle_pain': ['heel', 'plantar', 'fasciitis', 'arch', 'ankle'],
+                        'knee_pain': ['acl', 'mcl', 'meniscus', 'patella', 'runner'],
+                        'hip_pain': ['bursitis', 'arthritis', 'groin'],
+                        'elbow_pain': ['tennis elbow', 'golfer', 'tendonitis'],
+                        'pelvic_floor': ['incontinence', 'bladder', 'prolapse']
+                    };
+
+                    // Check for specific conditions
+                    Object.entries(conditionMap).forEach(([key, terms]) => {
+                        if (terms.some(term => lowerMessage.includes(term))) {
+                            detectedAreas.add({ key, data: PAIN_AREAS[key] });
+                        }
+                    });
+
+                    return Array.from(detectedAreas);
+                }
+
+                // Handle user message
+                function handleUserMessage(message) {
+                    // Apply spelling correction
+                    const correctedMessage = correctSpelling(message);
+                    const lowerMessage = correctedMessage.toLowerCase();
+
+                    // Check for pain mentions first
+                    const detectedPainAreas = detectPainAreas(lowerMessage);
+                    if (detectedPainAreas.length > 0 && !appointmentStage) {
+                        handlePainMessage(detectedPainAreas);
+                        return;
+                    }
+
+                    // Handle appointment flow
+                    if (appointmentStage) {
+                        handleAppointmentFlow(message);
+                        return;
+                    }
+
+                    // Handle conversation flow
+                    if (conversationState.currentFlow) {
+                        handleConversationFlow(message);
+                        return;
+                    }
+
+                    // Handle FAQs
+                    if (lowerMessage.includes('service') || lowerMessage.includes('what do you do') || lowerMessage.includes('treat')) {
+                        addBotMessage(FAQs.services);
+                    } else if (lowerMessage.includes('hour') || lowerMessage.includes('open')) {
+                        addBotMessage(FAQs.hours);
+                    } else if (lowerMessage.includes('insurance') || lowerMessage.includes('pay')) {
+                        addBotMessage(FAQs.insurance).then(() => startAppointmentScheduling());
+                    } else if (lowerMessage.includes('location') || lowerMessage.includes('address') || lowerMessage.includes('where')) {
+                        addBotMessage(FAQs.locations);
+                    } else if (lowerMessage.includes('appointment') || lowerMessage.includes('schedule') || lowerMessage.includes('book')) {
+                        startAppointmentScheduling();
+                    } else if (/(insurance|accept|coverage)/i.test(lowerMessage)) {
+                        handleInsuranceQuery();
+                    } else if (/(cost|price|fee)/i.test(lowerMessage)) {
+                        handleCostQuery();
+                    } else if (/(certified|qualified|experience)/i.test(lowerMessage)) {
+                        handleTherapistQuery();
+                    } else if (/(pain|hurt|ache|sore)/i.test(lowerMessage)) {
+                        showTypingIndicator().then(() => {
+                            addBotMessage("What type of pain are you experiencing? We treat many conditions.").then(() => {
+                                showOptions(BUTTON_OPTIONS.painAreas);
+                            });
+                        });
+                    } else {
+                        handleRandomInput();
+                    }
+                }
+
+                // Enhanced pain message handler
+                function handlePainMessage(detectedAreas) {
+                    if (detectedAreas.length === 1) {
+                        const { key, data } = detectedAreas[0];
+                        conversationState.lastPainArea = key;
+
+                        return showTypingIndicator().then(() => {
+                            addBotMessage([
+                                `I understand you're experiencing ${data.display.toLowerCase()} issues.`,
+                                data.description,
+                                `Our specialists use: ${data.treatments.join(", ")}.`,
+                                "Would you like to:"
+                            ]).then(() => {
+                                showOptions([
+                                    { text: `📅 Schedule for ${data.display}`, type: "appointment", area: key },
+                                    { text: `ℹ️ More about ${data.display} treatment`, type: "more_info", area: key },
+                                    { text: "🤔 I have other pain areas", type: "other_pain" }
+                                ]);
+                            });
+                        });
+                    } else if (detectedAreas.length > 1) {
+                        return showTypingIndicator().then(() => {
+                            addBotMessage([
+                                "I notice you're experiencing pain in multiple areas.",
+                                "Which area is causing you the most concern right now?"
+                            ]).then(() => {
+                                showOptions(detectedAreas.map(({ key, data }) => ({
+                                    text: `${data.icon} ${data.display}`,
+                                    type: "pain",
+                                    area: key
+                                })));
+                            });
+                        });
+                    } else {
+                        return showTypingIndicator().then(() => {
+                            addBotMessage([
+                                "I want to help you with your pain. Please select the area that's bothering you:"
+                            ]).then(() => {
+                                showOptions(generatePainAreaButtons());
+                            });
+                        });
+                    }
+                }
+
+                // Function to show more pain areas if the user requests them
+                function showMorePainAreas() {
+                    // Get the areas that weren't shown in the first set
+                    const remainingAreas = Object.entries(PAIN_AREAS)
+                        .slice(5)
+                        .map(([key, data]) => ({
+                            text: `${data.icon} ${data.display}`,
+                            type: "pain",
+                            area: key,
+                            description: data.description
+                        }));
+
+                    if (remainingAreas.length > 0) {
+                        addBotMessage("Here are additional areas we treat:").then(() => {
+                            showOptions(remainingAreas);
+                        });
+                    }
+                }
+
+                // Start appointment scheduling
+                function startAppointmentScheduling() {
+                    appointmentStage = 'name';
+                    addBotMessage("Let's schedule your appointment. What is your full name?");
+                }
+
+                // Validate US phone number
+                function validatePhoneNumber(phone) {
+                    const digits = phone.replace(/\D/g, '');
+                    return digits.length === 10;
+                }
+
+                // Format phone number
+                function formatPhoneNumber(phone) {
+                    const digits = phone.replace(/\D/g, '');
+                    if (digits.length !== 10) return phone;
+
+                    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+                }
+
+                // Validate email
+                function validateEmail(email) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    return emailRegex.test(email);
+                }
+
+                // Handle appointment flow
+                function handleAppointmentFlow(message) {
+                    switch (appointmentStage) {
+                        case 'name':
+                            appointmentDetails.name = message;
+                            appointmentStage = 'phone';
+                            addBotMessage(`Thanks, ${message.split(' ')[0]}! What's the best phone number to reach you?`);
+                            break;
+
+                        case 'phone':
+                            if (!validatePhoneNumber(message)) {
+                                addBotMessage("I need a valid 10-digit phone number (like 1234567890). Could you try again?");
+                            } else {
+                                const formattedPhone = formatPhoneNumber(message);
+                                appointmentDetails.phone = formattedPhone;
+                                appointmentStage = 'email';
+                                addBotMessage("Perfect! What's your email address?");
+                            }
+                            break;
+
+                        case 'email':
+                            if (!validateEmail(message)) {
+                                addBotMessage("That doesn't look like a valid email. Please enter an email like name@example.com");
+                            } else {
+                                appointmentDetails.email = message;
+                                appointmentStage = 'location';
+                                addBotMessage("Last step! Please select your preferred location:");
+                                displayLocationSelect();
+                            }
+                            break;
+
+                        case 'location':
+                            // If the user types anything during location selection, prompt them to use the dropdown.
+                            addBotMessage("Please select a location from the dropdown menu above.");
+                            break;
+                    }
+                }
+
+                // Display the location selection dropdown
+                function displayLocationSelect() {
+                    // Hide the standard text input to prevent conflicting entries
+                    inputField.style.display = 'none';
+
+                    // Create the select element and a container for it
+                    const selectElement = document.createElement('select');
+                    selectElement.id = 'location-select';
+                    // Add a default option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = "";
+                    defaultOption.text = "Select a location...";
+                    selectElement.appendChild(defaultOption);
+
+                    // Populate select options from LOCATIONS
+                    for (const key in LOCATIONS) {
+                        if (LOCATIONS.hasOwnProperty(key)) {
+                            const option = document.createElement('option');
+                            option.value = key;
+                            option.text = `${LOCATIONS[key].name} (${LOCATIONS[key].address})`;
+                            selectElement.appendChild(option);
+                        }
+                    }
+
+                    // Wrap the select element in a container styled as a bot message
+                    const selectContainer = document.createElement('div');
+                    selectContainer.className = 'pt-bot-message';
+                    selectContainer.appendChild(selectElement);
+                    messagesContainer.appendChild(selectContainer);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                    // Listen for the change event on the select element
+                    selectElement.addEventListener('change', function () {
+                        const selectedKey = selectElement.value;
+                        if (selectedKey && LOCATIONS[selectedKey]) {
+                            completeAppointmentScheduling(LOCATIONS[selectedKey]);
+                            // Remove the select element and re-display the text input
+                            selectContainer.remove();
+                            inputField.style.display = 'block';
+                        }
+                    });
+                }
+
+                // Complete appointment scheduling
+                function completeAppointmentScheduling(location) {
+                    appointmentDetails.location = location.name;
+                    appointmentDetails.address = location.address;
+
+                    // Get the pain area display name if available
+                    let painAreaText = "your condition";
+                    if (conversationState.lastPainArea && PAIN_AREAS[conversationState.lastPainArea]) {
+                        painAreaText = PAIN_AREAS[conversationState.lastPainArea].display.toLowerCase();
+                    }
+
+                    showTypingIndicator().then(() => {
+                        addBotMessage([
+                            "🎉 Great news! Your appointment request is confirmed.",
+                            `We'll help you with ${painAreaText} at our ${location.name} location.`,
+                            "Our team will call you within 24 hours to schedule your exact appointment time.",
+                            "Please bring your insurance card and photo ID to your first visit.",
+                            "Any questions before then? I'm happy to help!"
+                        ]).then(() => {
+                            // Show next steps options
+                            const nextOptions = [
+                                { text: "🧠 What to Expect", type: "expect" },
+                                { text: "📃 Insurance Questions", type: "insurance" },
+                                { text: "🙏 Thanks, that's all!", type: "thanks" }
+                            ];
+                            showOptions(nextOptions);
+                        });
+                    });
+
+                    submitAppointment(appointmentDetails);
+                    appointmentStage = null;
+                }
+
+                // Submit appointment to server
+                function submitAppointment(details) {
+                    console.log('Appointment submitted:', details);
+                    // Server submission code here
+                }
+
+                // Clear conversation
+                function clearConversation() {
+                    messagesContainer.innerHTML = '';
+                    conversationState = { currentFlow: null, lastPainArea: null, formData: {} };
+                    appointmentStage = null;
+                }
+
+                // Handle random input with enhanced detection
+                function handleRandomInput() {
+                    // Check for common intents that might not have been caught
+                    const lowerMessage = inputField.value.toLowerCase();
+
+                    if (lowerMessage.includes('hello') || lowerMessage.includes('hi ') || lowerMessage.includes('hey')) {
+                        addBotMessage("👋 Hello! How can I help you today?").then(() => {
+                            showOptions(BUTTON_OPTIONS.main);
+                        });
+                    } else if (lowerMessage.includes('thanks') || lowerMessage.includes('thank you')) {
+                        addBotMessage("You're welcome! Is there anything else I can help you with today?");
+                    } else {
+                        // Default response with helpful options
+                        addBotMessage([
+                            "I'm not sure I understood that completely. Let me help you with some common questions:",
+                        ]).then(() => {
+                            showOptions(BUTTON_OPTIONS.main);
+                        });
+                    }
+                }
+
+                // Show response options as buttons
+                function showOptions(options) {
+                    const optionsContainer = document.createElement('div');
+                    optionsContainer.className = 'pt-options-container';
+
+                    options.forEach(option => {
+                        const button = document.createElement('button');
+                        button.className = 'pt-option-button';
+                        button.textContent = option.text;
+
+                        button.addEventListener('click', () => {
+                            // Handle button click based on type
+                            handleOptionClick(option);
+                        });
+
+                        optionsContainer.appendChild(button);
+                    });
+
+                    messagesContainer.appendChild(optionsContainer);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+
+                // Handle option button clicks
+                function handleOptionClick(option) {
+                    // Add the option text as a user message
+                    addUserMessage(option.text);
+
+                    // Handle based on option type
+                    switch (option.type) {
+                        case 'appointment':
+                            startAppointmentScheduling();
+                            // If an area was specified, save it
+                            if (option.area) {
+                                conversationState.lastPainArea = option.area;
+                            }
+                            break;
+
+                        case 'staff':
+                            showTypingIndicator().then(() => {
+                                addBotMessage([
+                                    "Our therapists are all licensed professionals with specialized training.",
+                                    "Would you like to schedule a consultation with one of our experts?"
+                                ]).then(() => {
+                                    showOptions([
+                                        { text: "📅 Yes, schedule now", type: "appointment" },
+                                        { text: "📞 I have more questions", type: "questions" }
+                                    ]);
+                                });
+                            });
+                            break;
+
+                        case 'questions':
+                            showTypingIndicator().then(() => {
+                                addBotMessage("What would you like to know more about?").then(() => {
+                                    showOptions([
+                                        { text: "💼 Insurance & Payment", type: "insurance" },
+                                        { text: "⏰ Treatment Duration", type: "duration" },
+                                        { text: "🧪 Treatment Methods", type: "methods" },
+                                        { text: "🩺 Our Specialties", type: "specialties" }
+                                    ]);
+                                });
+                            });
+                            break;
+
+                        case 'locations':
+                            showTypingIndicator().then(() => {
+                                addBotMessage(FAQs.locations).then(() => {
+                                    const locationButtons = Object.entries(LOCATIONS).map(([key, data]) => ({
+                                        text: `📍 ${data.name}`,
+                                        type: 'location_details',
+                                        location: key
+                                    }));
+                                    showOptions(locationButtons);
+                                });
+                            });
+                            break;
+
+                        case 'location_details':
+                            if (option.location && LOCATIONS[option.location]) {
+                                const loc = LOCATIONS[option.location];
+                                showTypingIndicator().then(() => {
+                                    addBotMessage([
+                                        `📍 ${loc.name}`,
+                                        `Address: ${loc.address}`,
+                                        `Hours: Monday-Friday 9:00 AM - 6:00 PM`,
+                                        `Would you like to schedule an appointment at this location?`
+                                    ]).then(() => {
+                                        showOptions([
+                                            { text: "📅 Schedule Here", type: "appointment", location: option.location },
+                                            { text: "↩️ Back to Locations", type: "locations" }
+                                        ]);
+                                    });
+                                });
+                            }
+                            break;
+
+                        case 'pain':
+                            if (option.area && PAIN_AREAS[option.area]) {
+                                const painData = PAIN_AREAS[option.area];
+                                conversationState.lastPainArea = option.area;
+
+                                showTypingIndicator().then(() => {
+                                    addBotMessage([
+                                        `We specialize in treating ${painData.display.toLowerCase()}.`,
+                                        `Our approach includes: ${painData.treatments.join(", ")}.`,
+                                        painData.description,
+                                        `Would you like to schedule an appointment with a specialist?`
+                                    ]).then(() => {
+                                        showOptions([
+                                            { text: "📅 Yes, schedule now", type: "appointment", area: option.area },
+                                            { text: "ℹ️ Tell me more", type: "more_info", area: option.area },
+                                            { text: "🔄 Other pain areas", type: "other_pain" }
+                                        ]);
+                                    });
+                                });
+                            }
+                            break;
+
+                        case 'more_info':
+                            if (option.area && PAIN_AREAS[option.area]) {
+                                const painData = PAIN_AREAS[option.area];
+                                showTypingIndicator().then(() => {
+                                    addBotMessage([
+                                        `For ${painData.display.toLowerCase()}, our treatment approach is personalized to your needs.`,
+                                        `We typically recommend 2-3 sessions per week initially, with most patients seeing improvement within 4-6 weeks.`,
+                                        `Our therapists use a combination of ${painData.treatments.join(", ")} to address your specific condition.`,
+                                        `Would you like to get started with treatment?`
+                                    ]).then(() => {
+                                        showOptions([
+                                            { text: "📅 Schedule Appointment", type: "appointment", area: option.area },
+                                            { text: "❓ More Questions", type: "questions" }
+                                        ]);
+                                    });
+                                });
+                            }
+                            break;
+
+                        case 'other_pain':
+                            showTypingIndicator().then(() => {
+                                addBotMessage("What other pain areas are you experiencing?").then(() => {
+                                    showOptions(BUTTON_OPTIONS.painAreas);
+                                });
+                            });
+                            break;
+
+                        case 'more_pain_areas':
+                            showMorePainAreas();
+                            break;
+
+                        case 'insurance':
+                            showTypingIndicator().then(() => {
+                                addBotMessage([
+                                    "We accept most major insurance plans including Blue Cross, Aetna, UnitedHealthcare, Cigna, and Medicare.",
+                                    "Most plans cover physical therapy and charge you according to the services provided.",
+                                    "We'll verify your benefits before your first appointment and explain any costs.",
+                                    "Would you like to check your coverage with us?"
+                                ]).then(() => {
+                                    showOptions([
+                                        { text: "👍 Yes, check my coverage", type: "appointment" },
+                                        { text: "❓ More Questions", type: "questions" }
+                                    ]);
+                                });
+                            });
+                            break;
+
+                        case 'duration':
+                            showTypingIndicator().then(() => {
+                                addBotMessage([
+                                    "Most of our patients attend therapy 2-3 times per week initially.",
+                                    "A typical course of treatment ranges from 6-12 weeks, though this varies based on your condition and progress.",
+                                    "Each session lasts approximately 45-60 minutes.",
+                                    "Would you like to get started with your treatment plan?"
+                                ]).then(() => {
+                                    showOptions([
+                                        { text: "📅 Schedule First Visit", type: "appointment" },
+                                        { text: "❓ More Questions", type: "questions" }
+                                    ]);
+                                });
+                            });
+                            break;
+
+                        case 'methods':
+                            showTypingIndicator().then(() => {
+                                addBotMessage([
+                                    "Our therapists use evidence-based treatment methods including:",
+                                    "• Manual therapy techniques",
+                                    "• Therapeutic exercise programs",
+                                    "• Modalities (heat, ice, ultrasound, electrical stimulation)",
+                                    "• Movement retraining",
+                                    "• Ergonomic and postural education",
+                                    "Would you like to know more about how these might help you specifically?"
+                                ]).then(() => {
+                                    showOptions([
+                                        { text: "📅 Talk to a Therapist", type: "appointment" },
+                                        { text: "🔄 Back to Main Menu", type: "back_to_main" }
+                                    ]);
+                                });
+                            });
+                            break;
+
+                        case 'specialties':
+                            showTypingIndicator().then(() => {
+                                addBotMessage([
+                                    "Our therapists specialize in treating a wide range of conditions including:",
+                                    "• Orthopedic injuries",
+                                    "• Sports medicine",
+                                    "• Post-surgical rehabilitation",
+                                    "• Chronic pain management",
+                                    "• Neurological conditions",
+                                    "• Workplace injuries",
+                                    "What specific condition are you looking to address?"
+                                ]).then(() => {
+                                    showOptions(BUTTON_OPTIONS.painAreas);
+                                });
+                            });
+                            break;
+
+                        case 'expect':
+                            conversationState.currentFlow = "expect";
+                            handleConversationFlow();
+                            break;
+
+                        case 'thanks':
+                            conversationState.currentFlow = "thanks";
+                            handleConversationFlow();
+                            break;
+
+                        case 'back_to_main':
+                            showTypingIndicator().then(() => {
+                                addBotMessage("How else can I help you today?").then(() => {
+                                    showOptions(BUTTON_OPTIONS.main);
+                                });
+                            });
+                            break;
+
+                        default:
+                            // Default handling for unknown option types
+                            addBotMessage("I'm not sure how to help with that specific request. Let me show you some options:").then(() => {
+                                showOptions(BUTTON_OPTIONS.main);
+                            });
+                    }
+                }
+
+                // Handle insurance related queries
+                function handleInsuranceQuery() {
+                    showTypingIndicator().then(() => {
+                        addBotMessage([
+                            "We accept most major insurance plans including:",
+                            "• Blue Cross Blue Shield",
+                            "• Aetna",
+                            "• UnitedHealthcare",
+                            "• Cigna",
+                            "• Medicare",
+                            "• Workers' Compensation",
+                            "We offer a free insurance verification before your first visit. Would you like to check your coverage?"
+                        ]).then(() => {
+                            showOptions([
+                                { text: "✅ Verify My Insurance", type: "appointment" },
+                                { text: "💰 Self-Pay Options", type: "self_pay" }
+                            ]);
+                        });
+                    });
+                }
+
+                // Handle cost related queries
+                function handleCostQuery() {
+                    showTypingIndicator().then(() => {
+                        addBotMessage([
+                            "With insurance, your cost is typically a copay of $20-$50 per session depending on your plan.",
+                            "For self-pay patients, we offer competitive rates and package pricing options.",
+                            "We provide a free cost estimate before starting treatment. Would you like to check your costs?"
+                        ]).then(() => {
+                            showOptions([
+                                { text: "✅ Check My Costs", type: "appointment" },
+                                { text: "❓ More Questions", type: "questions" }
+                            ]);
+                        });
+                    });
+                }
+
+                // Handle therapist qualification queries
+                function handleTherapistQuery() {
+                    showTypingIndicator().then(() => {
+                        addBotMessage([
+                            "All our physical therapists are licensed professionals with advanced degrees (DPT or MPT).",
+                            "Many have additional certifications in specialized areas such as orthopedics, sports, and manual therapy.",
+                            "Our therapists regularly attend continuing education to stay current with the latest research and techniques.",
+                            "Would you like to schedule a consultation with one of our experts?"
+                        ]).then(() => {
+                            showOptions([
+                                { text: "📅 Schedule Consultation", type: "appointment" },
+                                { text: "❓ More Questions", type: "questions" }
+                            ]);
+                        });
+                    });
+                }
+
+                // Self-pay options handler
+                function handleSelfPayOptions() {
+                    showTypingIndicator().then(() => {
+                        addBotMessage([
+                            "For patients without insurance coverage, we offer:",
+                            "• Initial evaluation: $120",
+                            "• Follow-up sessions: $85-$100",
+                            "• Package discounts available for prepaid sessions",
+                            "• Payment plans for those who qualify",
+                            "Would you like to discuss payment options with our staff?"
+                        ]).then(() => {
+                            showOptions([
+                                { text: "📅 Schedule Consultation", type: "appointment" },
+                                { text: "❓ More Questions", type: "questions" }
+                            ]);
+                        });
+                    });
+                }
+            }
+
+            // Initialize bot on page load
+            createChatbotHTML();
+        });
+    </script>
+</body>
+
+</html>
