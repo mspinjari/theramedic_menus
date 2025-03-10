@@ -212,6 +212,13 @@
                     treatments: ["Manual therapy", "Exercise therapy", "Posture correction"],
                     description: "Our specialists address headaches, migraines, and TMJ disorders with targeted treatments."
                 },
+                "shoulder_pain": {
+                    display: "Shoulder Pain",
+                    icon: "💪",
+                    treatments: ["Manual therapy", "Strengthening exercises", "Stretching", "Posture correction", "Joint mobilization"],
+                    description: "We provide targeted treatments for rotator cuff injuries, frozen shoulder, and other shoulder-related conditions to improve mobility and reduce pain."
+                },
+
                 "back_pain": {
                     display: "Back Pain",
                     icon: "⬆️",
@@ -288,10 +295,10 @@
                 ],
                 locations: [
                     "We have 4 convenient locations to serve you:",
-                    "🏢 STAFFORD/SUGAR LAND: 12603 Southwest Fwy",
-                    "🏢 SPRING: 17320 Red Oak Dr",
-                    "🏢 KATY: 24217 Kingsland Blvd",
-                    "🏢 SOUTHFIELD: 26400 W 12 Mile Rd",
+                    "🏢 STAFFORD/SUGAR LAND: 12603 Southwest Fwy, TX 77477",
+                    "🏢 SPRING: 17320 Red Oak Dr, TX 77090",
+                    "🏢 KATY: 24217 Kingsland Blvd, TX 77494",
+                    "🏢 SOUTHFIELD: 26400 W 12 Mile Rd, MI 48034",
                     "Which is most convenient for you?"
                 ],
                 painResponse: [
@@ -302,6 +309,7 @@
 
             // Spelling correction map
             const SPELLING_CORRECTIONS = {
+                // General corrections
                 "physio": "physical therapy",
                 "physioterapy": "physical therapy",
                 "fisiotherapy": "physical therapy",
@@ -333,15 +341,95 @@
                 "clock": "hours",
                 "tame": "hours",
                 "tam": "hours",
+
+                // Head Pain corrections
                 "headake": "head pain",
                 "migraines": "head pain",
                 "migrane": "head pain",
+                "hed pain": "head pain",
+                "hedache": "head pain",
+
+                // Shoulder Pain corrections
+                "shoulder": "shoulder",
+                "shouder": "shoulder",
+                "sholder": "shoulder",
+                "shouldr": "shoulder",
+                "shouldar": "shoulder",
+                "sholuder": "shoulder",
+                "shoulder pain": "shoulder pain",
+                "shouder pain": "shoulder pain",
+                "sholder pain": "shoulder pain",
+                "shouldr pain": "shoulder pain",
+                "shouldar pain": "shoulder pain",
+                "sholuder pain": "shoulder pain",
+                "shoulder ache": "shoulder pain",
+                "shouder ache": "shoulder pain",
+                "shoulder treatment": "shoulder treatment",
+                "shouder treatment": "shoulder treatment",
+                "shoulder therapy": "shoulder therapy",
+                "shouder therapy": "shoulder therapy",
+                "rotater cuff": "rotator cuff",
+                "rotatr cuff": "rotator cuff",
+                "rotator cuf": "rotator cuff",
+                "rotator coff": "rotator cuff",
+
+                // Back Pain corrections
                 "backpain": "back pain",
                 "sore back": "back pain",
                 "backache": "back pain",
+                "bak pain": "back pain",
+                "bacak": "back pain",
+
+                // Neck Pain corrections
                 "neckpain": "neck pain",
-                "sore neck": "neck pain"
+                "sore neck": "neck pain",
+                "nek pain": "neck pain",
+                "neckache": "neck pain",
+                "neak pain": "neck pain",
+
+                // Hip Pain corrections
+                "hippain": "hip pain",
+                "hip ache": "hip pain",
+                "hipache": "hip pain",
+                "hipp pain": "hip pain",
+
+                // Elbow Pain corrections
+                "elbowpain": "elbow pain",
+                "elbow ache": "elbow pain",
+                "elbowache": "elbow pain",
+                "elbo pain": "elbow pain",
+                "elbrow pain": "elbow pain",
+                "elbowe pain": "elbow pain",
+
+                // Pelvic Floor corrections
+                "pelvicfloor": "pelvic floor",
+                "pelvic flooor": "pelvic floor",
+                "pelvic florr": "pelvic floor",
+                "pelvic fold": "pelvic floor",
+
+                // Hand/Wrist Pain corrections
+                "handwristpain": "hand/wrist pain",
+                "hand wrist pain": "hand/wrist pain",
+                "wristpain": "hand/wrist pain",
+                "wrist pain": "hand/wrist pain",
+                "hand ache": "hand/wrist pain",
+                "wrist ache": "hand/wrist pain",
+
+                // Knee Pain corrections
+                "kneepain": "knee pain",
+                "knee ache": "knee pain",
+                "kneeache": "knee pain",
+
+                // Foot/Ankle Pain corrections
+                "footanklepain": "foot/ankle pain",
+                "foot ankle pain": "foot/ankle pain",
+                "footache": "foot/ankle pain",
+                "anklepain": "foot/ankle pain",
+                "ankle ache": "foot/ankle pain",
+                "ankleache": "foot/ankle pain",
+                "foot ache": "foot/ankle pain"
             };
+
 
             // Generate pain area buttons
             function generatePainAreaButtons(detectedAreas = null) {
@@ -646,6 +734,7 @@
                     // Specific condition mapping
                     const conditionMap = {
                         'head_pain': ['headache', 'migraine', 'tmj', 'jaw', 'temple'],
+                        'shoulder_pain': ['rotator cuff', 'frozen shoulder', 'impingement', 'shoulder strain', 'labral tear', 'deltoid', 'scapula', 'bursitis'],
                         'back_pain': ['sciatica', 'lumbar', 'spine', 'spinal', 'lower back', 'upper back'],
                         'neck_pain': ['whiplash', 'cervical', 'tech neck', 'shoulder'],
                         'hand_wrist_pain': ['carpal', 'tunnel', 'wrist', 'finger', 'thumb'],
