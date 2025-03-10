@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theramedic Chat Button</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Chat container and button */
+        .theramedic-chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .theramedic-chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #f26e21;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .theramedic-chat-button:hover {
+            transform: scale(1.05);
+        }
+
+        .theramedic-chat-icon {
+            color: white;
+            font-size: 24px;
+        }
+
+        /* Chat popup */
+        .theramedic-chat-popup {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 320px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 9;
+        }
+
+        .theramedic-chat-popup.active {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .theramedic-chat-header {
+            background-color: #f26e21;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theramedic-chat-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .theramedic-chat-body {
+            padding: 20px;
+        }
+
+        .theramedic-location-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .theramedic-selected-location {
+            background-color: #f26e21;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .theramedic-user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .theramedic-assistance-title {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .theramedic-chat-message {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .theramedic-chat-avatar {
+            width: 24px;
+            height: 24px;
+        }
+
+        .theramedic-chat-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .theramedic-chat-text.welcome {
+            font-weight: bold;
+        }
+
+        .theramedic-chat-text.review-prompt {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .theramedic-location-selector {
+            margin-top: 20px;
+        }
+
+        .theramedic-location-prompt {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .theramedic-location-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .theramedic-location-button {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .theramedic-location-button:hover {
+            background-color: #eee;
+        }
+
+        .theramedic-location-button.active {
+            background-color: #f26e21;
+            color: white;
+            border-color: #f26e21;
+        }
+
+        .theramedic-review-section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .theramedic-review-section.active {
+            display: block;
+        }
+
+        .theramedic-platform-select {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .theramedic-platform-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .theramedic-platform-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .theramedic-platform-button:hover {
+            background-color: #eee;
+        }
+
+        .theramedic-platform-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theramedic-platform-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .theramedic-location-note {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 10px;
+            color: #999;
+            padding-right: 5px;
+        }
+
+        .theramedic-agent-info {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 50px;
+            padding: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 8;
+            transform: translateY(20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .theramedic-agent-info.active {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .theramedic-agent-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .theramedic-agent-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .theramedic-agent-status {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+            bottom: 3px;
+            right: 3px;
+            border: 2px solid white;
+        }
+
+        .theramedic-close-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #f26e21;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            z-index: 7;
+            transform: scale(0);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .theramedic-close-button.active {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .theramedic-chat-initial-view,
+        .theramedic-chat-location-selected-view {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .theramedic-chat-initial-view.hidden {
+            display: none;
+        }
+
+        .theramedic-chat-location-selected-view {
+            display: none;
+        }
+
+        .theramedic-chat-location-selected-view.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="theramedic-chat-container">
+        <!-- Chat Popup -->
+        <div class="theramedic-chat-popup" id="theramedicChatPopup">
+            <div class="theramedic-chat-header">
+                <h3 class="theramedic-chat-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7118 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0035 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92179 4.44061 8.37488 5.27072 7.03258C6.10083 5.69028 7.28825 4.6056 8.7 3.90003C9.87812 3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 3.11502 17.053 3.99479 18.5291 5.47089C20.0052 6.94699 20.885 8.91568 21 11V11.5Z"
+                            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Leave A Review
+                </h3>
+                <span class="theramedic-chat-dropdown">▼</span>
+            </div>
+
+            <div class="theramedic-chat-body">
+                <!-- Initial View - Location Selection -->
+                <div class="theramedic-chat-initial-view" id="theramedicInitialView">
+                    <div class="theramedic-assistance-title">Theramedic's Assistance</div>
+
+                    <div class="theramedic-chat-message">
+                        <div class="theramedic-chat-avatar">
+                            <img src="/api/placeholder/24/24" alt="Theramedic Logo">
+                        </div>
+                        <div class="theramedic-chat-text welcome">
+                            Hi there, Thank you for visiting us! We hope you had a positive experience with us and we'd
+                            love to hear your thoughts. Your feedback helps us improve and also helps others looking for
+                            the right care.
+                        </div>
+                    </div>
+
+                    <div class="theramedic-location-selector">
+                        <div class="theramedic-location-prompt">To get started, please select the location you visited:
+                        </div>
+                        <div class="theramedic-location-options">
+                            <div class="theramedic-location-button" data-location="Stafford, TX">Stafford, TX</div>
+                            <div class="theramedic-location-button" data-location="Spring, TX">Spring, TX</div>
+                            <div class="theramedic-location-button" data-location="Katy, TX">Katy, TX</div>
+                            <div class="theramedic-location-button" data-location="Southfield, MI">Southfield, MI</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Selected View - Review Platform Selection -->
+                <div class="theramedic-chat-location-selected-view" id="theramedicLocationSelectedView">
+                    <div class="theramedic-location-display">
+                        <div class="theramedic-selected-location" id="theramedicSelectedLocation">Spring, TX</div>
+                        <div class="theramedic-user-avatar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+                                    stroke="#888888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path
+                                    d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"
+                                    stroke="#888888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="theramedic-assistance-title">Theramedic's Assistance</div>
+
+                    <div class="theramedic-chat-message">
+                        <div class="theramedic-chat-avatar">
+                            <img src="/api/placeholder/24/24" alt="Theramedic Logo">
+                        </div>
+                        <div class="theramedic-chat-text">
+                            Thank you for selecting your location!
+                        </div>
+                    </div>
+
+                    <div class="theramedic-chat-message">
+                        <div class="theramedic-chat-text review-prompt">
+                            Your review makes a difference! Pick a platform below to share your experience in seconds.
+                        </div>
+                    </div>
+
+                    <div class="theramedic-review-section active">
+                        <div class="theramedic-platform-select">Select the platform:</div>
+                        <div class="theramedic-platform-buttons">
+                            <div class="theramedic-platform-button google-button" id="googleReviewButton">
+                                <div class="theramedic-platform-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z"
+                                            fill="#4285F4" />
+                                        <path d="M11 8L15 12L11 16V8Z" fill="#4285F4" />
+                                    </svg>
+                                </div>
+                                <div class="theramedic-platform-name">Google</div>
+                                <div class="theramedic-location-note">Google link will be of Spring location only</div>
+                            </div>
+                            <div class="theramedic-platform-button yelp-button" id="yelpReviewButton">
+                                <div class="theramedic-platform-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M18.2734 15.2354C17.7998 15.6514 17.1289 15.7432 16.4873 15.6221C15.8164 15.4863 15.2705 15.0557 14.9531 14.4707C14.6357 13.8857 14.5732 13.1514 14.8906 12.4904C15.4219 11.4238 16.8457 11.0615 17.9121 11.6074C18.498 11.9248 18.9434 12.4707 19.0781 13.1416C19.2139 13.8125 19.0928 14.498 18.2734 15.2354Z"
+                                            fill="#D32323" />
+                                        <path
+                                            d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z"
+                                            fill="#D32323" />
+                                    </svg>
+                                </div>
+                                <div class="theramedic-platform-name">Yelp</div>
+                            </div>
+                            <div class="theramedic-platform-button facebook-button" id="facebookReviewButton">
+                                <div class="theramedic-platform-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z"
+                                            fill="#1877F2" />
+                                    </svg>
+                                </div>
+                                <div class="theramedic-platform-name">Facebook</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agent Info -->
+        <div class="theramedic-agent-info" id="theramedicAgentInfo">
+            <div class="theramedic-agent-avatar">
+                <img src="/api/placeholder/40/40" alt="Agent Avatar">
+                <div class="theramedic-agent-status"></div>
+            </div>
+        </div>
+
+        <!-- Close Button (X) -->
+        <div class="theramedic-close-button" id="theramedicCloseButton">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </div>
+
+        <!-- Chat Button -->
+        <div class="theramedic-chat-button" id="theramedicChatButton">
+            <div class="theramedic-chat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7118 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0035 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92179 4.44061 8.37488 5.27072 7.03258C6.10083 5.69028 7.28825 4.6056 8.7 3.90003C9.87812 3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 3.11502 17.053 3.99479 18.5291 5.47089C20.0052 6.94699 20.885 8.91568 21 11V11.5Z"
+                        stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get elements
+        const chatButton = document.getElementById('theramedicChatButton');
+        const chatPopup = document.getElementById('theramedicChatPopup');
+        const agentInfo = document.getElementById('theramedicAgentInfo');
+        const closeButton = document.getElementById('theramedicCloseButton');
+        const locationButtons = document.querySelectorAll('.theramedic-location-button');
+        const initialView = document.getElementById('theramedicInitialView');
+        const locationSelectedView = document.getElementById('theramedicLocationSelectedView');
+        const selectedLocationElement = document.getElementById('theramedicSelectedLocation');
+
+        // Review platform buttons
+        const googleReviewButton = document.getElementById('googleReviewButton');
+        const yelpReviewButton = document.getElementById('yelpReviewButton');
+        const facebookReviewButton = document.getElementById('facebookReviewButton');
+
+        // Location-specific review links
+        const reviewLinks = {
+            'Stafford, TX': {
+                google: 'https://g.page/r/theramedic-stafford/review',
+                yelp: 'https://www.yelp.com/biz/theramedic-stafford/review',
+                facebook: 'https://www.facebook.com/theramedic.stafford/reviews/'
+            },
+            'Spring, TX': {
+                google: 'https://g.page/r/theramedic-spring/review',
+                yelp: 'https://www.yelp.com/biz/theramedic-spring/review',
+                facebook: 'https://www.facebook.com/theramedic.spring/reviews/'
+            },
+            'Katy, TX': {
+                google: 'https://g.page/r/theramedic-katy/review',
+                yelp: 'https://www.yelp.com/biz/theramedic-katy/review',
+                facebook: 'https://www.facebook.com/theramedic.katy/reviews/'
+            },
+            'Southfield, MI': {
+                google: 'https://g.page/r/theramedic-southfield/review',
+                yelp: 'https://www.yelp.com/biz/theramedic-southfield/review',
+                facebook: 'https://www.facebook.com/theramedic.southfield/reviews/'
+            }
+        };
+
+        // Current location
+        let currentLocation = '';
+
+        // Toggle chat popup
+        let isOpen = false;
+
+        chatButton.addEventListener('click', function () {
+            toggleChat();
+        });
+
+        closeButton.addEventListener('click', function () {
+            toggleChat();
+        });
+
+        function toggleChat() {
+            isOpen = !isOpen;
+
+            if (isOpen) {
+                chatPopup.classList.add('active');
+                agentInfo.classList.add('active');
+                closeButton.classList.add('active');
+            } else {
+                chatPopup.classList.remove('active');
+                agentInfo.classList.remove('active');
+                closeButton.classList.remove('active');
+
+                // Reset to initial view when closing
+                setTimeout(() => {
+                    showInitialView();
+                }, 300);
+            }
+        }
+
+        // Location selection
+        locationButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // Get the selected location
+                currentLocation = this.getAttribute('data-location');
+
+                // Update the display
+                selectedLocationElement.textContent = currentLocation;
+
+                // Show the location selected view
+                showLocationSelectedView();
+            });
+        });
+
+        // Platform button click handlers
+        googleReviewButton.addEventListener('click', function () {
+            if (currentLocation && reviewLinks[currentLocation]) {
+                window.open(reviewLinks[currentLocation].google, '_blank');
+            }
+        });
+
+        yelpReviewButton.addEventListener('click', function () {
+            if (currentLocation && reviewLinks[currentLocation]) {
+                window.open(reviewLinks[currentLocation].yelp, '_blank');
+            }
+        });
+
+        facebookReviewButton.addEventListener('click', function () {
+            if (currentLocation && reviewLinks[currentLocation]) {
+                window.open(reviewLinks[currentLocation].facebook, '_blank');
+            }
+        });
+
+        // Helper functions
+        function showInitialView() {
+            initialView.classList.remove('hidden');
+            locationSelectedView.classList.remove('active');
+
+            // Reset location buttons
+            locationButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Reset current location
+            currentLocation = '';
+        }
+
+        function showLocationSelectedView() {
+            initialView.classList.add('hidden');
+            locationSelectedView.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>
