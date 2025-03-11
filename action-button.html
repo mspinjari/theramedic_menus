@@ -5,17 +5,152 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     <style>
+        :root {
+            --primary-color: #ff6e31;
+            --blue-color: #1d3559;
+            --white-color: #ffffff;
+            --light-gray: #ADADAD;
+        }
+
+        .fab-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            user-select: none;
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            transform-origin: 0 0;
+        }
+
+        .fab-container.active {
+            height: 100%;
+        }
+
+        .fab-container.active .sub-button:nth-child(2) {
+            transform: translateY(-60px);
+        }
+
+        .fab-container.active .sub-button:nth-child(3) {
+            transform: translateY(-120px);
+        }
+
+        .fab {
+            position: relative;
+            height: 50px;
+            width: 50px;
+            background-color: #ff6e31;
+            border-radius: 50%;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .fab .fab-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            border-radius: 50%;
+        }
+
+        .fab .fab-content i {
+            color: white;
+            font-size: 24px;
+            transition: all 0.5s;
+            position: absolute;
+        }
+
+        .fab .fab-content i.fa-times {
+            transform: rotate(-180deg);
+            opacity: 0;
+        }
+
+        .fab.active .fab-content i.fa-headset {
+            transform: rotate(180deg);
+            opacity: 0;
+        }
+
+        .fab.active .fab-content i.fa-times {
+            transform: rotate(0);
+            opacity: 1;
+        }
+
+        .sub-button {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            bottom: 0px;
+            right: 0px;
+            height: 50px;
+            width: 50px;
+            background-color: #ff6e31;
+            border-radius: 50%;
+            transition: all .3s ease;
+        }
+
+        .sub-button:hover {
+            cursor: pointer;
+        }
+
+        .sub-button i {
+            color: white;
+            font-size: 24px;
+        }
+
+        .sub-button a {
+            color: white;
+            text-decoration: none;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Add tooltip styles */
+        .tooltip {
+            position: absolute;
+            right: 65px;
+            background-color: #e9e9e9;
+            color: black;
+            padding: 8px 15px;
+            border-radius: 4px solid;
+            font-size: 14px;
+            white-space: nowrap;
+            border-radius: 5px 26px 26px 5px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sub-button:hover .tooltip {
+            opacity: 1;
+        }
+
+
         #pt-chatbot-container {
-            position: fixed;
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            /* position: fixed;
             bottom: 20px;
             right: 20px;
             z-index: 9999;
-            font-family: Arial, sans-serif;
+            font-family: Arial, sans-serif; */
         }
+
+
 
         .pt-chatbot-wrapper {
             width: 300px;
+            position: relative;
+            /* bottom: -150px; */
         }
 
         .pt-chatbot {
@@ -23,7 +158,7 @@
             flex-direction: column;
             height: 400px;
             background-color: #fff;
-            border-radius: 10px;
+            border-radius: 16px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             overflow: hidden;
         }
@@ -32,8 +167,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 15px;
-            background-color: #3B82F6;
+            padding: 20px 20px;
+            background-color: #ff6e31;
             color: white;
         }
 
@@ -47,7 +182,7 @@
             border: none;
             color: white;
             font-size: 20px;
-            cursor: pointer;
+            /* cursor: pointer; */
         }
 
         .pt-chatbot-messages {
@@ -74,38 +209,42 @@
         }
 
         .pt-user-message {
-            background-color: #3B82F6;
+            background-color: #ff6e31;
             color: white;
             align-self: flex-end;
         }
 
         .pt-chatbot-input {
             display: flex;
-            padding: 10px;
-            border-top: 1px solid #eee;
+            padding: 20px;
+            gap: 10px;
+            border-radius: 26px;
+            background-color: white;
         }
 
         .pt-chatbot-input input {
             flex-grow: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
+            padding: 10px;
+            border: 0px;
+            border-radius: 26px;
+            background-color: #efefef;
             border-radius: 4px 0 0 4px;
         }
 
         .pt-send-button {
-            background-color: #3B82F6;
+            background-color: var(--blue-color);
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 0 4px 4px 0;
+            padding: 10px;
+            border-radius: 8px;
             cursor: pointer;
         }
 
         .pt-chatbot-toggle {
-            background-color: #3B82F6;
+            background-color: #ff6e31;
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 10px 10px;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -171,12 +310,239 @@
             gap: 10px;
             justify-content: center;
         }
+
+        .pt-options-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pt-option-button {
+            background-color: #E5F2FF;
+            color: var(--primary-color);
+            border: none;
+            padding: 8px;
+            margin: 5px;
+            border-radius: 8px;
+            display: inline-block;
+            text-align: left;
+
+        }
+
+
+        .pt-option-button:hover {
+            background-color: var(--white-color);
+            color: var(--primary-color);
+            outline: 1px solid var(--primary-color);
+            padding: 8px;
+            margin: 5px;
+            border-radius: 8px;
+
+        }
+
+        .pt-option-button:hover::after {
+            content: "✓";
+            font-size: 10px;
+            padding: 4px 5px;
+            margin-left: 5px;
+            border-radius: 100%;
+            color: var(--white-color);
+            background-color: var(--primary-color);
+
+        }
+
+
+        #appointment-form {
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .pt-cancel-form {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            /* cursor: pointer; */
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            float: left;
+            margin: 0 1px;
+            background-color: #ff6e31;
+            display: block;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: 1s blink infinite;
+        }
+
+        .typing-indicator span:nth-of-type(1) {
+            animation-delay: 0.3333s;
+        }
+
+        .typing-indicator span:nth-of-type(2) {
+            animation-delay: 0.6666s;
+        }
+
+        .typing-indicator span:nth-of-type(3) {
+            animation-delay: 0.9999s;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 1;
+            }
+        }
+
+        #review-chatbot-container {
+            position: absolute;
+            bottom: 110px;
+            right: 50px;
+        }
+
+        .review-platforms>.pt-option-button>.fab {
+            /* background-color: var(--white-color); */
+            color: var(--white-color);
+            border: none;
+            padding: 5px 0px;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            background-color: inherit !important;
+
+
+        }
     </style>
 </head>
 
 <body>
+    <div class="fab-container">
+        <div class="fab shadow">
+            <div class="fab-content ">
+                <i class="fas fa-headset"></i>
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="sub-button shadow">
+            <span class="tooltip">Review us</span>
+            <a href="#" id="reviewLink">
+                <i class="fa-solid fa-star"></i>
+            </a>
+        </div>
+        <div class="sub-button shadow">
+            <span class="tooltip">Chat with us</span>
+            <div id="pt-chatbot-container">
+                <div class="pt-chatbot-wrapper">
+                    <div class="pt-chatbot" style="display: none;">
+                        <div class="pt-chatbot-header">
+                            <h3>PT Clinic Assistance</h3>
+                            <button class="pt-close-button">&times;</button>
+                        </div>
+                        <div class="pt-chatbot-messages"></div>
+                        <div class="pt-chatbot-input">
+                            <input type="text" placeholder="Type your message...">
+                            <button class="pt-send-button"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                    <button class="pt-chatbot-toggle"> <i class="fa-regular fa-comments"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div id="pt-chatbot-container"></div>
+    <!-- Review Chatbot -->
+    <div id="review-chatbot-container" class="pt-chatbot-wrapper">
+        <div class="pt-chatbot" style="display: none;">
+            <div class="pt-chatbot-header">
+                <h3>Leave a Review</h3>
+                <button class="pt-close-button">&times;</button>
+            </div>
+            <div class="pt-chatbot-messages"></div>
+        </div>
+    </div>
+
+    <!-- End Chat Modal -->
+    <div class="end-chat-modal">
+        <div class="end-chat-content">
+            <h3>Do you want to leave current chat?</h3>
+            <div class="end-chat-buttons">
+                <button id="confirmEndChat" class="pt-send-button">End Chat</button>
+                <button id="cancelEndChat" class="pt-send-button">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Form Template -->
+    <template id="appointment-form-template">
+        <form id="appointment-form" class="pt-bot-message" style="display: none;">
+            <h4>Schedule Appointment</h4>
+            <div class="form-group">
+                <label>Full Name:</label>
+                <input type="text" name="name" required>
+                <div class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <label>Phone Number:</label>
+                <input type="tel" name="phone" required>
+                <div class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+                <div class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <label>Preferred Location:</label>
+                <select name="location" required>
+                    <option value="">Select location</option>
+                </select>
+                <div class="error-message"></div>
+            </div>
+            <div class="form-buttons">
+                <button type="submit" class="pt-send-button">Submit</button>
+                <button type="button" class="pt-cancel-form">Cancel</button>
+            </div>
+        </form>
+    </template>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -211,6 +577,12 @@
                     icon: "🧠",
                     treatments: ["Manual therapy", "Exercise therapy", "Posture correction"],
                     description: "Our specialists address headaches, migraines, and TMJ disorders with targeted treatments."
+                },
+                "shoulder_pain": {
+                    display: "Shoulder Pain",
+                    icon: "💪",
+                    treatments: ["Manual therapy", "Strengthening exercises", "Stretching", "Posture correction", "Joint mobilization"],
+                    description: "We provide targeted treatments for rotator cuff injuries, frozen shoulder, and other shoulder-related conditions to improve mobility and reduce pain."
                 },
                 "back_pain": {
                     display: "Back Pain",
@@ -288,10 +660,10 @@
                 ],
                 locations: [
                     "We have 4 convenient locations to serve you:",
-                    "🏢 STAFFORD/SUGAR LAND: 12603 Southwest Fwy",
-                    "🏢 SPRING: 17320 Red Oak Dr",
-                    "🏢 KATY: 24217 Kingsland Blvd",
-                    "🏢 SOUTHFIELD: 26400 W 12 Mile Rd",
+                    "🏢 STAFFORD/SUGAR LAND: 12603 Southwest Fwy, TX 77477",
+                    "🏢 SPRING: 17320 Red Oak Dr, TX 77090",
+                    "🏢 KATY: 24217 Kingsland Blvd, TX 77494",
+                    "🏢 SOUTHFIELD: 26400 W 12 Mile Rd, MI 48034",
                     "Which is most convenient for you?"
                 ],
                 painResponse: [
@@ -302,6 +674,7 @@
 
             // Spelling correction map
             const SPELLING_CORRECTIONS = {
+                // General corrections
                 "physio": "physical therapy",
                 "physioterapy": "physical therapy",
                 "fisiotherapy": "physical therapy",
@@ -333,14 +706,93 @@
                 "clock": "hours",
                 "tame": "hours",
                 "tam": "hours",
+
+                // Head Pain corrections
                 "headake": "head pain",
                 "migraines": "head pain",
                 "migrane": "head pain",
+                "hed pain": "head pain",
+                "hedache": "head pain",
+
+                // Shoulder Pain corrections
+                "shoulder": "shoulder",
+                "shouder": "shoulder",
+                "sholder": "shoulder",
+                "shouldr": "shoulder",
+                "shouldar": "shoulder",
+                "sholuder": "shoulder",
+                "shoulder pain": "shoulder pain",
+                "shouder pain": "shoulder pain",
+                "sholder pain": "shoulder pain",
+                "shouldr pain": "shoulder pain",
+                "shouldar pain": "shoulder pain",
+                "sholuder pain": "shoulder pain",
+                "shoulder ache": "shoulder pain",
+                "shouder ache": "shoulder pain",
+                "shoulder treatment": "shoulder treatment",
+                "shouder treatment": "shoulder treatment",
+                "shoulder therapy": "shoulder therapy",
+                "shouder therapy": "shoulder therapy",
+                "rotater cuff": "rotator cuff",
+                "rotatr cuff": "rotator cuff",
+                "rotator cuf": "rotator cuff",
+                "rotator coff": "rotator cuff",
+
+                // Back Pain corrections
                 "backpain": "back pain",
                 "sore back": "back pain",
                 "backache": "back pain",
+                "bak pain": "back pain",
+                "bacak": "back pain",
+
+                // Neck Pain corrections
                 "neckpain": "neck pain",
-                "sore neck": "neck pain"
+                "sore neck": "neck pain",
+                "nek pain": "neck pain",
+                "neckache": "neck pain",
+                "neak pain": "neck pain",
+
+                // Hip Pain corrections
+                "hippain": "hip pain",
+                "hip ache": "hip pain",
+                "hipache": "hip pain",
+                "hipp pain": "hip pain",
+
+                // Elbow Pain corrections
+                "elbowpain": "elbow pain",
+                "elbow ache": "elbow pain",
+                "elbowache": "elbow pain",
+                "elbo pain": "elbow pain",
+                "elbrow pain": "elbow pain",
+                "elbowe pain": "elbow pain",
+
+                // Pelvic Floor corrections
+                "pelvicfloor": "pelvic floor",
+                "pelvic flooor": "pelvic floor",
+                "pelvic florr": "pelvic floor",
+                "pelvic fold": "pelvic floor",
+
+                // Hand/Wrist Pain corrections
+                "handwristpain": "hand/wrist pain",
+                "hand wrist pain": "hand/wrist pain",
+                "wristpain": "hand/wrist pain",
+                "wrist pain": "hand/wrist pain",
+                "hand ache": "hand/wrist pain",
+                "wrist ache": "hand/wrist pain",
+
+                // Knee Pain corrections
+                "kneepain": "knee pain",
+                "knee ache": "knee pain",
+                "kneeache": "knee pain",
+
+                // Foot/Ankle Pain corrections
+                "footanklepain": "foot/ankle pain",
+                "foot ankle pain": "foot/ankle pain",
+                "footache": "foot/ankle pain",
+                "anklepain": "foot/ankle pain",
+                "ankle ache": "foot/ankle pain",
+                "ankleache": "foot/ankle pain",
+                "foot ache": "foot/ankle pain"
             };
 
             // Generate pain area buttons
@@ -357,7 +809,7 @@
 
                 // Otherwise show all pain areas (limited to 5 at a time for UI purposes)
                 return Object.entries(PAIN_AREAS)
-                    .slice(0, 5) // Limit to first 5 areas for better UI
+                    .slice(0, 10) // Limit to first 5 areas for better UI
                     .map(([key, data]) => ({
                         text: `${data.icon} ${data.display}`,
                         type: "pain",
@@ -393,10 +845,10 @@
             <div class="pt-chatbot-messages"></div>
             <div class="pt-chatbot-input">
               <input type="text" placeholder="Type your message...">
-              <button class="pt-send-button">Send</button>
+              <button class="pt-send-button"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
           </div>
-          <button class="pt-chatbot-toggle">Chat</button>
+          <button class="pt-chatbot-toggle"><i class="fa-regular fa-comments"></i></button>
         </div>
     `;
 
@@ -427,7 +879,7 @@
             width: 8px;
             float: left;
             margin: 0 1px;
-            background-color: #3B82F6;
+            background-color: #ff6e31;
             display: block;
             border-radius: 50%;
             opacity: 0.4;
@@ -447,6 +899,87 @@
             }
         }
     `;
+                document.head.appendChild(style);
+
+                // Add appointment form template
+                const formTemplate = document.createElement('template');
+                formTemplate.innerHTML = `
+            <form id="appointment-form" class="pt-bot-message" style="display: none;">
+                <h4>Schedule Appointment</h4>
+                <div class="form-group">
+                    <label>Full Name:</label>
+                    <input type="text" name="name" required>
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number:</label>
+                    <input type="tel" name="phone" required>
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" name="email" required>
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Location:</label>
+                    <select name="location" required>
+                        <option value="">Select location</option>
+                        ${Object.keys(LOCATIONS).map(key =>
+                    `<option value="${key}">${LOCATIONS[key].name}</option>`
+                ).join('')}
+                    </select>
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="pt-send-button">Submit</button>
+                    <button type="button" class="pt-cancel-form">Cancel</button>
+                </div>
+            </form>
+        `;
+                document.body.appendChild(formTemplate.content);
+
+                // Add form styles
+                style.textContent += `
+            #appointment-form {
+                padding: 15px;
+                margin: 10px 0;
+            }
+            .form-group {
+                margin-bottom: 15px;
+            }
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+            .form-group input, .form-group select {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+            .error-message {
+                color: #dc3545;
+                font-size: 12px;
+                margin-top: 4px;
+                display: none;
+            }
+            .form-buttons {
+                display: flex;
+                gap: 10px;
+                margin-top: 15px;
+            }
+            .pt-cancel-form {
+                background-color: #6c757d;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+        `;
                 document.head.appendChild(style);
 
                 // Initialize chatbot functionality
@@ -646,6 +1179,7 @@
                     // Specific condition mapping
                     const conditionMap = {
                         'head_pain': ['headache', 'migraine', 'tmj', 'jaw', 'temple'],
+                        'shoulder_pain': ['rotator cuff', 'frozen shoulder', 'impingement', 'shoulder strain', 'labral tear', 'deltoid', 'scapula', 'bursitis'],
                         'back_pain': ['sciatica', 'lumbar', 'spine', 'spinal', 'lower back', 'upper back'],
                         'neck_pain': ['whiplash', 'cervical', 'tech neck', 'shoulder'],
                         'hand_wrist_pain': ['carpal', 'tunnel', 'wrist', 'finger', 'thumb'],
@@ -783,9 +1317,40 @@
                 }
 
                 // Start appointment scheduling
-                function startAppointmentScheduling() {
-                    appointmentStage = 'name';
-                    addBotMessage("Let's schedule your appointment. What is your full name?");
+                function startAppointmentScheduling(option = {}) {
+                    // Hide regular input
+                    document.querySelector('.pt-chatbot-input').style.display = 'none';
+
+                    // Clone and show form
+                    const originalForm = document.getElementById('appointment-form');
+                    const form = originalForm.cloneNode(true);
+                    form.style.display = 'block';
+                    messagesContainer.appendChild(form);
+
+                    // Pre-select location if coming from location selection
+                    if (option.location && option.preselect) {
+                        const locationSelect = form.querySelector('[name="location"]');
+                        locationSelect.value = option.location;
+                    }
+
+                    // Save pain area context if present
+                    if (option.area) {
+                        conversationState.lastPainArea = option.area;
+                    }
+
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                    // Form submission handler
+                    form.onsubmit = (e) => {
+                        e.preventDefault();
+                        handleFormSubmission(form);
+                    };
+
+                    // Cancel button handler
+                    form.querySelector('.pt-cancel-form').onclick = () => {
+                        form.remove();
+                        document.querySelector('.pt-chatbot-input').style.display = 'flex';
+                    };
                 }
 
                 // Validate US phone number
@@ -808,93 +1373,52 @@
                     return emailRegex.test(email);
                 }
 
-                // Handle appointment flow
-                function handleAppointmentFlow(message) {
-                    switch (appointmentStage) {
-                        case 'name':
-                            appointmentDetails.name = message;
-                            appointmentStage = 'phone';
-                            addBotMessage(`Thanks, ${message.split(' ')[0]}! What's the best phone number to reach you?`);
-                            break;
+                function handleFormSubmission(form) {
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData.entries());
+                    let isValid = true;
 
-                        case 'phone':
-                            if (!validatePhoneNumber(message)) {
-                                addBotMessage("I need a valid 10-digit phone number (like 1234567890). Could you try again?");
-                            } else {
-                                const formattedPhone = formatPhoneNumber(message);
-                                appointmentDetails.phone = formattedPhone;
-                                appointmentStage = 'email';
-                                addBotMessage("Perfect! What's your email address?");
-                            }
-                            break;
+                    // Clear previous errors
+                    form.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+                    form.querySelectorAll('input, select').forEach(el => el.style.borderColor = '#ddd');
 
-                        case 'email':
-                            if (!validateEmail(message)) {
-                                addBotMessage("That doesn't look like a valid email. Please enter an email like name@example.com");
-                            } else {
-                                appointmentDetails.email = message;
-                                appointmentStage = 'location';
-                                addBotMessage("Last step! Please select your preferred location:");
-                                displayLocationSelect();
-                            }
-                            break;
+                    // Validate fields
+                    if (!data.name.trim()) {
+                        showError(form, 'name', 'Please enter your name');
+                        isValid = false;
+                    }
 
-                        case 'location':
-                            // If the user types anything during location selection, prompt them to use the dropdown.
-                            addBotMessage("Please select a location from the dropdown menu above.");
-                            break;
+                    if (!validatePhoneNumber(data.phone)) {
+                        showError(form, 'phone', 'Please enter a valid 10-digit phone number');
+                        isValid = false;
+                    }
+
+                    if (!validateEmail(data.email)) {
+                        showError(form, 'email', 'Please enter a valid email address');
+                        isValid = false;
+                    }
+
+                    if (!data.location) {
+                        showError(form, 'location', 'Please select a location');
+                        isValid = false;
+                    }
+
+                    if (isValid) {
+                        data.phone = formatPhoneNumber(data.phone);
+                        completeAppointmentScheduling(LOCATIONS[data.location], data);
+                        form.remove();
+                        document.querySelector('.pt-chatbot-input').style.display = 'flex';
                     }
                 }
 
-                // Display the location selection dropdown
-                function displayLocationSelect() {
-                    // Hide the standard text input to prevent conflicting entries
-                    inputField.style.display = 'none';
-
-                    // Create the select element and a container for it
-                    const selectElement = document.createElement('select');
-                    selectElement.id = 'location-select';
-                    // Add a default option
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = "";
-                    defaultOption.text = "Select a location...";
-                    selectElement.appendChild(defaultOption);
-
-                    // Populate select options from LOCATIONS
-                    for (const key in LOCATIONS) {
-                        if (LOCATIONS.hasOwnProperty(key)) {
-                            const option = document.createElement('option');
-                            option.value = key;
-                            option.text = `${LOCATIONS[key].name} (${LOCATIONS[key].address})`;
-                            selectElement.appendChild(option);
-                        }
-                    }
-
-                    // Wrap the select element in a container styled as a bot message
-                    const selectContainer = document.createElement('div');
-                    selectContainer.className = 'pt-bot-message';
-                    selectContainer.appendChild(selectElement);
-                    messagesContainer.appendChild(selectContainer);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                    // Listen for the change event on the select element
-                    selectElement.addEventListener('change', function () {
-                        const selectedKey = selectElement.value;
-                        if (selectedKey && LOCATIONS[selectedKey]) {
-                            completeAppointmentScheduling(LOCATIONS[selectedKey]);
-                            // Remove the select element and re-display the text input
-                            selectContainer.remove();
-                            inputField.style.display = 'block';
-                        }
-                    });
+                function showError(form, fieldName, message) {
+                    const group = form.querySelector(`[name="${fieldName}"]`).closest('.form-group');
+                    group.querySelector('.error-message').textContent = message;
+                    group.querySelector('.error-message').style.display = 'block';
+                    group.querySelector('input, select').style.borderColor = '#dc3545';
                 }
 
-                // Complete appointment scheduling
-                function completeAppointmentScheduling(location) {
-                    appointmentDetails.location = location.name;
-                    appointmentDetails.address = location.address;
-
-                    // Get the pain area display name if available
+                function completeAppointmentScheduling(location, data) {
                     let painAreaText = "your condition";
                     if (conversationState.lastPainArea && PAIN_AREAS[conversationState.lastPainArea]) {
                         painAreaText = PAIN_AREAS[conversationState.lastPainArea].display.toLowerCase();
@@ -902,24 +1426,23 @@
 
                     showTypingIndicator().then(() => {
                         addBotMessage([
-                            "🎉 Great news! Your appointment request is confirmed.",
-                            `We'll help you with ${painAreaText} at our ${location.name} location.`,
-                            "Our team will call you within 24 hours to schedule your exact appointment time.",
-                            "Please bring your insurance card and photo ID to your first visit.",
-                            "Any questions before then? I'm happy to help!"
+                            "🎉 Appointment Request Received!",
+                            `Name: ${data.name}`,
+                            `Phone: ${data.phone}`,
+                            `Email: ${data.email}`,
+                            `Location: ${location.name}`,
+                            "Our team will contact you within 24 hours to confirm your appointment.",
+                            "Thank you for choosing Theramedic Rehab!"
                         ]).then(() => {
-                            // Show next steps options
-                            const nextOptions = [
-                                { text: "🧠 What to Expect", type: "expect" },
-                                { text: "📃 Insurance Questions", type: "insurance" },
-                                { text: "🙏 Thanks, that's all!", type: "thanks" }
-                            ];
-                            showOptions(nextOptions);
+                            showOptions([
+                                // { text: "📅 View Appointment Details", type: "appointment_details" },
+                                { text: "📞 I have more questions", type: "questions" },
+                                { text: "🏠 Return to Main Menu", type: "back_to_main" }
+                            ]);
                         });
                     });
 
-                    submitAppointment(appointmentDetails);
-                    appointmentStage = null;
+                    submitAppointment({ ...data, location: location.name, address: location.address });
                 }
 
                 // Submit appointment to server
@@ -986,11 +1509,7 @@
                     // Handle based on option type
                     switch (option.type) {
                         case 'appointment':
-                            startAppointmentScheduling();
-                            // If an area was specified, save it
-                            if (option.area) {
-                                conversationState.lastPainArea = option.area;
-                            }
+                            startAppointmentScheduling(option);
                             break;
 
                         case 'staff':
@@ -1044,7 +1563,12 @@
                                         `Would you like to schedule an appointment at this location?`
                                     ]).then(() => {
                                         showOptions([
-                                            { text: "📅 Schedule Here", type: "appointment", location: option.location },
+                                            {
+                                                text: "📅 Schedule Here",
+                                                type: "appointment",
+                                                location: option.location,
+                                                preselect: true
+                                            },
                                             { text: "↩️ Back to Locations", type: "locations" }
                                         ]);
                                     });
@@ -1275,6 +1799,209 @@
 
             // Initialize bot on page load
             createChatbotHTML();
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+
+        });
+    </script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+
+            const fab = document.querySelector('.fab');
+            const fabContainer = document.querySelector('.fab-container');
+
+            // Get all chatbot elements
+            const reviewChatbot = document.querySelector('#review-chatbot-container .pt-chatbot');
+            const mainChatbot = document.querySelector('#pt-chatbot-container .pt-chatbot');
+            const reviewMessages = document.querySelector('#review-chatbot-container .pt-chatbot-messages');
+            const mainMessages = document.querySelector('#pt-chatbot-container .pt-chatbot-messages');
+            const mainToggleButton = document.querySelector('#pt-chatbot-container .pt-chatbot-toggle');
+
+            fab.addEventListener('click', function () {
+                const wasActive = fabContainer.classList.contains('active');
+
+                // Toggle FAB state
+                fab.classList.toggle('active');
+                fabContainer.classList.toggle('active');
+
+                // If closing the FAB, close all chatbots and reset main chat
+                if (wasActive) {
+                    // Close both chatbots
+                    reviewChatbot.style.display = 'none';
+                    mainChatbot.style.display = 'none';
+
+                    // Clear all messages
+                    reviewMessages.innerHTML = '';
+                    mainMessages.innerHTML = '';
+
+                    // Reset main chat toggle button
+                    mainToggleButton.style.display = 'block';
+                }
+            });
+
+
+            // Review locations data
+            const REVIEW_LOCATIONS = {
+                "STAFFORD": {
+                    name: "STAFFORD/SUGAR LAND",
+                    reviews: {
+                        google: "https://g.page/r/CdVXrRcI3_VFEAI/review",
+                        yelp: "https://www.yelp.com/biz/theramedic-stafford",
+                        facebook: "https://www.facebook.com/theramedic.stafford/reviews/"
+                    }
+                },
+                "SPRING": {
+                    name: "SPRING",
+                    reviews: {
+                        google: "https://g.page/r/CQpKvnvdgKFPEAI/review",
+                        yelp: "https://www.yelp.com/biz/theramedic-spring",
+                        facebook: "https://www.facebook.com/theramedic.spring/reviews/"
+                    }
+                },
+                "KATY": {
+                    name: "KATY",
+                    reviews: {
+                        google: "https://g.page/r/CdB20A8WdOBxEAI/review",
+                        yelp: "https://www.yelp.com/biz/theramedic-katy",
+                        facebook: "https://www.facebook.com/theramedic.katy/reviews/"
+                    }
+                },
+                "SOUTHFIELD": {
+                    name: "SOUTHEAST, MI",
+                    reviews: {
+                        google: "https://g.page/r/CV9kjrUSYnBnEAI/review",
+                        yelp: "https://www.yelp.com/biz/theramedic-southeast",
+                        facebook: "https://www.facebook.com/theramedic.southeast/reviews/"
+                    }
+                }
+            };
+
+            const reviewLink = document.getElementById('reviewLink');
+
+            reviewLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (reviewChatbot.style.display === 'flex') {
+                    reviewChatbot.style.display = 'none';
+                    reviewMessages.innerHTML = '';
+                } else {
+                    reviewChatbot.style.display = 'flex';
+                    startReviewFlow();
+                }
+            });
+
+            // Close review chatbot
+            const reviewCloseButton = document.querySelector('#review-chatbot-container .pt-close-button');
+            reviewCloseButton.addEventListener('click', function () {
+                reviewChatbot.style.display = 'none';
+                reviewMessages.innerHTML = '';
+            });
+
+            function startReviewFlow() {
+                reviewMessages.innerHTML = '';
+
+                // First message
+                addBotMessage("Hi there, Thank you for visiting us! We hope you had a positive experience with us and we'd love to hear your thoughts. Your feedback helps us improve and also helps others looking for the right care.");
+
+                // Second message
+                setTimeout(() => {
+                    addBotMessage("To get started, please select the location you visited:");
+                }, 500);
+
+                // Third message with location buttons
+                setTimeout(() => {
+                    const locationButtons = document.createElement('div');
+                    locationButtons.className = 'pt-options-container';
+
+                    Object.entries(REVIEW_LOCATIONS).forEach(([key, data]) => {
+                        const button = document.createElement('button');
+                        button.className = 'pt-option-button';
+                        button.textContent = data.name;
+                        button.addEventListener('click', () => {
+                            // Add user selection as a message
+                            addUserMessage(data.name);
+                            showReviewPlatforms(key);
+                        });
+                        locationButtons.appendChild(button);
+                    });
+
+                    reviewMessages.appendChild(locationButtons);
+                }, 1000);
+            }
+
+            function showReviewPlatforms(locationKey) {
+                const location = REVIEW_LOCATIONS[locationKey];
+
+                // Clear previous platform buttons if any
+                const existingPlatforms = reviewMessages.querySelector('.review-platforms');
+                if (existingPlatforms) {
+                    existingPlatforms.remove();
+                }
+
+                // Add bot response with typing effect
+                setTimeout(() => {
+                    addBotMessage(`Thank you for choosing ${location.name}. We appreciate your feedback! Please select your preferred platform to share your experience:`);
+
+                    // Add platform buttons
+                    const platformContainer = document.createElement('div');
+                    platformContainer.className = 'pt-options-container review-platforms';
+
+                    const platforms = {
+                        google: {
+                            icon: 'http://zystamatic-com.stackstaging.com/theramedicrehab/wp-content/uploads/2025/03/google.png',
+                            text: 'Google Review'
+                        },
+                        yelp: {
+                            icon: 'http://zystamatic-com.stackstaging.com/theramedicrehab/wp-content/uploads/2025/03/yelp.png',
+                            text: 'Yelp Review'
+                        },
+                        facebook: {
+                            icon: 'http://zystamatic-com.stackstaging.com/theramedicrehab/wp-content/uploads/2025/03/facebook.png',
+                            text: 'Facebook Review'
+                        }
+                    };
+
+                    Object.entries(platforms).forEach(([platform, { icon, text }]) => {
+                        const button = document.createElement('button');
+                        button.className = 'pt-option-button';
+                        button.innerHTML = `<img src="${icon}" style="width:20px;height:20px;vertical-align:middle"> ${text}`;
+                        button.addEventListener('click', () => {
+                            // Add user selection as a message
+                            addUserMessage(text);
+                            // Add final thank you message
+                            setTimeout(() => {
+                                addBotMessage("Thank you! You'll be redirected to leave your review. Your feedback means a lot to us! 🙏");
+                                setTimeout(() => {
+                                    window.open(location.reviews[platform], '_blank');
+                                }, 1000);
+                            }, 500);
+                        });
+                        platformContainer.appendChild(button);
+                    });
+
+                    reviewMessages.appendChild(platformContainer);
+                    reviewMessages.scrollTop = reviewMessages.scrollHeight;
+                }, 500);
+            }
+
+            function addBotMessage(message) {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'pt-bot-message';
+                messageElement.textContent = message;
+                reviewMessages.appendChild(messageElement);
+                reviewMessages.scrollTop = reviewMessages.scrollHeight;
+            }
+
+            function addUserMessage(message) {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'pt-user-message';
+                messageElement.textContent = message;
+                reviewMessages.appendChild(messageElement);
+                reviewMessages.scrollTop = reviewMessages.scrollHeight;
+            }
+
+
         });
     </script>
 </body>

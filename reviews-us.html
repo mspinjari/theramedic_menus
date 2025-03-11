@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action Button with Review Panel</title>
+    <!-- Font Awesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            min-height: 200vh; /* For demonstration scroll */
+        }
+
+        /* FAB Container Styles */
+        .fab-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            user-select: none;
+            position: fixed;
+            bottom: 50px;
+            right: 50px;
+            transform-origin: 0 0;
+            z-index: 9999;
+        }
+
+        .fab-container.active {
+            height: 100%;
+        }
+
+        .fab-container.active .sub-button:nth-child(2) {
+            transform: translateY(-60px);
+        }
+
+        .fab-container.active .sub-button:nth-child(3) {
+            transform: translateY(-120px);
+        }
+
+        /* Main FAB Styles */
+        .fab {
+            position: relative;
+            height: 50px;
+            width: 50px;
+            background-color: #ff6e31;
+            border-radius: 50%;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .fab .fab-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            border-radius: 50%;
+        }
+
+        .fab .fab-content i {
+            color: white;
+            font-size: 24px;
+            transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out;
+            position: absolute;
+        }
+
+        .fab .fab-content i.fa-headset {
+            transform: scale(1);
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .fab .fab-content i.fa-times {
+            transform: scale(0);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .fab.active .fab-content i.fa-headset {
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        .fab.active .fab-content i.fa-times {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Sub-Button Styles */
+        .sub-button {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            bottom: 0px;
+            right: 0px;
+            height: 50px;
+            width: 50px;
+            background-color: #ff6e31;
+            border-radius: 50%;
+            transition: all .3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .sub-button:hover {
+            cursor: pointer;
+            transform: scale(1.1);
+        }
+
+        .sub-button i {
+            color: white;
+            font-size: 24px;
+        }
+
+        .sub-button a {
+            color: white;
+            text-decoration: none;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            position: absolute;
+            right: 65px;
+            background-color: #e9e9e9;
+            color: black;
+            padding: 8px 15px;
+            font-size: 14px;
+            white-space: nowrap;
+            border-radius: 5px 26px 26px 5px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .sub-button:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* Review Panel Styles */
+        .review-panel {
+            position: fixed;
+            bottom: 110px;
+            right: 50px;
+            width: 320px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .review-header {
+            background-color: #ff6e31;
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .review-header i {
+            cursor: pointer;
+        }
+
+        .review-content {
+            padding: 15px 20px;
+        }
+
+        .review-message {
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            padding: 15px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .review-message::before {
+            content: "";
+            position: absolute;
+            left: -8px;
+            top: 15px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-right: 15px solid #f5f5f5;
+            border-bottom: 8px solid transparent;
+        }
+
+        .location-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 10px;
+            margin: 15px 0;
+        }
+
+        .location-option {
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .location-option:hover, .location-option.selected {
+            background-color: #ffe0d0;
+        }
+
+        .location-option.selected::after {
+            content: "✓";
+            color: #ff6e31;
+            font-weight: bold;
+        }
+
+        .platform-list {
+            display: none;
+        }
+
+        .platform-option {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .platform-option:hover {
+            background-color: #ffe0d0;
+            transform: translateY(-2px);
+        }
+
+        .platform-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-button {
+            background-color: #ff6e31;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            text-align: center;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Review Panel -->
+    <div id="reviewPanel" class="review-panel">
+        <div class="review-header">
+            <div>
+                <i class="far fa-comment-alt"></i>
+                Leave A Review
+            </div>
+            <i class="fas fa-chevron-down" id="minimizeReview"></i>
+        </div>
+        <div class="review-content">
+            <!-- Step 1: Location Selection -->
+            <div id="step1">
+                <div class="review-message">
+                    Hi there! Thank you for visiting us. Your feedback helps us improve.
+                </div>
+                <div class="location-grid">
+                    <div class="location-option" data-location="Stafford, TX">Stafford, TX</div>
+                    <div class="location-option" data-location="Spring, TX">Spring, TX</div>
+                    <div class="location-option" data-location="Katy, TX">Katy, TX</div>
+                    <div class="location-option" data-location="Southeast, MI">Southeast, MI</div>
+                </div>
+                <button id="continueToStep2" class="action-button">Continue</button>
+            </div>
+
+            <!-- Step 2: Platform Selection -->
+            <div id="step2" style="display:none;">
+                <div class="review-message">
+                    Your review makes a difference! Choose a platform:
+                </div>
+                <div class="platform-list">
+                    <div class="platform-option" data-platform="google">
+                        <div class="platform-icon"><i class="fab fa-google"></i></div>
+                        Google
+                    </div>
+                    <div class="platform-option" data-platform="yelp">
+                        <div class="platform-icon"><i class="fab fa-yelp"></i></div>
+                        Yelp
+                    </div>
+                    <div class="platform-option" data-platform="facebook">
+                        <div class="platform-icon"><i class="fab fa-facebook-f"></i></div>
+                        Facebook
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Button -->
+    <div class="fab-container">
+        <div class="fab shadow">
+            <div class="fab-content">
+                <i class="fas fa-headset"></i>
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="sub-button shadow" id="reviewButton">
+            <span class="tooltip">Review us</span>
+            <a href="#" id="reviewLink">
+                <i class="fa-solid fa-star"></i>
+            </a>
+        </div>
+        <div class="sub-button shadow">
+            <span class="tooltip">Chat with us</span>
+            <a href="https://example.com/chat" target="_blank">
+                <i class="fa-regular fa-comments"></i>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // FAB Toggle
+            const fab = document.querySelector('.fab');
+            const fabContainer = document.querySelector('.fab-container');
+
+            fab.addEventListener('click', function (e) {
+                e.stopPropagation();
+                fab.classList.toggle('active');
+                fabContainer.classList.toggle('active');
+            });
+
+            // Review Panel Toggle
+            const reviewButton = document.getElementById('reviewButton');
+            const reviewPanel = document.getElementById('reviewPanel');
+
+            reviewButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                reviewPanel.style.display = 'block';
+                fabContainer.classList.add('active');
+                fab.classList.add('active');
+            });
+
+            // Close Panel on Outside Click
+            document.addEventListener('click', function(e) {
+                if (!reviewPanel.contains(e.target)) {
+                    reviewPanel.style.display = 'none';
+                }
+                if (!fabContainer.contains(e.target)) {
+                    fabContainer.classList.remove('active');
+                    fab.classList.remove('active');
+                }
+            });
+
+            // Location Selection
+            const locationOptions = document.querySelectorAll('.location-option');
+            const continueButton = document.getElementById('continueToStep2');
+
+            locationOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    locationOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    continueButton.style.display = 'block';
+                });
+            });
+
+            // Continue to Platform Selection
+            continueButton.addEventListener('click', function() {
+                document.getElementById('step1').style.display = 'none';
+                document.getElementById('step2').style.display = 'block';
+                document.querySelector('.platform-list').style.display = 'block';
+            });
+
+            // Platform Selection
+            const platformOptions = document.querySelectorAll('.platform-option');
+            const locationUrls = {
+                "Stafford, TX": {
+                    google: "https://g.page/r/CdVXrRcI3_VFEAI/review",
+                    yelp: "https://www.yelp.com/biz/theramedic-stafford",
+                    facebook: "https://www.facebook.com/theramedic.stafford/reviews/"
+                },
+                "Spring, TX": {
+                    google: "https://g.page/r/CQpKvnvdgKFPEAI/review",
+                    yelp: "https://www.yelp.com/biz/theramedic-spring",
+                    facebook: "https://www.facebook.com/theramedic.spring/reviews/"
+                },
+                "Katy, TX": {
+                    google: "https://g.page/r/CdB20A8WdOBxEAI/review",
+                    yelp: "https://www.yelp.com/biz/theramedic-katy",
+                    facebook: "https://www.facebook.com/theramedic.katy/reviews/"
+                },
+                "Southeast, MI": {
+                    google: "https://g.page/r/CV9kjrUSYnBnEAI/review",
+                    yelp: "https://www.yelp.com/biz/theramedic-southeast",
+                    facebook: "https://www.facebook.com/theramedic.southeast/reviews/"
+                }
+            };
+
+            platformOptions.forEach(platform => {
+                platform.addEventListener('click', function() {
+                    const selectedLocation = document.querySelector('.location-option.selected').dataset.location;
+                    const platformName = this.dataset.platform;
+                    window.open(locationUrls[selectedLocation][platformName], '_blank');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
