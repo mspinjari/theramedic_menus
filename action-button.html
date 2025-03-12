@@ -594,27 +594,67 @@
                         physical: {
                             name: "Physical Therapy",
                             icon: "🏃‍♂️",
-                            description: "Comprehensive physical rehabilitation for various conditions and injuries."
+                            description: "Comprehensive physical rehabilitation for various conditions and injuries.",
+                            details: [
+                                "Personalized exercise programs",
+                                "Manual therapy techniques",
+                                "Pain management strategies",
+                                "Functional movement training"
+                            ],
+                            duration: "45-60 minutes per session",
+                            frequency: "2-3 times per week initially"
                         },
                         occupational: {
                             name: "Occupational Therapy",
                             icon: "🔧",
-                            description: "Help with daily activities and workplace ergonomics."
+                            description: "Help with daily activities and workplace ergonomics.",
+                            details: [
+                                "Daily living skills training",
+                                "Workplace ergonomic assessment",
+                                "Adaptive equipment training",
+                                "Hand therapy"
+                            ],
+                            duration: "45-60 minutes per session",
+                            frequency: "2-3 times per week"
                         },
                         aquatic: {
                             name: "Aquatic Therapy",
                             icon: "🏊‍♂️",
-                            description: "Water-based therapy for gentle rehabilitation."
+                            description: "Water-based therapy for gentle rehabilitation.",
+                            details: [
+                                "Low-impact exercises",
+                                "Resistance training in water",
+                                "Balance and coordination",
+                                "Joint-friendly movements"
+                            ],
+                            duration: "30-45 minutes per session",
+                            frequency: "2 times per week"
                         },
                         speech: {
                             name: "Speech Language Therapy",
                             icon: "🗣️",
-                            description: "Communication and swallowing disorder treatment."
+                            description: "Communication and swallowing disorder treatment.",
+                            details: [
+                                "Articulation therapy",
+                                "Language intervention",
+                                "Voice therapy",
+                                "Swallowing therapy"
+                            ],
+                            duration: "45-60 minutes per session",
+                            frequency: "1-2 times per week"
                         },
                         pediatric: {
                             name: "Pediatric Therapy",
                             icon: "👶",
-                            description: "Specialized therapy services for children."
+                            description: "Specialized therapy services for children.",
+                            details: [
+                                "Developmental delay treatment",
+                                "Sensory integration",
+                                "Motor skills development",
+                                "Pediatric rehabilitation"
+                            ],
+                            duration: "30-45 minutes per session",
+                            frequency: "1-3 times per week"
                         },
                         telerehab: {
                             name: "Tele-Rehab",
@@ -899,7 +939,28 @@
                 "anklepain": "foot/ankle pain",
                 "ankle ache": "foot/ankle pain",
                 "ankleache": "foot/ankle pain",
-                "foot ache": "foot/ankle pain"
+                "foot ache": "foot/ankle pain",
+
+                // Service-related corrections
+                "aqua": "aquatic therapy",
+                "water therapy": "aquatic therapy",
+                "pool therapy": "aquatic therapy",
+                "hydro": "aquatic therapy",
+                "physical therapy": "physical therapy",
+                "pt": "physical therapy",
+                "physio": "physical therapy",
+                "occupational": "occupational therapy",
+                "ot": "occupational therapy",
+                "speech": "speech therapy",
+                "slp": "speech therapy",
+                "tele": "tele-rehab",
+                "virtual": "tele-rehab",
+                "online": "tele-rehab",
+                "remote": "tele-rehab",
+                "pediatric": "pediatric therapy",
+                "peds": "pediatric therapy",
+                "children": "pediatric therapy",
+                "kids": "pediatric therapy"
             };
 
             // Generate pain area buttons
@@ -929,7 +990,7 @@
             const BUTTON_OPTIONS = {
                 main: [
                     { text: "📅 Book Appointment", type: "appointment" },
-                    { text: "👩‍⚕️ Speak with Therapist", type: "staff" },
+                    { text: "👩‍⚕️ Our Services", type: "service" },
                     { text: "❓ Ask PT Questions", type: "questions" },
                     { text: "🏥 Clinic Info", type: "locations" }
                 ],
@@ -1307,11 +1368,43 @@
                     return Array.from(detectedAreas);
                 }
 
+                // Add this inside handleUserMessage function after the detectPainAreas check
+                function detectService(message) {
+                    const lowerMessage = message.toLowerCase();
+                    const detectedServices = new Set();
+
+                    Object.entries(SERVICES).forEach(([categoryKey, category]) => {
+                        Object.entries(category.services).forEach(([serviceKey, service]) => {
+                            const searchTerms = [
+                                serviceKey,
+                                service.name.toLowerCase(),
+                                ...(service.details || []).map(d => d.toLowerCase()),
+                                // Add common variations
+                                service.name.toLowerCase().replace(' therapy', ''),
+                                service.name.toLowerCase().replace(' rehabilitation', '')
+                            ];
+
+                            if (searchTerms.some(term => lowerMessage.includes(term))) {
+                                detectedServices.add({ categoryKey, serviceKey, service });
+                            }
+                        });
+                    });
+
+                    return Array.from(detectedServices);
+                }
+
                 // Handle user message
                 function handleUserMessage(message) {
                     // Apply spelling correction
                     const correctedMessage = correctSpelling(message);
                     const lowerMessage = correctedMessage.toLowerCase();
+
+                    // Check for services first
+                    const detectedServices = detectService(correctedMessage);
+                    if (detectedServices.length > 0) {
+                        handleServiceMessage(detectedServices);
+                        return;
+                    }
 
                     // Check for pain mentions first
                     const detectedPainAreas = detectPainAreas(lowerMessage);
@@ -1638,9 +1731,11 @@
                                 addBotMessage("What would you like to know more about?").then(() => {
                                     showOptions([
                                         { text: "💼 Insurance & Payment", type: "insurance" },
-                                        { text: "⏰ Treatment Duration", type: "duration" },
+                                        { text: "👩‍⚕️ Our Services", type: "service" },
                                         { text: "🧪 Treatment Methods", type: "methods" },
+                                        { text: "⏰ Treatment Duration", type: "ser" },
                                         { text: "🩺 Our Specialties", type: "specialties" }
+
                                     ]);
                                 });
                             });
@@ -1822,6 +1917,90 @@
                             });
                             break;
 
+                        case 'service':
+                            if (option.service) {
+                                let serviceData = null;
+                                Object.values(SERVICES).forEach(category => {
+                                    Object.values(category.services).forEach(service => {
+                                        if (service.name === option.service) {
+                                            serviceData = service;
+                                        }
+                                    });
+                                });
+
+                                if (serviceData) {
+                                    showTypingIndicator().then(() => {
+                                        addBotMessage([
+                                            `${serviceData.icon} ${serviceData.name}`,
+                                            serviceData.description,
+                                            "Our program includes:",
+                                            ...serviceData.details.map(detail => `• ${detail}`),
+                                            `Sessions typically last ${serviceData.duration}.`,
+                                            `We recommend ${serviceData.frequency} for optimal results.`,
+                                            "Would you like to schedule a session or learn more?"
+                                        ]).then(() => {
+                                            showOptions([
+                                                { text: `📅 Schedule ${serviceData.name}`, type: "appointment", service: serviceData.name },
+                                                { text: "❓ Ask Questions", type: "questions" },
+                                                { text: "🔄 View Other Services", type: "other_services" }
+                                            ]);
+                                        });
+                                    });
+                                }
+                            }
+                            break;
+
+                        case 'service_info':
+                            if (option.service) {
+                                let serviceData = null;
+                                Object.values(SERVICES).forEach(category => {
+                                    Object.values(category.services).forEach(service => {
+                                        if (service.name === option.service) {
+                                            serviceData = service;
+                                        }
+                                    });
+                                });
+
+                                if (serviceData) {
+                                    showTypingIndicator().then(() => {
+                                        addBotMessage([
+                                            `More about our ${serviceData.name}:`,
+                                            "What to expect:",
+                                            ...serviceData.details.map(detail => `• ${detail}`),
+                                            `\nTreatment Schedule:`,
+                                            `• Duration: ${serviceData.duration}`,
+                                            `• Frequency: ${serviceData.frequency}`,
+                                            "\nReady to start your treatment?"
+                                        ]).then(() => {
+                                            showOptions([
+                                                { text: "📅 Schedule Now", type: "appointment", service: serviceData.name },
+                                                { text: "💰 Insurance Coverage", type: "insurance" },
+                                                { text: "🔄 Back to Services", type: "other_services" }
+                                            ]);
+                                        });
+                                    });
+                                }
+                            }
+                            break;
+
+                        case 'other_services':
+                            showTypingIndicator().then(() => {
+                                addBotMessage("Here are our available services:").then(() => {
+                                    const serviceOptions = [];
+                                    Object.values(SERVICES).forEach(category => {
+                                        Object.values(category.services).forEach(service => {
+                                            serviceOptions.push({
+                                                text: `${service.icon} ${service.name}`,
+                                                type: "service",
+                                                service: service.name
+                                            });
+                                        });
+                                    });
+                                    showOptions(serviceOptions);
+                                });
+                            });
+                            break;
+
                         default:
                             // Default handling for unknown option types
                             addBotMessage("I'm not sure how to help with that specific request. Let me show you some options:").then(() => {
@@ -1902,6 +2081,52 @@
                         });
                     });
                 }
+
+                // Handle service-related messages
+                function handleServiceMessage(detectedServices) {
+                    if (detectedServices.length > 0) {
+                        const service = detectedServices[0].service;
+                        showTypingIndicator().then(() => {
+                            addBotMessage([
+                                `${service.icon} ${service.name}`,
+                                service.description,
+                                ...(service.details ? ["Our program includes:", ...service.details] : []),
+                                ...(service.duration ? [`Sessions typically last ${service.duration}`] : []),
+                                ...(service.frequency ? [`We recommend ${service.frequency}`] : []),
+                                "Would you like to schedule a session or learn more?"
+                            ]).then(() => {
+                                showOptions([
+                                    { text: `📅 Schedule ${service.name}`, type: "appointment", service: service.name },
+                                    { text: "❓ Ask Questions", type: "questions" },
+                                    { text: "🔄 View Other Services", type: "other_services" }
+                                ]);
+                            });
+                        });
+                    }
+                }
+
+                // Show specific service category
+                function showServiceCategory(categoryKey) {
+                    const category = SERVICES[categoryKey];
+                    showTypingIndicator().then(() => {
+                        addBotMessage([
+                            `${category.title}:`,
+                            ...Object.values(category.services).map(service =>
+                                `${service.icon} ${service.name} - ${service.description}`
+                            )
+                        ]).then(() => {
+                            const serviceOptions = Object.values(category.services).map(service => ({
+                                text: `${service.icon} ${service.name}`,
+                                type: "service",
+                                service: service.name
+                            }));
+                            showOptions([
+                                ...serviceOptions,
+                                { text: "🔄 Back to Services", type: "services" }
+                            ]);
+                        });
+                    });
+                }
             }
 
             // Initialize bot on page load
@@ -1954,33 +2179,33 @@
                 "STAFFORD": {
                     name: "STAFFORD/SUGAR LAND",
                     reviews: {
-                        google: "https://g.page/r/CdVXrRcI3_VFEAI/review",
-                        yelp: "https://www.yelp.com/biz/theramedic-stafford",
-                        facebook: "https://www.facebook.com/theramedic.stafford/reviews/"
+                        google: "https://g.page/r/CbpuSkoPonK5EBM/review",
+                        yelp: "https://www.yelp.com/biz/theramedic-rehab-and-physical-therapy-stafford-2",
+                        facebook: "https://www.facebook.com/theramedicrehab"
                     }
                 },
                 "SPRING": {
                     name: "SPRING",
                     reviews: {
-                        google: "https://g.page/r/CQpKvnvdgKFPEAI/review",
-                        yelp: "https://www.yelp.com/biz/theramedic-spring",
-                        facebook: "https://www.facebook.com/theramedic.spring/reviews/"
+                        google: "https://g.page/r/CVvhL6I9hS5iEBM/review",
+                        yelp: "https://www.yelp.com/biz/theramedic-rehab-houston",
+                        facebook: "https://www.facebook.com/theramedicrehab"
                     }
                 },
                 "KATY": {
                     name: "KATY",
                     reviews: {
-                        google: "https://g.page/r/CdB20A8WdOBxEAI/review",
-                        yelp: "https://www.yelp.com/biz/theramedic-katy",
-                        facebook: "https://www.facebook.com/theramedic.katy/reviews/"
+                        google: "https://g.page/r/CWw_87pfoIyxEBM/review",
+                        yelp: "https://www.yelp.com/biz/theramedic-rehab-and-physical-therapy-katy",
+                        facebook: "https://www.facebook.com/theramedickaty/reviews"
                     }
                 },
                 "SOUTHFIELD": {
                     name: "SOUTHEAST, MI",
                     reviews: {
-                        google: "https://g.page/r/CV9kjrUSYnBnEAI/review",
-                        yelp: "https://www.yelp.com/biz/theramedic-southeast",
-                        facebook: "https://www.facebook.com/theramedic.southeast/reviews/"
+                        google: "https://g.page/r/CQo8jfv1UW8PEBM/review",
+                        yelp: "https://www.yelp.com/biz/theramedic-rehab-and-physical-therapy-southfield",
+                        facebook: "https://www.facebook.com/Theramedicrehabsouthfield/reviews"
                     }
                 }
             };
