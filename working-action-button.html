@@ -156,7 +156,7 @@
         .pt-chatbot {
             display: flex;
             flex-direction: column;
-            height: 450px;
+            height: 400px;
             background-color: #fff;
             border-radius: 16px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -174,8 +174,7 @@
 
         .pt-chatbot-header h3 {
             margin: 0;
-            font-size: 14px;
-            line-height: 16px;
+            font-size: 16px;
         }
 
         .pt-close-button {
@@ -189,7 +188,7 @@
         .pt-chatbot-messages {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 15px 10px 15px 45px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -198,30 +197,15 @@
         .pt-bot-message,
         .pt-user-message {
             max-width: 80%;
-            padding: 8px;
+            padding: 10px;
             border-radius: 8px;
-            /* margin-bottom: 5px; */
+            margin-bottom: 5px;
         }
 
         .pt-bot-message {
             background-color: #E5F2FF;
             color: #333;
             align-self: flex-start;
-        }
-
-        .pt-bot-message::before {
-            content: '';
-            background-image: url('http://zystamatic-com.stackstaging.com/theramedicrehab/wp-content/uploads/2025/03/female_assistant.jpg');
-            background-size: cover;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 15px;
-            position: relative;
-            top: -5px;
-            margin-left: -45px;
         }
 
         .pt-user-message {
@@ -475,7 +459,7 @@
         <div class="fab shadow">
             <div class="fab-content ">
                 <i class="fas fa-headset"></i>
-                <i class="fas fa-times"></i>
+                <i class="fas fa-times pt-close-button-2"></i>
             </div>
         </div>
         <div class="sub-button shadow">
@@ -586,85 +570,6 @@
                 }
             };
 
-            // Add new service categories
-            const SERVICES = {
-                therapy: {
-                    title: "Therapy Services",
-                    services: {
-                        physical: {
-                            name: "Physical Therapy",
-                            icon: "🏃‍♂️",
-                            description: "Comprehensive physical rehabilitation for various conditions and injuries."
-                        },
-                        occupational: {
-                            name: "Occupational Therapy",
-                            icon: "🔧",
-                            description: "Help with daily activities and workplace ergonomics."
-                        },
-                        aquatic: {
-                            name: "Aquatic Therapy",
-                            icon: "🏊‍♂️",
-                            description: "Water-based therapy for gentle rehabilitation."
-                        },
-                        speech: {
-                            name: "Speech Language Therapy",
-                            icon: "🗣️",
-                            description: "Communication and swallowing disorder treatment."
-                        },
-                        pediatric: {
-                            name: "Pediatric Therapy",
-                            icon: "👶",
-                            description: "Specialized therapy services for children."
-                        },
-                        telerehab: {
-                            name: "Tele-Rehab",
-                            icon: "💻",
-                            description: "Remote therapy sessions via video conferencing."
-                        }
-                    }
-                },
-                recovery: {
-                    title: "Recovery Services",
-                    services: {
-                        auto: {
-                            name: "Auto Accident Injury Rehab",
-                            icon: "🚗",
-                            description: "Specialized rehabilitation for accident-related injuries."
-                        },
-                        sports: {
-                            name: "Sport Injuries",
-                            icon: "⚽",
-                            description: "Recovery programs for athletes and sports-related injuries."
-                        },
-                        cognitive: {
-                            name: "Cognitive Rehab",
-                            icon: "🧠",
-                            description: "Therapy for cognitive function improvement."
-                        },
-                        worker: {
-                            name: "Worker Injury",
-                            icon: "⚒️",
-                            description: "Work-related injury rehabilitation programs."
-                        },
-                        vestibular: {
-                            name: "Vestibular Rehab",
-                            icon: "🌀",
-                            description: "Treatment for balance and dizziness disorders."
-                        },
-                        fce: {
-                            name: "Functional Capacity Evaluation (FCE)",
-                            icon: "📊",
-                            description: "Comprehensive assessment of physical abilities."
-                        },
-                        stroke: {
-                            name: "Stroke Rehab",
-                            icon: "🫀",
-                            description: "Rehabilitation programs for stroke recovery."
-                        }
-                    }
-                }
-            };
-
             // Enhanced pain areas with more detailed information and treatment descriptions
             const PAIN_AREAS = {
                 "head_pain": {
@@ -732,29 +637,17 @@
             // Optimized FAQ responses - more conversational and concise
             const FAQs = {
                 greeting: [
-                    "Hi there! I'm your Theramedic Rehab! assistant.\nHow can I help you feel better today?",
-                    "Welcome to our Theramedic Rehab! What brings you in today?"
+                    "👋 Hi there! I'm your Theramedic Rehab! assistant. How can I help you feel better today?",
+                    "🤖 Welcome to our Theramedic Rehab! What brings you in today?"
                 ],
                 services: [
-                    "We offer comprehensive rehabilitation services including:",
-                    "Therapy Services:",
-                    "🏃‍♂️ Physical Therapy",
-                    "🔧 Occupational Therapy",
-                    "🏊‍♂️ Aquatic Therapy",
-                    "🗣️ Speech Language Therapy",
-                    "👶 Pediatric Therapy",
-                    "💻 Tele-Rehab",
-                    // "",
-                    "Recovery Services:",
-                    "🚗 Auto Accident Injury Rehab",
-                    "⚽ Sport Injuries",
-                    "🧠 Cognitive Rehab",
-                    "⚒️ Worker Injury",
-                    "🌀 Vestibular Rehab",
-                    "📊 Functional Capacity Evaluation",
-                    "🫀 Stroke Rehab",
-                    // "",
-                    "Would you like to learn more about any specific service?"
+                    "We offer specialized treatment for:",
+                    "• 🦴 Joint & muscle rehabilitation",
+                    "• 🏃‍♂️ Sports injuries",
+                    "• 🩺 Post-surgery recovery",
+                    "• 😌 Chronic pain management",
+                    "• 👶 Pediatric therapy",
+                    "Ready to feel better? Let's set up your appointment!"
                 ],
                 hours: [
                     "⏰ We're here for you:",
@@ -782,13 +675,13 @@
             // Spelling correction map
             const SPELLING_CORRECTIONS = {
                 // General corrections
-                // "physio": "physical therapy",
-                // "physioterapy": "physical therapy",
-                // "fisiotherapy": "physical therapy",
-                // "fisiotherapi": "physical therapy",
-                // "physiotherapy": "physical therapy",
-                // "therapy": "physical therapy",
-                // "therapist": "physical therapist",
+                "physio": "physical therapy",
+                "physioterapy": "physical therapy",
+                "fisiotherapy": "physical therapy",
+                "fisiotherapi": "physical therapy",
+                "physiotherapy": "physical therapy",
+                "therapy": "physical therapy",
+                "therapist": "physical therapist",
                 "appointment": "appointment",
                 "appoitment": "appointment",
                 "apointment": "appointment",
@@ -916,7 +809,7 @@
 
                 // Otherwise show all pain areas (limited to 5 at a time for UI purposes)
                 return Object.entries(PAIN_AREAS)
-                    .slice(0, 10) // Limit to first 5 areas for better UI
+                    .slice(0, 5) // Limit to first 5 areas for better UI
                     .map(([key, data]) => ({
                         text: `${data.icon} ${data.display}`,
                         type: "pain",
@@ -1912,43 +1805,20 @@
         });
     </script>
     <script>
-
         document.addEventListener('DOMContentLoaded', function () {
-
-
+            // ...existing code...
             const fab = document.querySelector('.fab');
             const fabContainer = document.querySelector('.fab-container');
 
-            // Get all chatbot elements
-            const reviewChatbot = document.querySelector('#review-chatbot-container .pt-chatbot');
-            const mainChatbot = document.querySelector('#pt-chatbot-container .pt-chatbot');
-            const reviewMessages = document.querySelector('#review-chatbot-container .pt-chatbot-messages');
-            const mainMessages = document.querySelector('#pt-chatbot-container .pt-chatbot-messages');
-            const mainToggleButton = document.querySelector('#pt-chatbot-container .pt-chatbot-toggle');
-
             fab.addEventListener('click', function () {
-                const wasActive = fabContainer.classList.contains('active');
-
-                // Toggle FAB state
                 fab.classList.toggle('active');
                 fabContainer.classList.toggle('active');
-
-                // If closing the FAB, close all chatbots and reset main chat
-                if (wasActive) {
-                    // Close both chatbots
-                    reviewChatbot.style.display = 'none';
-                    mainChatbot.style.display = 'none';
-
-                    // Clear all messages
-                    reviewMessages.innerHTML = '';
-                    mainMessages.innerHTML = '';
-
-                    // Reset main chat toggle button
-                    mainToggleButton.style.display = 'block';
-                }
             });
 
-
+            document.getElementById('reviewLink').addEventListener('click', function (e) {
+                e.preventDefault();
+                // Add your review functionality here
+            });
             // Review locations data
             const REVIEW_LOCATIONS = {
                 "STAFFORD": {
@@ -1985,21 +1855,27 @@
                 }
             };
 
+            // Initialize review chatbot
             const reviewLink = document.getElementById('reviewLink');
+            const reviewChatbot = document.querySelector('#review-chatbot-container .pt-chatbot');
+            const reviewMessages = document.querySelector('#review-chatbot-container .pt-chatbot-messages');
+            const reviewCloseButton = document.querySelector('#review-chatbot-container .pt-close-button');
 
+            // Show review chatbot
             reviewLink.addEventListener('click', function (e) {
                 e.preventDefault();
                 if (reviewChatbot.style.display === 'flex') {
+                    // If chatbot is visible, hide it and clear messages
                     reviewChatbot.style.display = 'none';
                     reviewMessages.innerHTML = '';
                 } else {
+                    // If chatbot is hidden, show it and start flow
                     reviewChatbot.style.display = 'flex';
                     startReviewFlow();
                 }
             });
 
             // Close review chatbot
-            const reviewCloseButton = document.querySelector('#review-chatbot-container .pt-close-button');
             reviewCloseButton.addEventListener('click', function () {
                 reviewChatbot.style.display = 'none';
                 reviewMessages.innerHTML = '';
@@ -2048,7 +1924,7 @@
 
                 // Add bot response with typing effect
                 setTimeout(() => {
-                    addBotMessage(`Thank you for choosing ${location.name}. \n\n We appreciate your feedback! Please select your preferred platform to share your experience:`);
+                    addBotMessage(`Thank you for choosing ${location.name}. We appreciate your feedback! Please select your preferred platform to share your experience:`);
 
                     // Add platform buttons
                     const platformContainer = document.createElement('div');
@@ -2107,8 +1983,6 @@
                 reviewMessages.appendChild(messageElement);
                 reviewMessages.scrollTop = reviewMessages.scrollHeight;
             }
-
-
         });
     </script>
 </body>
