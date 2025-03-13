@@ -883,6 +883,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (
         lowerMessage.includes("hello") ||
         lowerMessage.includes("hi ") ||
+        lowerMessage.includes("help") ||
         lowerMessage.includes("hey")
       ) {
         addBotMessage("👋 Hello! How can I help you today?").then(() => {
