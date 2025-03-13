@@ -11,10 +11,11 @@
     justify-content: flex-end;
     align-items: center;
     user-select: none;
-    position: absolute;
-    bottom: 50px;
+    position: fixed;
+    bottom: 20px;
     right: 50px;
     transform-origin: 0 0;
+    z-index: 10000;
 }
 
 .fab-container.active {
@@ -123,20 +124,6 @@
     opacity: 1;
 }
 
-
-#pt-chatbot-container {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    /* position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-    font-family: Arial, sans-serif; */
-}
-
-
-
 .pt-chatbot-wrapper {
     width: 300px;
     position: relative;
@@ -173,7 +160,7 @@
     border: none;
     color: white;
     font-size: 20px;
-    /* cursor: pointer; */
+    cursor: pointer !important;
 }
 
 .pt-chatbot-messages {
@@ -331,6 +318,7 @@ form input {
     border-radius: 8px;
     display: inline-block;
     text-align: left;
+    border-radius: 8px !important;
 
 }
 
@@ -341,8 +329,7 @@ form input {
     outline: 1px solid var(--primary-color);
     padding: 8px;
     margin: 5px;
-    border-radius: 8px;
-
+    border-radius: 8px !important;
 }
 
 .pt-option-button {
@@ -446,10 +433,19 @@ form input {
 }
 
 #review-chatbot-container {
-    position: absolute;
-    bottom: 110px;
+    position: fixed;
+    bottom: 80px;
     right: 50px;
+   
 }
+
+#main-chatbot-container {
+    position: fixed;
+    bottom: 80px;
+    right: 50px;
+  
+}
+
 
 .review-platforms>.pt-option-button>.fab {
     /* background-color: var(--white-color); */

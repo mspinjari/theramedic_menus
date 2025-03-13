@@ -11,175 +11,56 @@ import {
 
 document.addEventListener("DOMContentLoaded", function () {
 
- 
-  // Create chatbot HTML structure
-  function createChatbotHTML() {
-    const chatbotContainer = document.getElementById("pt-chatbot-container");
-    if (!chatbotContainer) return;
+  // Get chatbot elements
+  const mainChatbot = document.querySelector('#main-chatbot-container .pt-chatbot');
+  const mainMessages = document.querySelector('#main-chatbot-container .pt-chatbot-messages');
+  const chatLink = document.getElementById('chatLink');
+  const closeButton = document.querySelector('#main-chatbot-container .pt-close-button');
+  const sendButton = document.querySelector('#main-chatbot-container .pt-send-button');
+  const inputField = document.querySelector('#main-chatbot-container .pt-chatbot-input input');
+  
+  // Handle chat link click
+  chatLink?.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (mainChatbot.style.display === 'flex') {
+          mainChatbot.style.display = 'none';
+          mainMessages.innerHTML = '';
+      } else {
+          mainChatbot.style.display = 'flex';
+          initializeChatbot();
+      }
+  });
 
-    // Create the HTML structure
-    chatbotContainer.innerHTML = `
-        <div class="pt-chatbot-wrapper">
-          <div class="pt-chatbot" style="display: none;">
-            <div class="pt-chatbot-header">
-              <h3>PT Clinic Assistance</h3>
-              <button class="pt-close-button">&times;</button>
-            </div>
-            <div class="pt-chatbot-messages"></div>
-            <div class="pt-chatbot-input">
-              <input type="text" placeholder="Type your message...">
-              <button class="pt-send-button"><i class="fa-solid fa-paper-plane"></i></button>
-            </div>
-          </div>
-          <button class="pt-chatbot-toggle"><i class="fa-regular fa-comments"></i></button>
-        </div>
-    `;
-
-    // Add end chat modal
-    const endChatModal = document.createElement("div");
-    endChatModal.className = "end-chat-modal";
-    endChatModal.innerHTML = `
-        <div class="end-chat-content">
-            <h3>Do you want to leave current chat?</h3>
-            <div class="end-chat-buttons">
-                <button id="confirmEndChat" class="pt-send-button">END CHAT</button>
-                <button id="cancelEndChat" style="background-color: #ddd">Cancel</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(endChatModal);
-
-    // Add typing indicator style
-    const style = document.createElement("style");
-    style.textContent = `
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-        }
-        .typing-indicator span {
-            height: 8px;
-            width: 8px;
-            float: left;
-            margin: 0 1px;
-            background-color: #ff6e31;
-            display: block;
-            border-radius: 50%;
-            opacity: 0.4;
-        }
-        .typing-indicator span:nth-of-type(1) {
-            animation: 1s blink infinite 0.3333s;
-        }
-        .typing-indicator span:nth-of-type(2) {
-            animation: 1s blink infinite 0.6666s;
-        }
-        .typing-indicator span:nth-of-type(3) {
-            animation: 1s blink infinite 0.9999s;
-        }
-        @keyframes blink {
-            50% {
-                opacity: 1;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-
-    // Add appointment form template
-    const formTemplate = document.createElement("template");
-    formTemplate.innerHTML = `
-            <form id="appointment-form" class="pt-bot-message" style="display: none;">
-                <h4>Schedule Appointment</h4>
-                <div class="form-group">
-                    <label>Full Name:</label>
-                    <input type="text" name="name" required>
-                    <div class="error-message"></div>
-                </div>
-                <div class="form-group">
-                    <label>Phone Number:</label>
-                    <input type="tel" name="phone" required>
-                    <div class="error-message"></div>
-                </div>
-                <div class="form-group">
-                    <label>Email:</label>
-                    <input type="email" name="email" required>
-                    <div class="error-message"></div>
-                </div>
-                <div class="form-group">
-                    <label>Preferred Location:</label>
-                    <select name="location" required>
-                        <option value="">Select location</option>
-                        ${Object.keys(LOCATIONS)
-                          .map(
-                            (key) =>
-                              `<option value="${key}">${LOCATIONS[key].name}</option>`
-                          )
-                          .join("")}
-                    </select>
-                    <div class="error-message"></div>
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="pt-send-button">Submit</button>
-                    <button type="button" class="pt-cancel-form">Cancel</button>
-                </div>
-            </form>
-        `;
-    document.body.appendChild(formTemplate.content);
-
-    // Add form styles
-    style.textContent += `
-            #appointment-form {
-                padding: 15px;
-                margin: 10px 0;
-            }
-            .form-group {
-                margin-bottom: 15px;
-            }
-            .form-group label {
-                display: block;
-                margin-bottom: 5px;
-                font-weight: bold;
-            }
-            .form-group input, .form-group select {
-                width: 100%;
-                padding: 8px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                box-sizing: border-box;
-            }
-            .error-message {
-                color: #dc3545;
-                font-size: 12px;
-                margin-top: 4px;
-                display: none;
-            }
-            .form-buttons {
-                display: flex;
-                gap: 10px;
-                margin-top: 15px;
-            }
-            .pt-cancel-form {
-                background-color: #6c757d;
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-        `;
-    document.head.appendChild(style);
-
-    // Initialize chatbot functionality
-    initializeChatbot();
-  }
+  // Handle close button
+  closeButton?.addEventListener('click', function() {
+      mainChatbot.style.display = 'none';
+      mainMessages.innerHTML = '';
+  });
 
   // Initialize chatbot functionality
   function initializeChatbot() {
-    const chatbot = document.querySelector(".pt-chatbot");
-    const toggleButton = document.querySelector(".pt-chatbot-toggle");
-    const closeButton = document.querySelector(".pt-close-button");
-    const sendButton = document.querySelector(".pt-send-button");
-    const inputField = document.querySelector(".pt-chatbot-input input");
-    const messagesContainer = document.querySelector(".pt-chatbot-messages");
+    const messagesContainer = mainMessages;
+
+    // Move startInitialChat inside initializeChatbot
+    function startInitialChat() {
+      messagesContainer.innerHTML = '';
+
+      // First message
+      addBotMessage("Welcome to Theramedic Rehab! I'm here to assist you.");
+
+      // Second message with a slight delay
+      setTimeout(() => {
+        addBotMessage("How can I help you today?");
+      }, 1000);
+
+      // Third message with options after a delay
+      setTimeout(() => {
+        showOptions(BUTTON_OPTIONS.main);
+      }, 1500);
+    }
+
+    // Start chat immediately when initialized
+    startInitialChat();
 
     // Chat state
     let appointmentStage = null;
@@ -197,45 +78,11 @@ document.addEventListener("DOMContentLoaded", function () {
       formData: {},
     };
 
-    // Toggle chatbot visibility
-    toggleButton.addEventListener("click", () => {
-      chatbot.style.display = "flex";
-      toggleButton.style.display = "none";
-
-      // Add initial greeting if there are no messages
-      if (messagesContainer.children.length === 0) {
-        const randomGreeting =
-          FAQs.greeting[Math.floor(Math.random() * FAQs.greeting.length)];
-        showTypingIndicator()
-          .then(() => addBotMessage(randomGreeting))
-          .then(() => showOptions(BUTTON_OPTIONS.main));
-      }
-    });
-
-    // Close chatbot
-    closeButton.addEventListener("click", () => {
-      document.querySelector(".end-chat-modal").style.display = "flex";
-    });
-
-    // Add end chat handlers
-    document
-      .getElementById("cancelEndChat")
-      ?.addEventListener(
-        "click",
-        () => (document.querySelector(".end-chat-modal").style.display = "none")
-      );
-    document.getElementById("confirmEndChat")?.addEventListener("click", () => {
-      chatbot.style.display = "none";
-      toggleButton.style.display = "block";
-      document.querySelector(".end-chat-modal").style.display = "none";
-      clearConversation();
-    });
-
     // Send message
-    sendButton.addEventListener("click", sendUserMessage);
+    sendButton?.addEventListener("click", sendUserMessage);
 
     // Send message on Enter key
-    inputField.addEventListener("keypress", (e) => {
+    inputField?.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
         sendUserMessage();
       }
@@ -715,42 +562,53 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // Start appointment scheduling
+    // Fix the startAppointmentScheduling function
     function startAppointmentScheduling(option = {}) {
+      // Get elements
+      const chatbotInput = document.querySelector('#main-chatbot-container .pt-chatbot-input');
+      const template = document.querySelector('#appointment-form-template');
+      const originalForm = template.content.querySelector('#appointment-form');
+      
       // Hide regular input
-      document.querySelector(".pt-chatbot-input").style.display = "none";
-
+      if (chatbotInput) {
+          chatbotInput.style.display = 'none';
+      }
+  
       // Clone and show form
-      const originalForm = document.getElementById("appointment-form");
       const form = originalForm.cloneNode(true);
-      form.style.display = "block";
-      messagesContainer.appendChild(form);
-
-      // Pre-select location if coming from location selection
+      form.style.display = 'block';
+  
+      // Add locations to select
+      const locationSelect = form.querySelector('select[name="location"]');
+      Object.entries(LOCATIONS).forEach(([key, data]) => {
+          const option = document.createElement('option');
+          option.value = key;
+          option.textContent = data.name;
+          locationSelect.appendChild(option);
+      });
+  
+      // Pre-select location if provided
       if (option.location && option.preselect) {
-        const locationSelect = form.querySelector('[name="location"]');
-        locationSelect.value = option.location;
+          locationSelect.value = option.location;
       }
-
-      // Save pain area context if present
-      if (option.area) {
-        conversationState.lastPainArea = option.area;
-      }
-
+  
+      messagesContainer.appendChild(form);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
+  
       // Form submission handler
-      form.onsubmit = (e) => {
-        e.preventDefault();
-        handleFormSubmission(form);
-      };
-
+      form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          handleFormSubmission(form);
+      });
+  
       // Cancel button handler
-      form.querySelector(".pt-cancel-form").onclick = () => {
-        form.remove();
-        document.querySelector(".pt-chatbot-input").style.display = "flex";
-      };
-    }
+      form.querySelector('.pt-cancel-form').addEventListener('click', () => {
+          form.remove();
+          if (chatbotInput) {
+              chatbotInput.style.display = 'flex';
+          }
+      });
+  }
 
     // Validate US phone number
     function validatePhoneNumber(phone) {
@@ -883,7 +741,6 @@ document.addEventListener("DOMContentLoaded", function () {
       if (
         lowerMessage.includes("hello") ||
         lowerMessage.includes("hi ") ||
-        lowerMessage.includes("help") ||
         lowerMessage.includes("hey")
       ) {
         addBotMessage("👋 Hello! How can I help you today?").then(() => {
@@ -1313,7 +1170,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Initialize bot on page load
-  createChatbotHTML();
+  // Initialize bot
+  initializeChatbot();
 });
 document.addEventListener("DOMContentLoaded", function () {});

@@ -7,7 +7,7 @@
     <title>Document</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="action-button.css">
-   
+
 </head>
 
 <body>
@@ -26,22 +26,9 @@
         </div>
         <div class="sub-button shadow">
             <span class="tooltip">Chat with us</span>
-            <div id="pt-chatbot-container">
-                <div class="pt-chatbot-wrapper">
-                    <div class="pt-chatbot" style="display: none;">
-                        <div class="pt-chatbot-header">
-                            <h3>PT Clinic Assistance</h3>
-                            <button class="pt-close-button">&times;</button>
-                        </div>
-                        <div class="pt-chatbot-messages"></div>
-                        <div class="pt-chatbot-input">
-                            <input type="text" placeholder="Type your message...">
-                            <button class="pt-send-button"><i class="fa-solid fa-paper-plane"></i></button>
-                        </div>
-                    </div>
-                    <button class="pt-chatbot-toggle"> <i class="fa-regular fa-comments"></i></button>
-                </div>
-            </div>
+            <a href="#" id="chatLink">
+                <i class="fa-regular fa-comments"></i>
+            </a>
         </div>
     </div>
 
@@ -50,22 +37,28 @@
         <div class="pt-chatbot" style="display: none;">
             <div class="pt-chatbot-header">
                 <h3>Leave a Review</h3>
-                <button class="pt-close-button">&times;</button>
+                <a class="pt-close-button"><i class="fa-solid fa-xmark"></i></a>
             </div>
             <div class="pt-chatbot-messages"></div>
         </div>
     </div>
 
-    <!-- End Chat Modal -->
-    <div class="end-chat-modal">
-        <div class="end-chat-content">
-            <h3>Do you want to leave current chat?</h3>
-            <div class="end-chat-buttons">
-                <button id="confirmEndChat" class="pt-send-button">End Chat</button>
-                <button id="cancelEndChat" class="pt-send-button">Cancel</button>
+    <!-- Main Chatbot -->
+    <div id="main-chatbot-container" class="pt-chatbot-wrapper">
+        <div class="pt-chatbot" style="display: none;">
+            <div class="pt-chatbot-header">
+                <h3>PT Clinic Assistance</h3>
+                <a class="pt-close-button"><i class="fa-solid fa-xmark"></i></a>
+            </div>
+            <div class="pt-chatbot-messages"></div>
+            <div class="pt-chatbot-input">
+                <input type="text" placeholder="Type your message...">
+                <a class="pt-send-button"><i class="fa-solid fa-paper-plane"></i></a>
             </div>
         </div>
     </div>
+
+    
 
     <!-- Appointment Form Template -->
     <template id="appointment-form-template">
@@ -100,10 +93,8 @@
         </form>
     </template>
 
-    
-    
-     <script type="module" src="chatbot.js"></script>
-     <script type="module" src="reviews-bot.js"></script>
+    <script type="module" src="chatbot.js"></script>
+    <script type="module" src="reviews-bot.js"></script>
 </body>
 
 </html>

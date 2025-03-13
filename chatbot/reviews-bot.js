@@ -2,15 +2,16 @@
 document.addEventListener('DOMContentLoaded', function () {
 
 
+
     const fab = document.querySelector('.fab');
     const fabContainer = document.querySelector('.fab-container');
 
     // Get all chatbot elements
     const reviewChatbot = document.querySelector('#review-chatbot-container .pt-chatbot');
-    const mainChatbot = document.querySelector('#pt-chatbot-container .pt-chatbot');
+    const mainChatbot = document.querySelector('#main-chatbot-container .pt-chatbot');
     const reviewMessages = document.querySelector('#review-chatbot-container .pt-chatbot-messages');
-    const mainMessages = document.querySelector('#pt-chatbot-container .pt-chatbot-messages');
-    const mainToggleButton = document.querySelector('#pt-chatbot-container .pt-chatbot-toggle');
+    const mainMessages = document.querySelector('#main-chatbot-container .pt-chatbot-messages');
+    const mainToggleButton = document.querySelector('#main-chatbot-container .pt-chatbot-toggle');
 
     fab.addEventListener('click', function () {
         const wasActive = fabContainer.classList.contains('active');
