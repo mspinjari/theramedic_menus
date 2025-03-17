@@ -3,8 +3,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    const fab = document.querySelector('.fab');
-    const fabContainer = document.querySelector('.fab-container');
+    const thera_fab = document.querySelector('.thera_fab');
+    const fabContainer = document.querySelector('.thera_fab-container');
+    
 
     // Get all chatbot elements
     const reviewChatbot = document.querySelector('#review-chatbot-container .pt-chatbot');
@@ -13,11 +14,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const mainMessages = document.querySelector('#main-chatbot-container .pt-chatbot-messages');
     const mainToggleButton = document.querySelector('#main-chatbot-container .pt-chatbot-toggle');
 
-    fab.addEventListener('click', function () {
+    thera_fab.addEventListener('click', function () {
         const wasActive = fabContainer.classList.contains('active');
 
         // Toggle FAB state
-        fab.classList.toggle('active');
+        thera_fab.classList.toggle('active');
         fabContainer.classList.toggle('active');
 
         // If closing the FAB, close all chatbots and reset main chat

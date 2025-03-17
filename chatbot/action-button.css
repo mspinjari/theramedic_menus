@@ -5,7 +5,7 @@
     --light-gray: #ADADAD;
 }
 
-.fab-container {
+.thera_fab-container {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -18,19 +18,19 @@
     z-index: 10000;
 }
 
-.fab-container.active {
+.thera_fab-container.active {
     height: 100%;
 }
 
-.fab-container.active .sub-button:nth-child(2) {
+.thera_fab-container.active .sub-button:nth-child(2) {
     transform: translateY(-60px);
 }
 
-.fab-container.active .sub-button:nth-child(3) {
+.thera_fab-container.active .sub-button:nth-child(3) {
     transform: translateY(-120px);
 }
 
-.fab {
+.thera_fab {
     position: relative;
     height: 50px;
     width: 50px;
@@ -40,7 +40,7 @@
     cursor: pointer;
 }
 
-.fab .fab-content {
+.thera_fab .thera_fab-content {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -49,24 +49,24 @@
     border-radius: 50%;
 }
 
-.fab .fab-content i {
+.thera_fab .thera_fab-content i {
     color: white;
     font-size: 24px;
     transition: all 0.5s;
     position: absolute;
 }
 
-.fab .fab-content i.fa-times {
+.thera_fab .thera_fab-content i.fa-times {
     transform: rotate(-180deg);
     opacity: 0;
 }
 
-.fab.active .fab-content i.fa-headset {
+.thera_fab.active .thera_fab-content i.fa-headset {
     transform: rotate(180deg);
     opacity: 0;
 }
 
-.fab.active .fab-content i.fa-times {
+.thera_fab.active .thera_fab-content i.fa-times {
     transform: rotate(0);
     opacity: 1;
 }
@@ -225,8 +225,8 @@
 }
 
 .pt-send-button {
-    background-color: var(--blue-color);
-    color: white;
+    background-color: var(--blue-color) !important;
+    color: white !important;
     border: none;
     padding: 10px;
     border-radius: 8px;
@@ -325,8 +325,16 @@ form input {
 
 .pt-option-button:hover {
     background-color: var(--white-color);
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
     outline: 1px solid var(--primary-color);
+    padding: 8px;
+    margin: 5px;
+    border-radius: 8px !important;
+}
+.pt-option-button:focus {
+    background-color: var(--white-color);
+    color: var(--primary-color) !important;
+    outline: 1px solid var(--primary-color) !important;
     padding: 8px;
     margin: 5px;
     border-radius: 8px !important;
@@ -349,7 +357,18 @@ form input {
     top: 50%;
     transform: translateY(-50%);
 }
-
+.pt-option-button:focus::after {
+    content: "✓";
+    position: absolute;
+    font-size: 10px;
+    padding: 4px 7px;
+    border-radius: 100%;
+    color: var(--white-color);
+    background-color: var(--primary-color);
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
 
 #appointment-form {
     padding: 15px;
@@ -375,6 +394,17 @@ form input {
     box-sizing: border-box;
 }
 
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 80px;
+   
+}
+
 .error-message {
     color: #dc3545;
     font-size: 12px;
@@ -389,8 +419,8 @@ form input {
 }
 
 .pt-cancel-form {
-    background-color: #6c757d;
-    color: white;
+    background-color: #6c757d !important;
+    color: white !important;
     border: none;
     padding: 8px 12px;
     border-radius: 4px;
@@ -434,7 +464,7 @@ form input {
 }
 
 
-.review-platforms>.pt-option-button>.fab {
+.review-platforms>.pt-option-button>.thera_fab {
     /* background-color: var(--white-color); */
     color: var(--white-color);
     border: none;

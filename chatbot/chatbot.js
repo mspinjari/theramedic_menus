@@ -10,31 +10,40 @@ import {
 } from "./config.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-
   // Get chatbot elements
-  const mainChatbot = document.querySelector('#main-chatbot-container .pt-chatbot');
-  const mainMessages = document.querySelector('#main-chatbot-container .pt-chatbot-messages');
-  const chatLink = document.getElementById('chatLink');
-  const closeButton = document.querySelector('#main-chatbot-container .pt-close-button');
-  const sendButton = document.querySelector('#main-chatbot-container .pt-send-button');
-  const inputField = document.querySelector('#main-chatbot-container .pt-chatbot-input input');
-  
+  const mainChatbot = document.querySelector(
+    "#main-chatbot-container .pt-chatbot"
+  );
+  const mainMessages = document.querySelector(
+    "#main-chatbot-container .pt-chatbot-messages"
+  );
+  const chatLink = document.getElementById("chatLink");
+  const closeButton = document.querySelector(
+    "#main-chatbot-container .pt-close-button"
+  );
+  const sendButton = document.querySelector(
+    "#main-chatbot-container .pt-send-button"
+  );
+  const inputField = document.querySelector(
+    "#main-chatbot-container .pt-chatbot-input input"
+  );
+
   // Handle chat link click
-  chatLink?.addEventListener('click', function(e) {
-      e.preventDefault();
-      if (mainChatbot.style.display === 'flex') {
-          mainChatbot.style.display = 'none';
-          mainMessages.innerHTML = '';
-      } else {
-          mainChatbot.style.display = 'flex';
-          initializeChatbot();
-      }
+  chatLink?.addEventListener("click", function (e) {
+    e.preventDefault();
+    if (mainChatbot.style.display === "flex") {
+      mainChatbot.style.display = "none";
+      mainMessages.innerHTML = "";
+    } else {
+      mainChatbot.style.display = "flex";
+      initializeChatbot();
+    }
   });
 
   // Handle close button
-  closeButton?.addEventListener('click', function() {
-      mainChatbot.style.display = 'none';
-      mainMessages.innerHTML = '';
+  closeButton?.addEventListener("click", function () {
+    mainChatbot.style.display = "none";
+    mainMessages.innerHTML = "";
   });
 
   // Initialize chatbot functionality
@@ -43,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Move startInitialChat inside initializeChatbot
     function startInitialChat() {
-      messagesContainer.innerHTML = '';
+      messagesContainer.innerHTML = "";
 
       // First message
       addBotMessage("Welcome to Theramedic Rehab! I'm here to assist you.");
@@ -273,7 +282,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }
           // Check keywords if they exist
           if (service.keywords) {
-            service.keywords.forEach(keyword => {
+            service.keywords.forEach((keyword) => {
               if (lowerMessage.includes(keyword.toLowerCase())) {
                 detectedServices.add({ key, service, category });
               }
@@ -291,7 +300,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const lowerMessage = correctedMessage.toLowerCase();
 
       // Check for insurance query
-      if (/(do you (?:accept|take)|covered by|insurance plan) .+/i.test(message)) {
+      if (
+        /(do you (?:accept|take)|covered by|insurance plan) .+/i.test(message)
+      ) {
         showTypingIndicator().then(() => {
           addBotMessage(FAQs.insuranceQuery).then(() => {
             startAppointmentScheduling();
@@ -301,7 +312,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // Check for treatment plan query
-      if (/(what's|whats|what is).*(?:included|treatment plan|therapy plan)/i.test(message)) {
+      if (
+        /(what's|whats|what is).*(?:included|treatment plan|therapy plan)/i.test(
+          message
+        )
+      ) {
         showTypingIndicator().then(() => {
           addBotMessage(FAQs.treatmentPlan).then(() => {
             startAppointmentScheduling();
@@ -372,7 +387,7 @@ document.addEventListener("DOMContentLoaded", function () {
         lowerMessage.includes("what do you do") ||
         lowerMessage.includes("treat")
       ) {
-        showServiceCategories()
+        showServiceCategories();
       } else if (
         lowerMessage.includes("hour") ||
         lowerMessage.includes("open")
@@ -409,8 +424,13 @@ document.addEventListener("DOMContentLoaded", function () {
             showOptions(BUTTON_OPTIONS.painAreas);
           });
         });
-      } else {
-        handleRandomInput();
+      } 
+      
+      // else {
+      //   handleRandomInput();
+      // }
+      else {
+        handleRandomInput(correctedMessage);  // Pass the corrected message
       }
     }
 
@@ -471,17 +491,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // Handle service related queries
     function handleServiceMessage(serviceType, category) {
       const service = SERVICES[category]?.services[serviceType];
-      if (!service) return handleRandomInput();
+      // if (!service) return handleRandomInput();
+      if (!service) return handleRandomInput(correctedMessage);
 
       showTypingIndicator().then(() => {
         const messages = [
           `Our ${service.name} service includes:`,
-          service.description
+          service.description,
         ];
 
         if (service.details) {
           messages.push("We provide:");
-          messages.push(...service.details.map(detail => `• ${detail}`));
+          messages.push(...service.details.map((detail) => `• ${detail}`));
         }
 
         if (service.duration) {
@@ -502,7 +523,7 @@ document.addEventListener("DOMContentLoaded", function () {
               service: serviceType,
             },
             { text: "❓ More Questions", type: "questions" },
-            { text: "🔄 View Other Services", type: "service" }
+            { text: "🔄 View Other Services", type: "service" },
           ]);
         });
       });
@@ -511,33 +532,40 @@ document.addEventListener("DOMContentLoaded", function () {
     // Show service categories
     function showServiceCategories() {
       showTypingIndicator().then(() => {
-        addBotMessage("What type of service are you interested in?").then(() => {
-          const serviceButtons = Object.entries(SERVICES).map(([category, data]) => ({
-            text: `${data.title}`,
-            type: "service_category",
-            category: category
-          }));
-          showOptions(serviceButtons);
-        });
+        addBotMessage("What type of service are you interested in?").then(
+          () => {
+            const serviceButtons = Object.entries(SERVICES).map(
+              ([category, data]) => ({
+                text: `${data.title}`,
+                type: "service_category",
+                category: category,
+              })
+            );
+            showOptions(serviceButtons);
+          }
+        );
       });
     }
 
     // Show services in a category
     function showServicesInCategory(category) {
       const categoryData = SERVICES[category];
-      if (!categoryData) return handleRandomInput();
+      // if (!categoryData) return handleRandomInput();
+      if (!categoryData) return handleRandomInput(correctedMessage);
 
       showTypingIndicator().then(() => {
         addBotMessage(`Here are our ${categoryData.title}:`).then(() => {
-          const serviceButtons = Object.entries(categoryData.services).map(([key, service]) => ({
-            text: `${service.icon} ${service.name}`,
-            type: "service_detail",
-            service: key,
-            category: category
-          }));
+          const serviceButtons = Object.entries(categoryData.services).map(
+            ([key, service]) => ({
+              text: `${service.icon} ${service.name}`,
+              type: "service_detail",
+              service: key,
+              category: category,
+            })
+          );
           showOptions([
             ...serviceButtons,
-            { text: "↩️ Back to Categories", type: "service" }
+            { text: "↩️ Back to Categories", type: "service" },
           ]);
         });
       });
@@ -565,50 +593,52 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fix the startAppointmentScheduling function
     function startAppointmentScheduling(option = {}) {
       // Get elements
-      const chatbotInput = document.querySelector('#main-chatbot-container .pt-chatbot-input');
-      const template = document.querySelector('#appointment-form-template');
-      const originalForm = template.content.querySelector('#appointment-form');
-      
+      const chatbotInput = document.querySelector(
+        "#main-chatbot-container .pt-chatbot-input"
+      );
+      const template = document.querySelector("#appointment-form-template");
+      const originalForm = template.content.querySelector("#appointment-form");
+
       // Hide regular input
       if (chatbotInput) {
-          chatbotInput.style.display = 'none';
+        chatbotInput.style.display = "none";
       }
-  
+
       // Clone and show form
       const form = originalForm.cloneNode(true);
-      form.style.display = 'block';
-  
+      form.style.display = "block";
+
       // Add locations to select
       const locationSelect = form.querySelector('select[name="location"]');
       Object.entries(LOCATIONS).forEach(([key, data]) => {
-          const option = document.createElement('option');
-          option.value = key;
-          option.textContent = data.name;
-          locationSelect.appendChild(option);
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = data.name;
+        locationSelect.appendChild(option);
       });
-  
+
       // Pre-select location if provided
       if (option.location && option.preselect) {
-          locationSelect.value = option.location;
+        locationSelect.value = option.location;
       }
-  
+
       messagesContainer.appendChild(form);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
-  
+
       // Form submission handler
-      form.addEventListener('submit', (e) => {
-          e.preventDefault();
-          handleFormSubmission(form);
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        handleFormSubmission(form);
       });
-  
+
       // Cancel button handler
-      form.querySelector('.pt-cancel-form').addEventListener('click', () => {
-          form.remove();
-          if (chatbotInput) {
-              chatbotInput.style.display = 'flex';
-          }
+      form.querySelector(".pt-cancel-form").addEventListener("click", () => {
+        form.remove();
+        if (chatbotInput) {
+          chatbotInput.style.display = "flex";
+        }
       });
-  }
+    }
 
     // Validate US phone number
     function validatePhoneNumber(phone) {
@@ -691,18 +721,27 @@ document.addEventListener("DOMContentLoaded", function () {
           PAIN_AREAS[conversationState.lastPainArea].display.toLowerCase();
       }
 
+      const messages = [
+        "🎉 Appointment Request Received!",
+        `Name: ${data.name}`,
+        `Phone: ${data.phone}`,
+        `Email: ${data.email}`,
+        `Location: ${location.name}`,
+      ];
+
+      // Only add comment to messages if it exists and is not empty
+      if (data.comment && data.comment.trim()) {
+        messages.push(`Comments: ${data.comment}`);
+      }
+
+      messages.push(
+        "Our team will contact you within 24 hours to confirm your appointment.",
+        "Thank you for choosing Theramedic Rehab!"
+      );
+
       showTypingIndicator().then(() => {
-        addBotMessage([
-          "🎉 Appointment Request Received!",
-          `Name: ${data.name}`,
-          `Phone: ${data.phone}`,
-          `Email: ${data.email}`,
-          `Location: ${location.name}`,
-          "Our team will contact you within 24 hours to confirm your appointment.",
-          "Thank you for choosing Theramedic Rehab!",
-        ]).then(() => {
+        addBotMessage(messages).then(() => {
           showOptions([
-            // { text: "📅 View Appointment Details", type: "appointment_details" },
             { text: "📞 I have more questions", type: "questions" },
             { text: "🏠 Return to Main Menu", type: "back_to_main" },
           ]);
@@ -733,14 +772,48 @@ document.addEventListener("DOMContentLoaded", function () {
       appointmentStage = null;
     }
 
+    // // Handle random input with enhanced detection
+    // function handleRandomInput() {
+    //   // Check for common intents that might not have been caught
+    //   const lowerMessage = inputField.value.toLowerCase();
+
+    //   if (
+    //     lowerMessage.includes("hello") ||
+    //     lowerMessage.includes("hi") ||
+    //     lowerMessage.includes("help") ||
+    //     lowerMessage.includes("hey")
+    //   ) {
+    //     addBotMessage("👋 Hello! How can I help you today?").then(() => {
+    //       showOptions(BUTTON_OPTIONS.main);
+    //     });
+    //   } else if (
+    //     lowerMessage.includes("thanks") ||
+    //     lowerMessage.includes("thank you")
+    //   ) {
+    //     addBotMessage(
+    //       "You're welcome! Is there anything else I can help you with today?"
+    //     );
+    //   } else {
+    //     // Default response with helpful options
+    //     addBotMessage([
+    //       "I didn’t quite get that. Try filling out the BOOK APPOINTMENT for better assistance! Let me help you with some common questions:",
+    //     ]).then(() => {
+    //       showOptions(BUTTON_OPTIONS.main);
+    //       // startAppointmentScheduling();
+    //     });
+    //   }
+    // }
+
     // Handle random input with enhanced detection
-    function handleRandomInput() {
-      // Check for common intents that might not have been caught
-      const lowerMessage = inputField.value.toLowerCase();
+    function handleRandomInput(message) {
+      // Add message parameter
+      // Use the passed message instead of inputField.value
+      const lowerMessage = message.toLowerCase();
 
       if (
         lowerMessage.includes("hello") ||
-        lowerMessage.includes("hi ") ||
+        lowerMessage.includes("hi") ||
+        lowerMessage.includes("help") ||
         lowerMessage.includes("hey")
       ) {
         addBotMessage("👋 Hello! How can I help you today?").then(() => {
@@ -756,7 +829,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         // Default response with helpful options
         addBotMessage([
-          "I'm not sure I understood that completely. Let me help you with some common questions:",
+          "I didn’t quite get that. Try filling out the BOOK APPOINTMENT for better assistance! Let me help you with some common questions:",
         ]).then(() => {
           showOptions(BUTTON_OPTIONS.main);
         });
@@ -1118,16 +1191,16 @@ document.addEventListener("DOMContentLoaded", function () {
     function handleServiceQuery(detectedServices) {
       if (detectedServices.length === 1) {
         const { service, category } = detectedServices[0];
-        
+
         showTypingIndicator().then(() => {
           const messages = [
             `Let me tell you about our ${service.name} service:`,
-            service.description
+            service.description,
           ];
 
           if (service.details) {
             messages.push("This service includes:");
-            messages.push(...service.details.map(detail => `• ${detail}`));
+            messages.push(...service.details.map((detail) => `• ${detail}`));
           }
 
           if (service.duration) {
@@ -1138,31 +1211,35 @@ document.addEventListener("DOMContentLoaded", function () {
             messages.push(`⏰ Recommended frequency: ${service.frequency}`);
           }
 
-          messages.push("Would you like to learn more or schedule an appointment?");
+          messages.push(
+            "Would you like to learn more or schedule an appointment?"
+          );
 
           addBotMessage(messages).then(() => {
             showOptions([
               {
                 text: `📅 Schedule ${service.name}`,
                 type: "appointment",
-                service: service.name
+                service: service.name,
               },
               { text: "❓ Ask More Questions", type: "questions" },
-              { text: "🔄 View Other Services", type: "service" }
+              { text: "🔄 View Other Services", type: "service" },
             ]);
           });
         });
       } else if (detectedServices.length > 1) {
         showTypingIndicator().then(() => {
           addBotMessage([
-            "I found multiple services that might interest you. Which one would you like to learn more about?"
+            "I found multiple services that might interest you. Which one would you like to learn more about?",
           ]).then(() => {
-            const serviceButtons = detectedServices.map(({ service, category }) => ({
-              text: `${service.icon} ${service.name}`,
-              type: "service_detail",
-              service: service.name,
-              category: category
-            }));
+            const serviceButtons = detectedServices.map(
+              ({ service, category }) => ({
+                text: `${service.icon} ${service.name}`,
+                type: "service_detail",
+                service: service.name,
+                category: category,
+              })
+            );
             showOptions(serviceButtons);
           });
         });

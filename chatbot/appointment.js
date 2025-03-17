@@ -7,6 +7,7 @@ export class AppointmentHandler {
             phone: "",
             email: "",
             location: "",
+            comment: ""  // Add comment field
         };
     }
 
@@ -106,6 +107,11 @@ export class AppointmentHandler {
 
     submitAppointment(details) {
         console.log("Appointment submitted:", details);
+        // Show success message with comment if provided
+        const successMessage = details.comment 
+            ? `Thank you for your appointment request. We've noted your comment: "${details.comment}"`
+            : "Thank you for your appointment request.";
+        console.log(successMessage);
         // Server submission code here
     }
 }
