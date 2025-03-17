@@ -333,7 +333,8 @@ form input {
 }
 
 .pt-option-button {
-    position: relative; /* Add this */
+    position: relative;
+    /* Add this */
 }
 
 .pt-option-button:hover::after {
@@ -432,20 +433,6 @@ form input {
     }
 }
 
-#review-chatbot-container {
-    position: fixed;
-    bottom: 80px;
-    right: 50px;
-   
-}
-
-#main-chatbot-container {
-    position: fixed;
-    bottom: 80px;
-    right: 50px;
-  
-}
-
 
 .review-platforms>.pt-option-button>.fab {
     /* background-color: var(--white-color); */
@@ -458,4 +445,19 @@ form input {
     background-color: inherit !important;
 
 
+}
+
+
+#review-chatbot-container {
+    position: fixed;
+    bottom: 80px;
+    right: 50px;
+z-index: 10000;
+}
+
+#main-chatbot-container {
+    position: fixed;
+    bottom: 80px;
+    right: 50px;
+    z-index: 10000;
 }
