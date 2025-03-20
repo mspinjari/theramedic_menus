@@ -51,21 +51,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const messagesContainer = mainMessages;
 
     // Move startInitialChat inside initializeChatbot
-    function startInitialChat() {
+    async function startInitialChat() {
       messagesContainer.innerHTML = "";
 
-      // First message
-      addBotMessage("Welcome to Theramedic Rehab! I'm here to assist you.");
+      // First message with typing effect
+      await addBotMessage("Welcome to Theramedic Rehab! I'm here to assist you.");
 
-      // Second message with a slight delay
-      setTimeout(() => {
-        addBotMessage("How can I help you today?");
-      }, 1000);
+      // Second message after first completes
+      await addBotMessage("How can I help you today?");
 
-      // Third message with options after a delay
-      setTimeout(() => {
-        showOptions(BUTTON_OPTIONS.main);
-      }, 1500);
+      // Show options after messages complete
+
+      // await new Promise(resolve => setTimeout(resolve, 500));
+      // showOptions(BUTTON_OPTIONS.main);
+
+      await showOptions(BUTTON_OPTIONS.main);
     }
 
     // Start chat immediately when initialized
@@ -189,22 +189,43 @@ document.addEventListener("DOMContentLoaded", function () {
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    // Correct spelling in user message
+    // // Correct spelling in user message
+    // function correctSpelling(text) {
+    //   let correctedText = text.toLowerCase();
+
+    //   // Apply spelling corrections
+    //   Object.keys(SPELLING_CORRECTIONS).forEach((misspelled) => {
+    //     const regex = new RegExp(`\\b${misspelled}\\b`, "gi");
+    //     correctedText = correctedText.replace(
+    //       regex,
+    //       SPELLING_CORRECTIONS[misspelled]
+    //     );
+    //   });
+
+    //   return correctedText;
+    // }
     function correctSpelling(text) {
-      let correctedText = text.toLowerCase();
-
+      let correctedText = text.toLowerCase(); // Convert input text to lowercase once
+    
       // Apply spelling corrections
-      Object.keys(SPELLING_CORRECTIONS).forEach((misspelled) => {
-        const regex = new RegExp(`\\b${misspelled}\\b`, "gi");
-        correctedText = correctedText.replace(
-          regex,
-          SPELLING_CORRECTIONS[misspelled]
-        );
-      });
-
+      for (const correctedPhrase in SPELLING_CORRECTIONS) {
+        const variations = SPELLING_CORRECTIONS[correctedPhrase];
+    
+        if (Array.isArray(variations)) {
+          // Handle array of variations
+          variations.forEach((variation) => {
+            const regex = new RegExp(`\\b${variation}\\b`, "gi");
+            correctedText = correctedText.replace(regex, correctedPhrase);
+          });
+        } else {
+          // Handle single string correction (original logic)
+          const regex = new RegExp(`\\b${correctedPhrase}\\b`, "gi"); // use correctedPhrase as misspelled to match keys.
+          correctedText = correctedText.replace(regex, variations); // variations here is the single corrected string
+        }
+      }
+    
       return correctedText;
     }
-
     // Enhanced pain detection function
     function detectPainAreas(message) {
       const lowerMessage = message.toLowerCase();
@@ -299,6 +320,18 @@ document.addEventListener("DOMContentLoaded", function () {
       const correctedMessage = correctSpelling(message);
       const lowerMessage = correctedMessage.toLowerCase();
 
+      if (lowerMessage.includes("arthritis")) {
+        showTypingIndicator().then(() => {
+          addBotMessage([
+            "Arthritis can affect various joints. To assist you best, could you tell me where you are experiencing arthritis pain?",
+            "Please select the area that's most affected:", // More specific prompt
+          ]).then(() => {
+            showOptions(generatePainAreaButtons()); // Show pain area buttons
+          });
+        });
+        return; // Important: Return to prevent further pain area detection immediately after
+      }
+
       // Check for insurance query
       if (
         /(do you (?:accept|take)|covered by|insurance plan) .+/i.test(message)
@@ -313,7 +346,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Check for treatment plan query
       if (
-        /(what's|whats|what is).*(?:included|treatment plan|therapy plan)/i.test(
+        /(what's|whats|what|what is).*(?:included|treatment plan|treatment|therapy plan)/i.test(
           message
         )
       ) {
@@ -349,6 +382,46 @@ document.addEventListener("DOMContentLoaded", function () {
       if (/(?:book|schedule|appointment for|treatment for) .+/i.test(message)) {
         showTypingIndicator().then(() => {
           addBotMessage(FAQs.genericAppointment).then(() => {
+            startAppointmentScheduling();
+          });
+        });
+        return;
+      }
+
+      // Check for session length query
+      if (/(?:how long|length|duration) .*(session|appointment|visit)/i.test(message)) {
+        showTypingIndicator().then(() => {
+          addBotMessage(FAQs.sessionLength).then(() => {
+            startAppointmentScheduling();
+          });
+        });
+        return;
+      }
+
+      // Check for conditions treated query
+      if (/(?:what|which) .*(?:conditions?|problems?) .*(?:treat|help)/i.test(message)) {
+        showTypingIndicator().then(() => {
+          addBotMessage(FAQs.conditionsTreated).then(() => {
+            startAppointmentScheduling();
+          });
+        });
+        return;
+      }
+
+      // Check for treatment start query
+      if (/(?:how soon|when|how fast) .*(?:start|begin|treatment)/i.test(message)) {
+        showTypingIndicator().then(() => {
+          addBotMessage(FAQs.startTreatment).then(() => {
+            startAppointmentScheduling();
+          });
+        });
+        return;
+      }
+
+      // Check for first appointment query
+      if (/(?:what|bring|need).+(?:first|initial).+(?:appointment|visit|session)/i.test(message)) {
+        showTypingIndicator().then(() => {
+          addBotMessage(FAQs.firstAppointment).then(() => {
             startAppointmentScheduling();
           });
         });
@@ -403,13 +476,26 @@ document.addEventListener("DOMContentLoaded", function () {
         lowerMessage.includes("address") ||
         lowerMessage.includes("where")
       ) {
-        addBotMessage(FAQs.locations);
+        addBotMessage(FAQs.locations).then(() => {
+          const locationButtons = Object.entries(LOCATIONS).map(([key, data]) => ({
+            text: `📍 ${data.name}`,
+            type: "location_details",
+            location: key
+          }));
+          showOptions(locationButtons);
+        });
       } else if (
         lowerMessage.includes("appointment") ||
         lowerMessage.includes("schedule") ||
         lowerMessage.includes("book")
       ) {
         startAppointmentScheduling();
+      } else if (/\b(?:referr?al|required)\b/i.test(lowerMessage)) {
+        showTypingIndicator().then(() => {
+          addBotMessage(FAQs.referral).then(() => {
+            startAppointmentScheduling();
+          });
+        });
       } else if (/(insurance|accept|coverage)/i.test(lowerMessage)) {
         handleInsuranceQuery();
       } else if (/(cost|price|fee)/i.test(lowerMessage)) {
@@ -425,6 +511,8 @@ document.addEventListener("DOMContentLoaded", function () {
           });
         });
       } 
+
+      
       
       // else {
       //   handleRandomInput();
@@ -594,50 +682,55 @@ document.addEventListener("DOMContentLoaded", function () {
     function startAppointmentScheduling(option = {}) {
       // Get elements
       const chatbotInput = document.querySelector(
-        "#main-chatbot-container .pt-chatbot-input"
+      "#main-chatbot-container .pt-chatbot-input"
       );
-      const template = document.querySelector("#appointment-form-template");
+      const template = document.querySelector("#appointment-form-template"); 
       const originalForm = template.content.querySelector("#appointment-form");
 
       // Hide regular input
       if (chatbotInput) {
-        chatbotInput.style.display = "none";
+      chatbotInput.style.display = "none";
       }
 
-      // Clone and show form
-      const form = originalForm.cloneNode(true);
-      form.style.display = "block";
+      // Add message before showing form
+      // showTypingIndicator().then(() => {
+      // addBotMessage("Help Us Get to Know You, so that our team can contact you").then(() => {
+        // Clone and show form
+        const form = originalForm.cloneNode(true);
+        form.style.display = "block";
 
-      // Add locations to select
-      const locationSelect = form.querySelector('select[name="location"]');
-      Object.entries(LOCATIONS).forEach(([key, data]) => {
+        // Add locations to select
+        const locationSelect = form.querySelector('select[name="location"]');
+        Object.entries(LOCATIONS).forEach(([key, data]) => {
         const option = document.createElement("option");
         option.value = key;
         option.textContent = data.name;
         locationSelect.appendChild(option);
-      });
+        });
 
-      // Pre-select location if provided
-      if (option.location && option.preselect) {
+        // Pre-select location if provided
+        if (option.location && option.preselect) {
         locationSelect.value = option.location;
-      }
+        }
 
-      messagesContainer.appendChild(form);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        messagesContainer.appendChild(form);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-      // Form submission handler
-      form.addEventListener("submit", (e) => {
+        // Form submission handler
+        form.addEventListener("submit", (e) => {
         e.preventDefault();
         handleFormSubmission(form);
-      });
+        });
 
-      // Cancel button handler
-      form.querySelector(".pt-cancel-form").addEventListener("click", () => {
+        // Cancel button handler
+        form.querySelector(".pt-cancel-form").addEventListener("click", () => {
         form.remove();
         if (chatbotInput) {
           chatbotInput.style.display = "flex";
         }
-      });
+        });
+      // });
+      // });
     }
 
     // Validate US phone number
@@ -772,37 +865,7 @@ document.addEventListener("DOMContentLoaded", function () {
       appointmentStage = null;
     }
 
-    // // Handle random input with enhanced detection
-    // function handleRandomInput() {
-    //   // Check for common intents that might not have been caught
-    //   const lowerMessage = inputField.value.toLowerCase();
-
-    //   if (
-    //     lowerMessage.includes("hello") ||
-    //     lowerMessage.includes("hi") ||
-    //     lowerMessage.includes("help") ||
-    //     lowerMessage.includes("hey")
-    //   ) {
-    //     addBotMessage("👋 Hello! How can I help you today?").then(() => {
-    //       showOptions(BUTTON_OPTIONS.main);
-    //     });
-    //   } else if (
-    //     lowerMessage.includes("thanks") ||
-    //     lowerMessage.includes("thank you")
-    //   ) {
-    //     addBotMessage(
-    //       "You're welcome! Is there anything else I can help you with today?"
-    //     );
-    //   } else {
-    //     // Default response with helpful options
-    //     addBotMessage([
-    //       "I didn’t quite get that. Try filling out the BOOK APPOINTMENT for better assistance! Let me help you with some common questions:",
-    //     ]).then(() => {
-    //       showOptions(BUTTON_OPTIONS.main);
-    //       // startAppointmentScheduling();
-    //     });
-    //   }
-    // }
+  
 
     // Handle random input with enhanced detection
     function handleRandomInput(message) {
@@ -829,9 +892,10 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         // Default response with helpful options
         addBotMessage([
-          "I didn’t quite get that. Try filling out the BOOK APPOINTMENT for better assistance! Let me help you with some common questions:",
+          "I didn't quite get that. Please fill out the below form, our team will get back to you soon! Let me help you with some common questions:",
         ]).then(() => {
-          showOptions(BUTTON_OPTIONS.main);
+          // showOptions(BUTTON_OPTIONS.main);
+          startAppointmentScheduling();
         });
       }
     }
@@ -874,6 +938,7 @@ document.addEventListener("DOMContentLoaded", function () {
             addBotMessage([
               "Our therapists are all licensed professionals with specialized training.",
               "Would you like to schedule a consultation with one of our experts?",
+              "15 mins free consultation",
             ]).then(() => {
               showOptions([
                 { text: "📅 Yes, schedule now", type: "appointment" },
@@ -892,6 +957,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   { text: "⏰ Treatment Duration", type: "duration" },
                   { text: "🧪 Treatment Methods", type: "methods" },
                   { text: "🩺 Our Specialties", type: "specialties" },
+                  { text: "❔ Other Queries", type: "appointment" },
                 ]);
               }
             );
@@ -1011,7 +1077,7 @@ document.addEventListener("DOMContentLoaded", function () {
             addBotMessage([
               "We accept most major insurance plans including Blue Cross, Aetna, UnitedHealthcare, Cigna, and Medicare.",
               "Most plans cover physical therapy and charge you according to the services provided.",
-              "We'll verify your benefits before your first appointment and explain any costs.",
+              "We'll verify your benefits before your first appointment and explain any potential costs.",
               "Would you like to check your coverage with us?",
             ]).then(() => {
               showOptions([
@@ -1190,7 +1256,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add this new function to handle service queries
     function handleServiceQuery(detectedServices) {
       if (detectedServices.length === 1) {
-        const { service, category } = detectedServices[0];
+        const { key, service, category } = detectedServices[0];
 
         showTypingIndicator().then(() => {
           const messages = [
@@ -1211,19 +1277,25 @@ document.addEventListener("DOMContentLoaded", function () {
             messages.push(`⏰ Recommended frequency: ${service.frequency}`);
           }
 
-          messages.push(
-            "Would you like to learn more or schedule an appointment?"
-          );
+          messages.push("Would you like to learn more or schedule an appointment?");
 
           addBotMessage(messages).then(() => {
             showOptions([
               {
                 text: `📅 Schedule ${service.name}`,
-                type: "appointment",
-                service: service.name,
+                type: "service_appointment",
+                service: key,
+                category: category
               },
-              { text: "❓ Ask More Questions", type: "questions" },
-              { text: "🔄 View Other Services", type: "service" },
+              { 
+                text: "❓ Ask More Questions", 
+                type: "questions" 
+              },
+              { 
+                text: "🔄 View Other Services", 
+                type: "service_category",
+                category: category
+              },
             ]);
           });
         });
@@ -1232,14 +1304,19 @@ document.addEventListener("DOMContentLoaded", function () {
           addBotMessage([
             "I found multiple services that might interest you. Which one would you like to learn more about?",
           ]).then(() => {
-            const serviceButtons = detectedServices.map(
-              ({ service, category }) => ({
-                text: `${service.icon} ${service.name}`,
-                type: "service_detail",
-                service: service.name,
-                category: category,
-              })
-            );
+            const serviceButtons = detectedServices.map(({ key, service, category }) => ({
+              text: `${service.icon || '🔹'} ${service.name}`,
+              type: "service_detail",
+              service: key,
+              category: category
+            }));
+            
+            // Add a view all services option
+            serviceButtons.push({
+              text: "🔄 View All Services",
+              type: "service",
+            });
+            
             showOptions(serviceButtons);
           });
         });

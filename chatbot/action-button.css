@@ -172,18 +172,21 @@
     gap: 10px;
 }
 
-.pt-bot-message,
+.pt-bot-message{
+    max-width: 80%;  
+    padding: 0px 8px 15px 8px;
+    border-radius: 8px;
+}
 .pt-user-message {
     max-width: 80%;
     padding: 8px;
     border-radius: 8px;
-    /* margin-bottom: 5px; */
 }
 
 .pt-bot-message {
     background-color: #E5F2FF;
     color: #333;
-    align-self: flex-start;
+    align-self: start;
 }
 
 .pt-bot-message::before {
@@ -194,10 +197,10 @@
     height: 30px;
     border-radius: 50%;
     display: inline-block;
-    vertical-align: middle;
+    /* vertical-align: middle; */
     margin-right: 15px;
     position: relative;
-    top: -5px;
+    top: 5px;
     margin-left: -45px;
 }
 
@@ -252,7 +255,7 @@
 .pt-bot-message button {
     transition: opacity 0.2s;
     width: 100%;
-    text-align: left;
+    text-align: center;
 }
 
 .pt-bot-message button:hover {
@@ -317,8 +320,11 @@ form input {
     margin: 5px;
     border-radius: 8px;
     display: inline-block;
+    /* text-align: left; */
     text-align: left;
     border-radius: 8px !important;
+    text-wrap: wrap;
+  align-self: self-start;
 
 }
 
@@ -327,15 +333,16 @@ form input {
     background-color: var(--white-color);
     color: var(--primary-color) !important;
     outline: 1px solid var(--primary-color);
-    padding: 8px;
+    padding: 8px 15px 8px 8px;
     margin: 5px;
     border-radius: 8px !important;
 }
+
 .pt-option-button:focus {
     background-color: var(--white-color);
     color: var(--primary-color) !important;
     outline: 1px solid var(--primary-color) !important;
-    padding: 8px;
+    padding: 8px 15px 8px 8px;
     margin: 5px;
     border-radius: 8px !important;
 }
@@ -349,30 +356,33 @@ form input {
     content: "✓";
     position: absolute;
     font-size: 10px;
-    padding: 4px 7px;
+    padding: 4px 8px;
     border-radius: 100%;
     color: var(--white-color);
     background-color: var(--primary-color);
-    right: 5px;
+    right: -12px;
     top: 50%;
     transform: translateY(-50%);
 }
+
 .pt-option-button:focus::after {
     content: "✓";
     position: absolute;
     font-size: 10px;
-    padding: 4px 7px;
+    padding: 4px 8px;
     border-radius: 100%;
     color: var(--white-color);
     background-color: var(--primary-color);
-    right: 5px;
+    right: -12px;
     top: 50%;
     transform: translateY(-50%);
 }
 
 #appointment-form {
-    padding: 15px;
+    padding: 5px 15px 15px 15px;
     margin: 10px 0;
+    border-radius: 8px;
+    background-color: #E5F2FF;
 }
 
 .form-group {
@@ -402,7 +412,7 @@ form input {
     box-sizing: border-box;
     resize: vertical;
     min-height: 80px;
-   
+
 }
 
 .error-message {
@@ -482,7 +492,7 @@ form input {
     position: fixed;
     bottom: 80px;
     right: 50px;
-z-index: 10000;
+    z-index: 10000;
 }
 
 #main-chatbot-container {
