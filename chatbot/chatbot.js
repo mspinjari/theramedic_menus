@@ -320,16 +320,29 @@ document.addEventListener("DOMContentLoaded", function () {
       const correctedMessage = correctSpelling(message);
       const lowerMessage = correctedMessage.toLowerCase();
 
+      // Check for parking query by checking against spelling corrections
+      const parkingTerms = SPELLING_CORRECTIONS.parking;
+      const hasParkingTerm = parkingTerms.some(term => lowerMessage.includes(term.toLowerCase()));
+      
+      if (hasParkingTerm) {
+        showTypingIndicator().then(() => {
+          addBotMessage(FAQs.parking).then(() => {
+        startAppointmentScheduling();
+          });
+        });
+        return;
+      }
+
       if (lowerMessage.includes("arthritis")) {
         showTypingIndicator().then(() => {
           addBotMessage([
-            "Arthritis can affect various joints. To assist you best, could you tell me where you are experiencing arthritis pain?",
-            "Please select the area that's most affected:", // More specific prompt
+        "Arthritis can affect various joints. To assist you best, could you tell me where you are experiencing arthritis pain?", 
+        "Please select the area that's most affected:",
           ]).then(() => {
-            showOptions(generatePainAreaButtons()); // Show pain area buttons
+        showOptions(generatePainAreaButtons()); 
           });
         });
-        return; // Important: Return to prevent further pain area detection immediately after
+        return;
       }
 
       // Check for insurance query
@@ -892,7 +905,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         // Default response with helpful options
         addBotMessage([
-          "I didn't quite get that. Please fill out the below form, our team will get back to you soon! Let me help you with some common questions:",
+          "I didn't quite get that. Please fill out the below form, our team will get back to you soon!",
         ]).then(() => {
           // showOptions(BUTTON_OPTIONS.main);
           startAppointmentScheduling();

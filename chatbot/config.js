@@ -39,7 +39,7 @@ export const SERVICES = {
         ],
         details: [
           "Personalized treatment plans",
-          "Manual therapy techniques",
+          "Manual therapy techniques", 
           "Therapeutic exercises",
           "Pain management",
           "Functional training",
@@ -52,63 +52,30 @@ export const SERVICES = {
         icon: "🔧",
         description:
           "Occupational therapists treat injured, ill, or disabled patients through the therapeutic use of everyday activities. They help these patients develop, recover, improve, as well as maintain the skills needed for daily living and working.",
-        // keywords: [
-        //   "ot",
-        //   "occupational",
-        //   "work therapy",
-        //   "ergonomics",
-        //   "daily activities",
-        // ],
       },
       aquatic: {
         name: "Aquatic Therapy",
         icon: "🏊‍♂️",
         description:
           "With aquatic therapy at Theramedic, low-impact exercises paired with water resistance help reduce pain, improve mobility, and build strength for a faster and more comfortable recovery.",
-        // keywords: [
-        //   "pool therapy",
-        //   "water therapy",
-        //   "aquatic",
-        //   "swimming",
-        //   "hydrotherapy",
-        //   "water",
-        // ],
       },
       speech: {
         name: "Speech Language Therapy",
         icon: "🗣️",
         description:
           "If you're experiencing difficulties with speech, language, or swallowing, our speech therapists provide specialized techniques to help you communicate effectively and regain independence in eating and drinking.",
-        // keywords: [
-        //   "speech therapy",
-        //   "language therapy",
-        //   "swallowing therapy",
-        //   "communication therapy",
-        // ],
       },
       pediatric: {
-        name: "Pediatric Therapy",
+        name: "Pediatric Therapy", 
         icon: "👶",
         description:
-          "Theramedic’s pediatric therapy helps children reach developmental milestones, improve motor and communication skills, and build confidence for a brighter, more active future.",
-        // keywords: [
-        //   "children therapy",
-        //   "kids therapy",
-        //   "pediatric",
-        //   "child development",
-        // ],
+          "Theramedic's pediatric therapy helps children reach developmental milestones, improve motor and communication skills, and build confidence for a brighter, more active future.",
       },
       telerehab: {
         name: "Tele-Rehab",
         icon: "💻",
         description:
           "Experience the convenience of tele-rehab at Theramedic, where expert therapy is delivered to your home, improving mobility, strength, and recovery, while offering personalized care wherever you are.",
-        // keywords: [
-        //   "virtual therapy",
-        //   "online therapy",
-        //   "remote therapy",
-        //   "telehealth",
-        // ],
       },
     },
   },
@@ -120,85 +87,109 @@ export const SERVICES = {
         icon: "🚗",
         description:
           "Expert rehabilitation for auto accident injuries, focusing on reducing pain and rebuilding strength. Our targeted therapy helps restore movement, function, and independence through proven techniques.",
-        // keywords: [
-        //   "auto injury",
-        //   "accident recovery",
-        //   "vehicle injury",
-        // ],
       },
       sports: {
         name: "Sport Injuries",
         icon: "⚽",
         description:
           "Effective rehabilitation for sports injuries, focused on pain relief, mobility restoration, and performance. Our goal is to get athletes back to their sport stronger, more resilient, and ready to excel.",
-        // keywords: [
-        //   "sports injury",
-        //   "athletic injury",
-        //   "sports rehab",
-        //   "athletic recovery",
-        // ],
       },
       cognitive: {
         name: "Cognitive Rehab",
         icon: "🧠",
         description:
           "Targeted therapy to improve cognitive function, memory, and focus. Our personalized approach helps individuals regain clarity, confidence, and independence, enhancing daily life.",
-        // keywords: [
-        //   "brain therapy",
-        //   "cognitive therapy",
-        //   "mental recovery",
-        //   "brain training",
-        // ],
       },
       worker: {
         name: "Work Injury",
         icon: "⚒️",
         description:
-          "Personalized therapy to relieve pain, restore function, and promote a safe return to work. We help improve strength, mobility, and confidence, ensuring you’re equipped for a successful and lasting recovery.",
-        // keywords: [
-        //   "workplace injury",
-        //   "work injury",
-        //   "occupational injury",
-        //   "job injury",
-        //   "Worker compensation",
-        // ],
+          "Personalized therapy to relieve pain, restore function, and promote a safe return to work. We help improve strength, mobility, and confidence, ensuring you're equipped for a successful and lasting recovery.",
       },
       vestibular: {
         name: "Vestibular Rehab",
         icon: "🌀",
         description:
           "Targeted balance therapy to alleviate dizziness, improve stability, and rebuild confidence in movement. This treatment helps patients regain control over their coordination and restore comfort in everyday activities.",
-        // keywords: [
-        //   "balance therapy",
-        //   "dizziness",
-        //   "vertigo",
-        //   "vestibular treatment",
-        // ],
       },
       fce: {
         name: "Functional Capacity Evaluation (FCE)",
         icon: "📊",
         description:
           "Detailed evaluation to assess physical capabilities, supporting personalized rehab planning and work readiness. FCE aids in designing safe, targeted therapy for effective recovery and return to daily tasks.",
-        // keywords: [
-        //   "functional evaluation",
-        //   "capacity testing",
-        //   "physical assessment",
-        //   "fce",
-        // ],
       },
       stroke: {
         name: "Stroke Rehab",
         icon: "🫀",
         description:
           "Holistic therapy to restore strength, mobility, and independence after a stroke. Our approach helps patients regain essential functions, supporting an improved quality of life and return to daily activities.",
-        // keywords: [
-        //   "stroke recovery",
-        //   "stroke therapy",
-        //   "neurological rehab",
-        //   "stroke rehabilitation",
-        // ],
       },
+    },
+  },
+  rehab: {
+    title: "Rehab Services",
+    services: {
+      dryneedling: {
+        name: "Dry Needling",
+        icon: "💉",
+        description:
+          "Dry Needling is a technique that involves inserting thin needles into trigger points within muscles to relieve pain and improve movement. This therapy is highly effective for reducing muscle tension, improving blood flow, and enhancing overall recovery.",
+        details: [
+          "Precise needle placement for pain relief",
+          "Trigger point therapy for muscle tension",
+          "Improved flexibility and mobility",
+          "Enhanced blood circulation for faster recovery",
+          "Relief for chronic pain and stiffness",
+        ],
+        duration: "30-45 minutes",
+        frequency: "1-2 sessions per week",
+        // keywords: [],
+      },
+      cupping: {
+        name: "Cupping Therapy",
+        icon: "🔄",
+        description: "Cupping Therapy is a healing technique that uses special cups to create suction on the skin, drawing blood to the surface and promoting deep tissue healing. This therapy is highly effective for reducing muscle tension, improving circulation, and enhancing recovery while releasing toxins from the body.",
+        details: [
+          "Strategic cup placement for optimal healing",
+          "Myofascial release through negative pressure",
+          "Improved circulation and lymphatic drainage",
+          "Enhanced recovery and reduced inflammation",
+          "Relief for chronic pain and muscle stiffness"
+        ],
+        duration: "30-45 minutes",
+        frequency: "1-2 sessions per week",
+        // keywords: []
+      },
+      paraffin: {
+        name: "Paraffin Wax Therapy",
+        icon: "🔥",
+        description: "Paraffin Wax Therapy is a luxurious heat treatment that involves dipping the hands, feet, or other body parts into warm, soothing wax. This therapy provides deep, penetrating heat that helps improve circulation, relieve joint pain, and intensely moisturize and soften the skin.",
+        details: [
+          "Therapeutic warm wax application for deep heat penetration",
+          "Improved joint mobility and pain relief",
+          "Enhanced circulation to targeted areas", 
+          "Intensive skin hydration and softening",
+          "Relief for arthritis and stiff joints"
+        ],
+        duration: "15-20 minutes",
+        frequency: "1-2 sessions per week",
+        // keywords: []
+      },
+      normatec: {
+        name: "NormaTec Compression Therapy",
+        icon: "🦿",
+        description: "NormaTec Compression Therapy uses advanced pneumatic compression technology to enhance recovery and performance. This innovative system applies sequential pulse compression to your limbs, effectively flushing out metabolic waste and reducing muscle soreness while improving circulation.",
+        details: [
+          "Dynamic compression for enhanced recovery",
+          "Sequential pulse technology targeting specific muscle groups",
+          "Improved circulation and lymphatic drainage",
+          "Reduced muscle soreness and fatigue",
+          "Accelerated recovery between training sessions"
+        ],
+        duration: "20-30 minutes",
+        frequency: "2-3 sessions per week",
+        // keywords: []
+      }
     },
   },
 };
@@ -311,13 +302,18 @@ export const FAQs = {
   locations: [
     "We have 4 convenient locations to serve you:",
     "🏢 STAFFORD/SUGAR LAND: 12603 Southwest Fwy, TX 77477",
-    "🏢 SPRING: 17320 Red Oak Dr, TX 77090",
+    "🏢 SPRING: 17320 Red Oak Dr, TX 77090", 
     "🏢 KATY: 24217 Kingsland Blvd, TX 77494",
     "🏢 SOUTHFIELD: 26400 W 12 Mile Rd, MI 48034",
     "Which is most convenient for you?",
   ],
+  parking: [
+    "🅿️ Free parking is available at all four locations: ",
+    "STAFFORD/SUGAR LAND,\n\n SPRING,\n\n KATY,\n\n SOUTHFIELD ",
+    "All locations have accessible/handicap spots near entrance."
+  ],
   painResponse: [
-    "We specialize in treating your specific condition. Our therapists have extensive experience with this type of pain.",
+    "Our therapists are highly trained to address your specific condition, utilizing evidence-based techniques to provide effective relief.",
     "Let's schedule you with the right specialist who can help you get relief quickly.",
   ],
   insuranceQuery: [
@@ -336,10 +332,10 @@ export const FAQs = {
     "Thanks for your interest! To streamline your experience, please share your details via our form. Our team will review your request and contact you.",
   ],
   referral: [
-    "Thanks for asking! Requirements vary, and we’ll clarify everything for you. To simplify the process, fill out the form below:",
+    "Thanks for asking! Requirements vary, and we'll clarify everything for you. To simplify the process, fill out the form below:",
   ],
   sessionLength: [
-    "Great question! Session length varies based on your needs, and we'll ensure it aligns with your recovery goals. To share specifics, kindly fill out this quick form:",
+    "Great question! Session length varies based on your needs, and we'll ensure it aligns with your recovery goals. To share specifics, kindly fill out this quick form:",  
   ],
   conditionsTreated: [
     "Thanks for reaching out! We address a wide range of below conditions.",
@@ -441,7 +437,7 @@ export const SPELLING_CORRECTIONS = {
     "aquatic therap",
     "aquatic theraphy",
     "aquatic therapi",
-    "aquatic tharapy", 
+    "aquatic tharapy",
     "aquatic thrapy",
     "aquatic theray",
     "aqua therapy",
@@ -453,7 +449,7 @@ export const SPELLING_CORRECTIONS = {
     "water therapy",
     "water therap",
     "water pt",
-    "pool therapy", 
+    "pool therapy",
     "pool exercise",
     "pool rehab",
     "swimming therapy",
@@ -479,16 +475,15 @@ export const SPELLING_CORRECTIONS = {
     "cardiac rehab",
     "cardiovascular",
     "muscle spasm",
-    "muscle spasms", 
+    "muscle spasms",
     "muscle cramp",
     "muscle pain",
     "neurological",
     "neurological injury",
     "nerve injury",
     "nerve damage",
-    "neuro rehab"
+    "neuro rehab",
   ],
-
 
   // Speech Therapy variations - Refactored to Array
   "Speech Language Therapy": [
@@ -809,7 +804,7 @@ export const SPELLING_CORRECTIONS = {
     "post stroke",
     "post stroke therapy",
     "post stroke rehab",
-    "post stroke rehabilitation",
+    "post stroke rehabilitation", 
     "post stroke recovery",
     "hemiplegia",
     "hemiplegia therapy",
@@ -822,6 +817,98 @@ export const SPELLING_CORRECTIONS = {
     "brain attack",
     "neurological rehab",
   ],
+
+  // Dry Needling variations 
+  "Dry Needling": [
+    "dry needling therapy",
+    "needling",
+    "pinpoint",
+    "acupuncture", 
+    "dyr needling therapy",
+    "dry neelding therapy",
+    "dyr neelding therapy",
+    "dry needlin therapy",
+    "dry neding therapy",
+    "ry needling therapy",
+    "ddry needling therapy",
+    "dry needlingg therapy",
+    "dry needlingg theraphy",
+    "dri needling therapy",
+    "dry needlin therapy",
+    "drr needling therapy",
+    "dry nedling therapy",
+    "dry needljng therapy"
+  ],
+
+  // Cupping Therapy variations
+  "Cupping Therapy": [
+    "vacuum therapy",
+    "vaccuum therapy", 
+    "vacum therapy",
+    "cupping theraapy",
+    "cupping theryapy",
+    "cuping therapy",
+    "cupping therpy",
+    "cuppin therapy",
+    "cupping theraoy", 
+    "cuppping therapy",
+    "cuppingg therapy",
+    "cupping theraphy",
+    "cuiping therapy",
+    "cuppin therapy",
+    "cupping theraapy",
+    "cuppong therapy",
+    "cuppinh therapy",
+    "cupping tjerapy"
+  ],
+
+  // Paraffin Wax Therapy variations
+  "Paraffin Wax Therapy": [
+    "heat therapy",
+    "wax therapy",
+    "paraffin wxa therapy",
+    "paraffin txa therapy", 
+    "parafinn wax therapy",
+    "paraffin wax therap",
+    "parafin wax therapy",
+    "parafin waz therapy",
+    "paraffin waxx therapy",
+    "paraffin wwax therapy",
+    "parrafin wax therapy",
+    "parafin waks therapy",
+    "paraffin waks therapy",
+    "parafin wax therapyy",
+    "paraffin waz therapy",
+    "paraffin xax therapy",
+    "pqraffin wax therapy"
+  ],
+
+  // Normatec Compression Therapy variations
+  "NormaTec Compression Therapy": [
+    "air compression",
+    "air therapy",
+    "compression therapy",
+    "compresion therapy",
+    "pressure therapy", 
+    "presure therapy",
+    "normatek therapy",
+    "normatec compreession therapy",
+    "normatec compressioin therapy",
+    "normatce compression therapy",
+    "normatec compretion therapy",
+    "nrmatec compression therapy",
+    "normatec compreison therapy",
+    "normateec compression therapy",
+    "normatec compreesion therapy", 
+    "normatec compressionn therapy",
+    "normatec comprission therapy",
+    "normatec compresssion therapy",
+    "normatc compression therapy",
+    "normatec comprezsion therapy",
+    "normztec compression therapy",
+    "normatec cmpression therapy"
+  ],
+
 
   // Location specific corrections (no array needed, these map to location keys)
   stafford: "location",
@@ -887,7 +974,8 @@ export const SPELLING_CORRECTIONS = {
     "shoulder strain",
     "shoulder impingement",
   ],
-  "shoulder treatment": [ // keep the intent separate for 'treatment' and 'therapy' variations.
+  "shoulder treatment": [
+    // keep the intent separate for 'treatment' and 'therapy' variations.
     "shoulder treatment", // Included for completeness
     "shouder treatment",
   ],
@@ -909,9 +997,7 @@ export const SPELLING_CORRECTIONS = {
     "rotator cuff", //Duplicated in original list. Keeping for exact match with provided config
     "rotator cuff injuries", // new variations
     "rotator cuff injury", // new variations
-
   ],
-
 
   // Back Pain variations - Refactored to Array
   "Back Pain": [
@@ -1074,13 +1160,38 @@ export const SPELLING_CORRECTIONS = {
   // Foot/Ankle Pain corrections - Refactored to Array
   "Foot/Ankle Pain": [
     "footanklepain",
-    "foot ankle pain",
+    "foot ankle pain", 
     "footache",
     "anklepain",
     "ankle ache",
     "ankleache",
     "foot ache",
   ],
+
+  // Parking variations 
+  "parking": [
+    "parking",
+    "park",
+    "parking spot",
+    "parking space",
+    "parking lot",
+    "parking area",
+    "carpark",
+    "car park",
+    "valet",
+    "valet parking",
+    "handicap parking",
+    "disabled parking",
+    "accessible parking",
+    "patient parking",
+    "visitor parking",
+    "free parking",
+    "parking available",
+    "where to park",
+    "can i park",
+    "parking garage"
+  ],
+
 
   // Appointment related (no array needed, direct mapping)
   appointment: "appointment",
@@ -1198,7 +1309,7 @@ export const BUTTON_OPTIONS = {
   main: [
     { text: "📅 Book Appointment", type: "appointment" },
     { text: "👩‍⚕️ Speak with Therapist", type: "staff" },
-    { text: "👩‍⚕️ Our Services", type: "service" },
+    { text: "⚙️ Our Services", type: "service" },
     { text: "❓ Ask PT Questions", type: "questions" },
     { text: "🏥 Clinic Info", type: "locations" },
   ],
