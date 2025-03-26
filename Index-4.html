@@ -1341,6 +1341,13 @@
                     const dropdown = toggle.nextElementSibling;
                     parent.classList.remove('toggle-active');
                     dropdown?.classList.remove('active');
+
+                    // Close any nested dropdowns within this dropdown
+                    const nestedDropdowns = dropdown?.querySelectorAll('.nested-dropdown');
+                    nestedDropdowns?.forEach(nested => {
+                        nested.classList.remove('toggle-active');
+                        nested.querySelector('.nested-dropdown-menu')?.classList.remove('active');
+                    });
                 });
 
                 // Close all nested dropdowns
@@ -1382,7 +1389,6 @@
                 closeAllMobileDropdowns();
             });
 
-            // Rest of your existing code...
             // Toggle dropdown menus
             dropdownToggles.forEach(toggle => {
                 toggle.addEventListener('click', function (e) {
@@ -1390,17 +1396,39 @@
                     const parent = this.parentElement;
                     const dropdown = this.nextElementSibling;
 
-                    parent.classList.toggle('toggle-active');
-                    dropdown.classList.toggle('active');
+                    // If this dropdown is already active, close it and its nested dropdowns
+                    if (parent.classList.contains('toggle-active')) {
+                        parent.classList.remove('toggle-active');
+                        dropdown.classList.remove('active');
+                        
+                        // Close all nested dropdowns within this dropdown
+                        const nestedDropdowns = dropdown.querySelectorAll('.nested-dropdown');
+                        nestedDropdowns.forEach(nested => {
+                            nested.classList.remove('toggle-active');
+                            nested.querySelector('.nested-dropdown-menu')?.classList.remove('active');
+                        });
+                    } else {
+                        // Close other dropdowns and their nested dropdowns
+                        dropdownToggles.forEach(otherToggle => {
+                            if (otherToggle !== this) {
+                                const otherParent = otherToggle.parentElement;
+                                const otherDropdown = otherToggle.nextElementSibling;
+                                otherParent.classList.remove('toggle-active');
+                                otherDropdown.classList.remove('active');
 
-                    dropdownToggles.forEach(otherToggle => {
-                        if (otherToggle !== this) {
-                            const otherParent = otherToggle.parentElement;
-                            const otherDropdown = otherToggle.nextElementSibling;
-                            otherParent.classList.remove('toggle-active');
-                            otherDropdown.classList.remove('active');
-                        }
-                    });
+                                // Close nested dropdowns in other dropdowns
+                                const nestedDropdowns = otherDropdown?.querySelectorAll('.nested-dropdown');
+                                nestedDropdowns?.forEach(nested => {
+                                    nested.classList.remove('toggle-active');
+                                    nested.querySelector('.nested-dropdown-menu')?.classList.remove('active');
+                                });
+                            }
+                        });
+
+                        // Open this dropdown
+                        parent.classList.add('toggle-active');
+                        dropdown.classList.add('active');
+                    }
                 });
             });
 
