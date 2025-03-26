@@ -1339,7 +1339,7 @@ document.addEventListener("DOMContentLoaded", function () {
             showOptions([
               {
                 text: `📅 Schedule ${service.name}`,
-                type: "service_appointment",
+                type: "appointment",
                 service: key,
                 category: category,
               },
