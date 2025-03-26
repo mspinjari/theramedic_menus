@@ -1333,12 +1333,36 @@
             const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
             const desktopDropdown = document.querySelector('.desktop-dropdown');
 
+            // Function to close all mobile dropdowns
+            function closeAllMobileDropdowns() {
+                // Close all dropdown menus
+                document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                    const parent = toggle.parentElement;
+                    const dropdown = toggle.nextElementSibling;
+                    parent.classList.remove('toggle-active');
+                    dropdown?.classList.remove('active');
+                });
+
+                // Close all nested dropdowns
+                document.querySelectorAll('.nested-dropdown-toggle').forEach(toggle => {
+                    const parent = toggle.parentElement;
+                    const nestedDropdown = toggle.nextElementSibling;
+                    parent.classList.remove('toggle-active');
+                    nestedDropdown?.classList.remove('active');
+                });
+            }
+
             // Toggle mobile menu
             hamburger.addEventListener('click', function () {
                 hamburger.classList.toggle('active');
                 mobileMenu.classList.toggle('active');
                 overlay.classList.toggle('active');
                 document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+                
+                // If menu is being closed, close all dropdowns
+                if (!mobileMenu.classList.contains('active')) {
+                    closeAllMobileDropdowns();
+                }
             });
 
             // Close mobile menu
@@ -1347,6 +1371,7 @@
                 mobileMenu.classList.remove('active');
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
+                closeAllMobileDropdowns();
             });
 
             overlay.addEventListener('click', function () {
@@ -1354,8 +1379,10 @@
                 mobileMenu.classList.remove('active');
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
+                closeAllMobileDropdowns();
             });
 
+            // Rest of your existing code...
             // Toggle dropdown menus
             dropdownToggles.forEach(toggle => {
                 toggle.addEventListener('click', function (e) {
@@ -1472,7 +1499,6 @@
                 });
             });
         });
-
     </script>
 
 </body>

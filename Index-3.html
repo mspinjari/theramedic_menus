@@ -34,7 +34,7 @@
             font-family: "Quicksand", serif;
             font-optical-sizing: auto;
             font-style: normal;
-            max-width: 1240px;
+            /* max-width: 1240px; */
             margin: 0;
             margin: auto;
             padding: 0;
@@ -1171,12 +1171,32 @@
     </h1>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+       document.addEventListener('DOMContentLoaded', function () {
             const hamburger = document.querySelector('.hamburger');
             const mobileMenu = document.querySelector('.mobile-menu');
             const closeBtn = document.querySelector('.close-btn');
             const overlay = document.querySelector('.overlay');
             const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            const desktopDropdown = document.querySelector('.desktop-dropdown');
+
+            // Function to close all mobile dropdowns
+            function closeAllMobileDropdowns() {
+                // Close all dropdown menus
+                document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                    const parent = toggle.parentElement;
+                    const dropdown = toggle.nextElementSibling;
+                    parent.classList.remove('toggle-active');
+                    dropdown?.classList.remove('active');
+                });
+
+                // Close all nested dropdowns
+                document.querySelectorAll('.nested-dropdown-toggle').forEach(toggle => {
+                    const parent = toggle.parentElement;
+                    const nestedDropdown = toggle.nextElementSibling;
+                    parent.classList.remove('toggle-active');
+                    nestedDropdown?.classList.remove('active');
+                });
+            }
 
             // Toggle mobile menu
             hamburger.addEventListener('click', function () {
@@ -1184,6 +1204,11 @@
                 mobileMenu.classList.toggle('active');
                 overlay.classList.toggle('active');
                 document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+                
+                // If menu is being closed, close all dropdowns
+                if (!mobileMenu.classList.contains('active')) {
+                    closeAllMobileDropdowns();
+                }
             });
 
             // Close mobile menu
@@ -1192,6 +1217,7 @@
                 mobileMenu.classList.remove('active');
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
+                closeAllMobileDropdowns();
             });
 
             overlay.addEventListener('click', function () {
@@ -1199,8 +1225,10 @@
                 mobileMenu.classList.remove('active');
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
+                closeAllMobileDropdowns();
             });
 
+            // Rest of your existing code...
             // Toggle dropdown menus
             dropdownToggles.forEach(toggle => {
                 toggle.addEventListener('click', function (e) {
@@ -1208,11 +1236,9 @@
                     const parent = this.parentElement;
                     const dropdown = this.nextElementSibling;
 
-                    // Toggle the current dropdown
                     parent.classList.toggle('toggle-active');
                     dropdown.classList.toggle('active');
 
-                    // Close other dropdowns
                     dropdownToggles.forEach(otherToggle => {
                         if (otherToggle !== this) {
                             const otherParent = otherToggle.parentElement;
@@ -1230,16 +1256,14 @@
             nestedDropdownToggles.forEach(toggle => {
                 toggle.addEventListener('click', function (e) {
                     e.preventDefault();
-                    e.stopPropagation(); // Prevent parent dropdown from closing
+                    e.stopPropagation();
 
                     const parent = this.parentElement;
                     const nestedDropdown = this.nextElementSibling;
 
-                    // Toggle the current nested dropdown
                     parent.classList.toggle('toggle-active');
                     nestedDropdown.classList.toggle('active');
 
-                    // Close other nested dropdowns at the same level
                     const siblings = parent.parentElement.querySelectorAll('.nested-dropdown');
                     siblings.forEach(sibling => {
                         if (sibling !== parent) {
@@ -1247,6 +1271,77 @@
                             sibling.querySelector('.nested-dropdown-menu')?.classList.remove('active');
                         }
                     });
+                });
+            });
+
+            // Desktop nested toggle functionality
+            const desktopNestedToggles = document.querySelectorAll('.desktop-nested-toggle');
+
+            desktopNestedToggles.forEach(toggle => {
+                toggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const toggleId = this.id;
+                    const submenu = document.querySelector(`.sub-menus-items#${toggleId}`);
+                    if (!submenu) return;
+
+                    const chevronIcon = this.querySelector('i.fas');
+
+                    document.querySelectorAll('.sub-menus-items').forEach(menu => {
+                        if (menu !== submenu) {
+                            menu.classList.remove('active');
+                            const otherToggle = document.querySelector(`#${menu.id}`);
+                            if (otherToggle) {
+                                otherToggle.classList.remove('active');
+                                const otherIcon = otherToggle.querySelector('i.fas');
+                                if (otherIcon) {
+                                    otherIcon.style.transform = 'rotate(0deg)';
+                                }
+                            }
+                        }
+                    });
+
+                    submenu.classList.toggle('active');
+                    this.classList.toggle('active');
+
+                    if (chevronIcon) {
+                        chevronIcon.style.transition = 'transform 0.5s ease-in-out';
+                        chevronIcon.style.transform = submenu.classList.contains('active') ?
+                            'rotate(-180deg)' : 'rotate(0deg)';
+                    }
+                });
+            });
+
+            // Close any open submenu when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.desktop-nested-dropdown')) {
+                    document.querySelectorAll('.sub-menus-items').forEach(menu => {
+                        menu.classList.remove('active');
+                        const toggle = document.querySelector(`#${menu.id}`);
+                        if (toggle) {
+                            toggle.classList.remove('active');
+                            const icon = toggle.querySelector('i.fas');
+                            if (icon) {
+                                icon.style.transform = 'rotate(0deg)';
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Close all dropdown menus when hovering out from the desktop-dropdown
+            desktopDropdown.addEventListener('mouseleave', function () {
+                document.querySelectorAll('.sub-menus-items').forEach(menu => {
+                    menu.classList.remove('active');
+                    const toggle = document.querySelector(`#${menu.id}`);
+                    if (toggle) {
+                        toggle.classList.remove('active');
+                        const icon = toggle.querySelector('i.fas');
+                        if (icon) {
+                            icon.style.transform = 'rotate(0deg)';
+                        }
+                    }
                 });
             });
         });

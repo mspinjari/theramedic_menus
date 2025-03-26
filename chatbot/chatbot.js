@@ -55,7 +55,9 @@ document.addEventListener("DOMContentLoaded", function () {
       messagesContainer.innerHTML = "";
 
       // First message with typing effect
-      await addBotMessage("Welcome to Theramedic Rehab! I'm here to assist you.");
+      await addBotMessage(
+        "Welcome to Theramedic Rehab! I'm here to assist you."
+      );
 
       // Second message after first completes
       await addBotMessage("How can I help you today?");
@@ -206,11 +208,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // }
     function correctSpelling(text) {
       let correctedText = text.toLowerCase(); // Convert input text to lowercase once
-    
+
       // Apply spelling corrections
       for (const correctedPhrase in SPELLING_CORRECTIONS) {
         const variations = SPELLING_CORRECTIONS[correctedPhrase];
-    
+
         if (Array.isArray(variations)) {
           // Handle array of variations
           variations.forEach((variation) => {
@@ -223,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function () {
           correctedText = correctedText.replace(regex, variations); // variations here is the single corrected string
         }
       }
-    
+
       return correctedText;
     }
     // Enhanced pain detection function
@@ -322,12 +324,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Check for parking query by checking against spelling corrections
       const parkingTerms = SPELLING_CORRECTIONS.parking;
-      const hasParkingTerm = parkingTerms.some(term => lowerMessage.includes(term.toLowerCase()));
-      
+      const hasParkingTerm = parkingTerms.some((term) =>
+        lowerMessage.includes(term.toLowerCase())
+      );
+
       if (hasParkingTerm) {
         showTypingIndicator().then(() => {
           addBotMessage(FAQs.parking).then(() => {
-        startAppointmentScheduling();
+            startAppointmentScheduling();
           });
         });
         return;
@@ -336,22 +340,10 @@ document.addEventListener("DOMContentLoaded", function () {
       if (lowerMessage.includes("arthritis")) {
         showTypingIndicator().then(() => {
           addBotMessage([
-        "Arthritis can affect various joints. To assist you best, could you tell me where you are experiencing arthritis pain?", 
-        "Please select the area that's most affected:",
+            "Arthritis can affect various joints. To assist you best, could you tell me where you are experiencing arthritis pain?",
+            "Please select the area that's most affected:",
           ]).then(() => {
-        showOptions(generatePainAreaButtons()); 
-          });
-        });
-        return;
-      }
-
-      // Check for insurance query
-      if (
-        /(do you (?:accept|take)|covered by|insurance plan) .+/i.test(message)
-      ) {
-        showTypingIndicator().then(() => {
-          addBotMessage(FAQs.insuranceQuery).then(() => {
-            startAppointmentScheduling();
+            showOptions(generatePainAreaButtons());
           });
         });
         return;
@@ -390,6 +382,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         return;
       }
+      // Check for insurance query
+      if (
+        /(do you (?:accept|take)|covered by|insurance plan) .+/i.test(message)
+      ) {
+        showTypingIndicator().then(() => {
+          addBotMessage(FAQs.insuranceQuery).then(() => {
+            startAppointmentScheduling();
+          });
+        });
+        return;
+      }
 
       // Check for specific appointment/treatment request
       if (/(?:book|schedule|appointment for|treatment for) .+/i.test(message)) {
@@ -402,7 +405,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // Check for session length query
-      if (/(?:how long|length|duration) .*(session|appointment|visit)/i.test(message)) {
+      if (
+        /(?:how long|length|duration) .*(session|appointment|visit)/i.test(
+          message
+        )
+      ) {
         showTypingIndicator().then(() => {
           addBotMessage(FAQs.sessionLength).then(() => {
             startAppointmentScheduling();
@@ -412,7 +419,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // Check for conditions treated query
-      if (/(?:what|which) .*(?:conditions?|problems?) .*(?:treat|help)/i.test(message)) {
+      if (
+        /(?:what|which) .*(?:conditions?|problems?) .*(?:treat|help)/i.test(
+          message
+        )
+      ) {
         showTypingIndicator().then(() => {
           addBotMessage(FAQs.conditionsTreated).then(() => {
             startAppointmentScheduling();
@@ -422,7 +433,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // Check for treatment start query
-      if (/(?:how soon|when|how fast) .*(?:start|begin|treatment)/i.test(message)) {
+      if (
+        /(?:how soon|when|how fast) .*(?:start|begin|treatment)/i.test(message)
+      ) {
         showTypingIndicator().then(() => {
           addBotMessage(FAQs.startTreatment).then(() => {
             startAppointmentScheduling();
@@ -432,7 +445,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // Check for first appointment query
-      if (/(?:what|bring|need).+(?:first|initial).+(?:appointment|visit|session)/i.test(message)) {
+      if (
+        /(?:what|bring|need).+(?:first|initial).+(?:appointment|visit|session)/i.test(
+          message
+        )
+      ) {
         showTypingIndicator().then(() => {
           addBotMessage(FAQs.firstAppointment).then(() => {
             startAppointmentScheduling();
@@ -490,11 +507,13 @@ document.addEventListener("DOMContentLoaded", function () {
         lowerMessage.includes("where")
       ) {
         addBotMessage(FAQs.locations).then(() => {
-          const locationButtons = Object.entries(LOCATIONS).map(([key, data]) => ({
-            text: `📍 ${data.name}`,
-            type: "location_details",
-            location: key
-          }));
+          const locationButtons = Object.entries(LOCATIONS).map(
+            ([key, data]) => ({
+              text: `📍 ${data.name}`,
+              type: "location_details",
+              location: key,
+            })
+          );
           showOptions(locationButtons);
         });
       } else if (
@@ -503,35 +522,51 @@ document.addEventListener("DOMContentLoaded", function () {
         lowerMessage.includes("book")
       ) {
         startAppointmentScheduling();
-      } else if (/\b(?:referr?al|required)\b/i.test(lowerMessage)) {
+      } else if (
+        /\b(?:re+f+e+r+a+l+|re+qu+i+re+d+|dr|docto?r)\b/i.test(lowerMessage)
+      ) {
         showTypingIndicator().then(() => {
           addBotMessage(FAQs.referral).then(() => {
             startAppointmentScheduling();
           });
         });
-      } else if (/(insurance|accept|coverage)/i.test(lowerMessage)) {
+      } else if (
+        /(insurance|insur|covered|accept|coverage|benefit|plan|provider|network)/i.test(
+          lowerMessage
+        )
+      ) {
         handleInsuranceQuery();
-      } else if (/(cost|price|fee)/i.test(lowerMessage)) {
+      } else if (
+        /(cost|price|fee|charge|pay|payment|afford|expense|bill|money|dollar)/i.test(
+          lowerMessage
+        )
+      ) {
         handleCostQuery();
-      } else if (/(certified|qualified|experience)/i.test(lowerMessage)) {
+      } else if (
+        /(certified|qualified|experience|expert|specialist|training|education|license|credential|degree)/i.test(
+          lowerMessage
+        )
+      ) {
         handleTherapistQuery();
-      } else if (/(pain|hurt|ache|sore)/i.test(lowerMessage)) {
+      } else if (
+        /(pain|hurt|ache|sore|discomfort|stiff|tight|tender|numb|tingling|burning|sharp|dull|chronic|suffer)/i.test(
+          lowerMessage
+        )
+      ) {
         showTypingIndicator().then(() => {
-          addBotMessage(
-            "What type of pain are you experiencing? We treat many conditions."
-          ).then(() => {
+          addBotMessage([
+            "What type of pain are you experiencing?",
+            "We treat many conditions and can help identify the best treatment approach.",
+          ]).then(() => {
             showOptions(BUTTON_OPTIONS.painAreas);
           });
         });
-      } 
-
-      
-      
+      }
       // else {
       //   handleRandomInput();
       // }
       else {
-        handleRandomInput(correctedMessage);  // Pass the corrected message
+        handleRandomInput(correctedMessage); // Pass the corrected message
       }
     }
 
@@ -695,53 +730,53 @@ document.addEventListener("DOMContentLoaded", function () {
     function startAppointmentScheduling(option = {}) {
       // Get elements
       const chatbotInput = document.querySelector(
-      "#main-chatbot-container .pt-chatbot-input"
+        "#main-chatbot-container .pt-chatbot-input"
       );
-      const template = document.querySelector("#appointment-form-template"); 
+      const template = document.querySelector("#appointment-form-template");
       const originalForm = template.content.querySelector("#appointment-form");
 
       // Hide regular input
       if (chatbotInput) {
-      chatbotInput.style.display = "none";
+        chatbotInput.style.display = "none";
       }
 
       // Add message before showing form
       // showTypingIndicator().then(() => {
       // addBotMessage("Help Us Get to Know You, so that our team can contact you").then(() => {
-        // Clone and show form
-        const form = originalForm.cloneNode(true);
-        form.style.display = "block";
+      // Clone and show form
+      const form = originalForm.cloneNode(true);
+      form.style.display = "block";
 
-        // Add locations to select
-        const locationSelect = form.querySelector('select[name="location"]');
-        Object.entries(LOCATIONS).forEach(([key, data]) => {
+      // Add locations to select
+      const locationSelect = form.querySelector('select[name="location"]');
+      Object.entries(LOCATIONS).forEach(([key, data]) => {
         const option = document.createElement("option");
         option.value = key;
         option.textContent = data.name;
         locationSelect.appendChild(option);
-        });
+      });
 
-        // Pre-select location if provided
-        if (option.location && option.preselect) {
+      // Pre-select location if provided
+      if (option.location && option.preselect) {
         locationSelect.value = option.location;
-        }
+      }
 
-        messagesContainer.appendChild(form);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      messagesContainer.appendChild(form);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-        // Form submission handler
-        form.addEventListener("submit", (e) => {
+      // Form submission handler
+      form.addEventListener("submit", (e) => {
         e.preventDefault();
         handleFormSubmission(form);
-        });
+      });
 
-        // Cancel button handler
-        form.querySelector(".pt-cancel-form").addEventListener("click", () => {
+      // Cancel button handler
+      form.querySelector(".pt-cancel-form").addEventListener("click", () => {
         form.remove();
         if (chatbotInput) {
           chatbotInput.style.display = "flex";
         }
-        });
+      });
       // });
       // });
     }
@@ -877,8 +912,6 @@ document.addEventListener("DOMContentLoaded", function () {
       };
       appointmentStage = null;
     }
-
-  
 
     // Handle random input with enhanced detection
     function handleRandomInput(message) {
@@ -1128,9 +1161,13 @@ document.addEventListener("DOMContentLoaded", function () {
               "• Ergonomic and postural education",
               "Would you like to know more about how these might help you specifically?",
             ]).then(() => {
+              // showOptions([
+              //   { text: "📅 Talk to a Therapist", type: "appointment" },
+              //   { text: "🔄 Back to Main Menu", type: "back_to_main" },
+              // ]);
               showOptions([
-                { text: "📅 Talk to a Therapist", type: "appointment" },
-                { text: "🔄 Back to Main Menu", type: "back_to_main" },
+                { text: "📅 Schedule First Visit", type: "appointment" },
+                { text: "❓ More Questions", type: "questions" },
               ]);
             });
           });
@@ -1181,6 +1218,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         case "service_detail":
           handleServiceMessage(option.service, option.category);
+          break;
+
+        case "self_pay":
+          handleSelfPayOptions();
           break;
 
         default:
@@ -1290,7 +1331,9 @@ document.addEventListener("DOMContentLoaded", function () {
             messages.push(`⏰ Recommended frequency: ${service.frequency}`);
           }
 
-          messages.push("Would you like to learn more or schedule an appointment?");
+          messages.push(
+            "Would you like to learn more or schedule an appointment?"
+          );
 
           addBotMessage(messages).then(() => {
             showOptions([
@@ -1298,16 +1341,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: `📅 Schedule ${service.name}`,
                 type: "service_appointment",
                 service: key,
-                category: category
+                category: category,
               },
-              { 
-                text: "❓ Ask More Questions", 
-                type: "questions" 
+              {
+                text: "❓ Ask More Questions",
+                type: "questions",
               },
-              { 
-                text: "🔄 View Other Services", 
+              {
+                text: "🔄 View Other Services",
                 type: "service_category",
-                category: category
+                category: category,
               },
             ]);
           });
@@ -1317,19 +1360,21 @@ document.addEventListener("DOMContentLoaded", function () {
           addBotMessage([
             "I found multiple services that might interest you. Which one would you like to learn more about?",
           ]).then(() => {
-            const serviceButtons = detectedServices.map(({ key, service, category }) => ({
-              text: `${service.icon || '🔹'} ${service.name}`,
-              type: "service_detail",
-              service: key,
-              category: category
-            }));
-            
+            const serviceButtons = detectedServices.map(
+              ({ key, service, category }) => ({
+                text: `${service.icon || "🔹"} ${service.name}`,
+                type: "service_detail",
+                service: key,
+                category: category,
+              })
+            );
+
             // Add a view all services option
             serviceButtons.push({
               text: "🔄 View All Services",
               type: "service",
             });
-            
+
             showOptions(serviceButtons);
           });
         });
