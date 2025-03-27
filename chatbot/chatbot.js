@@ -191,21 +191,6 @@ document.addEventListener("DOMContentLoaded", function () {
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    // // Correct spelling in user message
-    // function correctSpelling(text) {
-    //   let correctedText = text.toLowerCase();
-
-    //   // Apply spelling corrections
-    //   Object.keys(SPELLING_CORRECTIONS).forEach((misspelled) => {
-    //     const regex = new RegExp(`\\b${misspelled}\\b`, "gi");
-    //     correctedText = correctedText.replace(
-    //       regex,
-    //       SPELLING_CORRECTIONS[misspelled]
-    //     );
-    //   });
-
-    //   return correctedText;
-    // }
     function correctSpelling(text) {
       let correctedText = text.toLowerCase(); // Convert input text to lowercase once
 
@@ -322,6 +307,99 @@ document.addEventListener("DOMContentLoaded", function () {
       const correctedMessage = correctSpelling(message);
       const lowerMessage = correctedMessage.toLowerCase();
 
+      // Enhanced FAQ matching function
+      function matchMultipleFAQs(message) {
+        const matchedFAQs = [];
+        const matchingRules = [
+          {
+            key: 'treatmentPlan',
+            regex: /(?:treatment|therapy)\s*(?:plan|approach|details)|what.*(?:included|involves|in|is)/i
+          },
+          {
+            key: 'paymentPlans',
+            regex: /(?:payment\s*plan|financing|package|cost\s*option)/i
+          },
+          {
+            key: 'costQuery',
+            regex: /(?:cost|price|fee|how\s*much|charge|pricing)/i
+          },
+          {
+            key: 'insuranceQuery',
+            regex: /(?:insurance|covered|coverage|accept|pay)/i
+          },
+          {
+            key: 'genericAppointment',
+            regex: /(?:book|schedule|appointment|visit)/i
+          },
+          {
+            key: 'sessionLength',
+            regex: /(?:how\s*long|length|duration)\s*(?:session|appointment|visit)/i
+          },
+          {
+            key: 'conditionsTreated',
+            regex: /(?:conditions?|problems?)\s*(?:treat|help|handle)/i
+          },
+          {
+            key: 'startTreatment',
+            regex: /(?:how\s*soon|when|start|begin)\s*(?:treatment|therapy)/i
+          },
+          {
+            key: 'firstAppointment',
+            regex: /(?:first|initial)\s*(?:appointment|visit|session)|what\s*(?:bring|need)/i
+          },
+          
+        ];
+
+        matchingRules.forEach(rule => {
+          if (rule.regex.test(message)) {
+            matchedFAQs.push(rule.key);
+          }
+        });
+
+        return matchedFAQs;
+      }
+
+      // Check for multiple FAQ matches
+      const matchedFAQs = matchMultipleFAQs(correctedMessage);
+      if (matchedFAQs.length > 0) {
+        const faqLabels = {
+          treatmentPlan: '📋 Treatment Plan Details',
+          paymentPlans: '💰 Payment/Financing Options',
+          costQuery: '💲 Cost/Pricing Info',
+          insuranceQuery: '🏥 Insurance Coverage',
+          genericAppointment: '📆 Booking an Appointment',
+          sessionLength: '⏱️ Session Duration',
+          conditionsTreated: '🩺 Conditions We Treat',
+          startTreatment: '🚀 Starting Treatment',
+          firstAppointment: '🆕 About First Appointments'
+        };
+
+        if (matchedFAQs.length === 1) {
+          showTypingIndicator().then(() => {
+            addBotMessage(FAQs[matchedFAQs[0]]).then(() => {
+              startAppointmentScheduling();
+            });
+          });
+          return;
+        }
+
+        showTypingIndicator().then(() => {
+          addBotMessage([
+            "I found multiple relevant topics.",
+            "Which would you like to know more about?"
+          ]).then(() => {
+            showOptions(
+              matchedFAQs.map(faqKey => ({
+                text: faqLabels[faqKey],
+                type: 'faq',
+                faq: faqKey
+              }))
+            );
+          });
+        });
+        return;
+      }
+
       // Check for parking query by checking against spelling corrections
       const parkingTerms = SPELLING_CORRECTIONS.parking;
       const hasParkingTerm = parkingTerms.some((term) =>
@@ -349,114 +427,114 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // Check for treatment plan query
-      if (
-        /(what's|whats|what|what is).*(?:included|treatment plan|treatment|therapy plan)/i.test(
-          message
-        )
-      ) {
-        showTypingIndicator().then(() => {
-          addBotMessage(FAQs.treatmentPlan).then(() => {
-            startAppointmentScheduling();
-          });
-        });
-        return;
-      }
+      // // Check for treatment plan query
+      // if (
+      //   /(?:what.*(?:included|involves|in|is)|tell.*about|explain|details|info|process|plan|approach).+(?:treatment|therapy)(?:\s+plan)?|(?:treatment|therapy)(?:\s+plan)?(?:\s+(?:info|details|process|includes?|involved|approach))?/i.test(
+      //     message
+      //   )
+      // ) {
+      //   showTypingIndicator().then(() => {
+      //     addBotMessage(FAQs.treatmentPlan).then(() => {
+      //   startAppointmentScheduling();
+      //     });
+      //   });
+      //   return;
+      // }
 
-      // Check for payment plans
-      if (/(?:payment plan|package|financing|financial)/i.test(message)) {
-        showTypingIndicator().then(() => {
-          addBotMessage(FAQs.paymentPlans).then(() => {
-            startAppointmentScheduling();
-          });
-        });
-        return;
-      }
+      // // Check for payment plans
+      // if (/(?:payment plan|package|financing|financial)/i.test(message)) {
+      //   showTypingIndicator().then(() => {
+      //     addBotMessage(FAQs.paymentPlans).then(() => {
+      //       startAppointmentScheduling();
+      //     });
+      //   });
+      //   return;
+      // }
 
-      // Check for cost query
-      if (/(?:cost|price|fee|how much|charge)/i.test(message)) {
-        showTypingIndicator().then(() => {
-          addBotMessage(FAQs.costQuery).then(() => {
-            startAppointmentScheduling();
-          });
-        });
-        return;
-      }
-      // Check for insurance query
-      if (
-        /(do you (?:accept|take)|covered by|insurance plan) .+/i.test(message)
-      ) {
-        showTypingIndicator().then(() => {
-          addBotMessage(FAQs.insuranceQuery).then(() => {
-            startAppointmentScheduling();
-          });
-        });
-        return;
-      }
+      // // Check for cost query
+      // if (/(?:cost|price|fee|how much|charge)/i.test(message)) {
+      //   showTypingIndicator().then(() => {
+      //     addBotMessage(FAQs.costQuery).then(() => {
+      //       startAppointmentScheduling();
+      //     });
+      //   });
+      //   return;
+      // }
+      // // Check for insurance query
+      // if (
+      //   /(do you (?:accept|take)|covered by|insurance) .+/i.test(message)
+      // ) {
+      //   showTypingIndicator().then(() => {
+      //     addBotMessage(FAQs.insuranceQuery).then(() => {
+      //       startAppointmentScheduling();
+      //     });
+      //   });
+      //   return;
+      // }
 
-      // Check for specific appointment/treatment request
-      if (/(?:book|schedule|appointment for|treatment for) .+/i.test(message)) {
-        showTypingIndicator().then(() => {
-          addBotMessage(FAQs.genericAppointment).then(() => {
-            startAppointmentScheduling();
-          });
-        });
-        return;
-      }
+      // // Check for specific appointment/treatment request
+      // if (/(?:book|schedule|appointment for|treatment for) .+/i.test(message)) {
+      //   showTypingIndicator().then(() => {
+      //     addBotMessage(FAQs.genericAppointment).then(() => {
+      //       startAppointmentScheduling();
+      //     });
+      //   });
+      //   return;
+      // }
 
-      // Check for session length query
-      if (
-        /(?:how long|length|duration) .*(session|appointment|visit)/i.test(
-          message
-        )
-      ) {
-        showTypingIndicator().then(() => {
-          addBotMessage(FAQs.sessionLength).then(() => {
-            startAppointmentScheduling();
-          });
-        });
-        return;
-      }
+      // // Check for session length query
+      // if (
+      //   /(?:how long|length|duration) .*(session|appointment|visit)/i.test(
+      //     message
+      //   )
+      // ) {
+      //   showTypingIndicator().then(() => {
+      //     addBotMessage(FAQs.sessionLength).then(() => {
+      //       startAppointmentScheduling();
+      //     });
+      //   });
+      //   return;
+      // }
 
-      // Check for conditions treated query
-      if (
-        /(?:what|which) .*(?:conditions?|problems?) .*(?:treat|help)/i.test(
-          message
-        )
-      ) {
-        showTypingIndicator().then(() => {
-          addBotMessage(FAQs.conditionsTreated).then(() => {
-            startAppointmentScheduling();
-          });
-        });
-        return;
-      }
+      // // Check for conditions treated query
+      // if (
+      //   /(?:what|which) .*(?:conditions?|problems?) .*(?:treat|help)/i.test(
+      //     message
+      //   )
+      // ) {
+      //   showTypingIndicator().then(() => {
+      //     addBotMessage(FAQs.conditionsTreated).then(() => {
+      //       startAppointmentScheduling();
+      //     });
+      //   });
+      //   return;
+      // }
 
-      // Check for treatment start query
-      if (
-        /(?:how soon|when|how fast) .*(?:start|begin|treatment)/i.test(message)
-      ) {
-        showTypingIndicator().then(() => {
-          addBotMessage(FAQs.startTreatment).then(() => {
-            startAppointmentScheduling();
-          });
-        });
-        return;
-      }
+      // // Check for treatment start query
+      // if (
+      //   /(?:how soon|when|how fast) .*(?:start|begin|treatment)/i.test(message)
+      // ) {
+      //   showTypingIndicator().then(() => {
+      //     addBotMessage(FAQs.startTreatment).then(() => {
+      //       startAppointmentScheduling();
+      //     });
+      //   });
+      //   return;
+      // }
 
-      // Check for first appointment query
-      if (
-        /(?:what|bring|need).+(?:first|initial).+(?:appointment|visit|session)/i.test(
-          message
-        )
-      ) {
-        showTypingIndicator().then(() => {
-          addBotMessage(FAQs.firstAppointment).then(() => {
-            startAppointmentScheduling();
-          });
-        });
-        return;
-      }
+      // // Check for first appointment query
+      // if (
+      //   /(?:what|bring|need).+(?:first|initial).+(?:appointment|visit|session)/i.test(
+      //     message
+      //   )
+      // ) {
+      //   showTypingIndicator().then(() => {
+      //     addBotMessage(FAQs.firstAppointment).then(() => {
+      //       startAppointmentScheduling();
+      //     });
+      //   });
+      //   return;
+      // }
 
       // Check for service-related queries first
       const detectedServices = detectServices(lowerMessage);
@@ -487,8 +565,9 @@ document.addEventListener("DOMContentLoaded", function () {
       // Handle FAQs
       if (
         lowerMessage.includes("service") ||
-        lowerMessage.includes("what do you do") ||
-        lowerMessage.includes("treat")
+        lowerMessage.includes("what do you do")
+        //  ||
+        // lowerMessage.includes("treat")
       ) {
         showServiceCategories();
       } else if (
@@ -531,18 +610,20 @@ document.addEventListener("DOMContentLoaded", function () {
           });
         });
       } else if (
-        /(insurance|insur|covered|accept|coverage|benefit|plan|provider|network)/i.test(
+        /(insurance|insur|covered|accept|coverage|benefit|provider|network)/i.test(
           lowerMessage
         )
       ) {
         handleInsuranceQuery();
-      } else if (
-        /(cost|price|fee|charge|pay|payment|afford|expense|bill|money|dollar)/i.test(
+            } else if (
+        /\b(?:cost|price|fee|how\s+much|charge|session|visit|therapy|treatment)\b.*(?:cost|price|fee|charge|estimate|detail|information|query|be|will)/i.test(
           lowerMessage
-        )
-      ) {
+        ) || 
+        /\b(?:cost|price|fee|charge)(?:\s+(?:of|for|per))?\b/i.test(lowerMessage) ||
+        /\b(?:charges?|charging|cost(?:ing)?|pric(?:ing|e)|fee(?:s)?)\b/i.test(lowerMessage)
+            ) {
         handleCostQuery();
-      } else if (
+            } else if (
         /(certified|qualified|experience|expert|specialist|training|education|license|credential|degree)/i.test(
           lowerMessage
         )
@@ -866,7 +947,18 @@ document.addEventListener("DOMContentLoaded", function () {
         "🎉 Appointment Request Received!",
         `Name: ${data.name}`,
         `Phone: ${data.phone}`,
-        `Email: ${data.email}`,
+        `Email: ${data.email.length > 20 
+          ? data.email.split('').reduce((acc, char, index) => {
+              if (index > 0 && index % 20 === 0) {
+                acc.push('\n       ' + char);
+              } else if (index === 0) {
+                acc.push(char);
+              } else {
+                acc[acc.length - 1] += char;
+              }
+              return acc;
+            }, []).join('')
+          : data.email}`,
         `Location: ${location.name}`,
       ];
 
@@ -1222,6 +1314,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         case "self_pay":
           handleSelfPayOptions();
+          break;
+
+        case "faq":
+          showTypingIndicator().then(() => {
+            addBotMessage(FAQs[option.faq]).then(() => {
+              startAppointmentScheduling();
+            });
+          });
           break;
 
         default:

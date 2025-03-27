@@ -308,14 +308,14 @@ export const FAQs = {
     "Which is most convenient for you?",
   ],
   parking: [
-    "🅿️ Free parking is available at all four locations: ",
-    "STAFFORD/SUGAR LAND,\n\n SPRING,\n\n KATY,\n\n SOUTHFIELD ",
-    "All locations have accessible/handicap spots near entrance."
+    "🅿️ Free parking should be available at all four locations",
+    "STAFFORD/SUGAR LAND,\n\n SPRING,\n\n KATY,\n\n SOUTHFIELD",
+    // "All locations have accessible/handicap spots near entrance."
   ],
-  painResponse: [
-    "Our therapists are highly trained to address your specific condition, utilizing evidence-based techniques to provide effective relief.",
-    "Let's schedule you with the right specialist who can help you get relief quickly.",
-  ],
+  // painResponse: [
+  //   "Our therapists are highly trained to address your specific condition, utilizing evidence-based techniques to provide effective relief.",
+  //   "Let's schedule you with the right specialisst who can help you get relief quickly.",
+  // ],
   insuranceQuery: [
     "Thanks for asking! Insurance coverage can vary based on your plan and location. To provide accurate details, please share your information via the form below, our team will contact you shortly so we can assist you faster.",
   ],
@@ -516,6 +516,8 @@ export const SPELLING_CORRECTIONS = {
     "s.l.p.",
     "s l p",
     "speech",
+    "neurological",
+    "neurological injury",
   ],
 
   // Pediatric Therapy variations - Refactored to Array
@@ -1223,6 +1225,7 @@ export const SPELLING_CORRECTIONS = {
   servis: "service",
   servise: "service",
   servicies: "service",
+  therapies : "service",
   srvices: "service",
   servces: "service",
   servics: "service",
@@ -1275,12 +1278,12 @@ export const SPELLING_CORRECTIONS = {
   clink: "location",
   clnic: "location",
   clinc: "clinlocationic",
-  clinik: "physical therapy",
-  facility: "physical therapy",
-  faciltiy: "physical therapy",
-  facilty: "physical therapy",
-  faciliti: "physical therapy",
-  facility: "physical therapy",
+  clinik: "location",
+  // facility: "physical therapy",
+  // faciltiy: "physical therapy",
+  // facilty: "physical therapy",
+  // faciliti: "physical therapy",
+  // facility: "physical therapy",
 
   // Hours related (no array needed, direct mapping)
   hours: "hours",
