@@ -125,7 +125,7 @@
 }
 
 .pt-chatbot-wrapper {
-    width: 300px;
+    width: 350px;
     position: relative;
     /* bottom: -150px; */
 }
@@ -169,7 +169,7 @@
     padding: 15px 10px 15px 45px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
 }
 
 .pt-bot-message{
@@ -317,7 +317,7 @@ form input {
     color: var(--primary-color);
     border: none;
     padding: 8px;
-    margin: 5px;
+    margin: 3px;
     border-radius: 8px;
     display: inline-block;
     /* text-align: left; */
@@ -334,7 +334,7 @@ form input {
     color: var(--primary-color) !important;
     outline: 1px solid var(--primary-color);
     padding: 8px 15px 8px 8px;
-    margin: 5px;
+    margin: 3px;
     border-radius: 8px !important;
 }
 
@@ -343,7 +343,7 @@ form input {
     color: var(--primary-color) !important;
     outline: 1px solid var(--primary-color) !important;
     padding: 8px 15px 8px 8px;
-    margin: 5px;
+    margin: 3px;
     border-radius: 8px !important;
 }
 

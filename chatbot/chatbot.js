@@ -27,6 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const inputField = document.querySelector(
     "#main-chatbot-container .pt-chatbot-input input"
   );
+  const chatbotInputintial = document.querySelector(
+    "#main-chatbot-container .pt-chatbot-input"
+  );
 
   // Handle chat link click
   chatLink?.addEventListener("click", function (e) {
@@ -36,14 +39,36 @@ document.addEventListener("DOMContentLoaded", function () {
       mainMessages.innerHTML = "";
     } else {
       mainChatbot.style.display = "flex";
+      chatbotInputintial.style.display = "flex";
       initializeChatbot();
     }
   });
 
+  // const cancelbutton = document.querySelector(
+  //   "#main-chatbot-container .pt-cancel"
+  // );
+  // cancelbutton?.addEventListener("click", function () {
+  //   stopTyping();
+  // });
+  // Stop typing function
+  function stopTyping() {
+    // Set flag to stop ongoing typing
+    window.typingStopped = true;
+
+    // Clear all intervals in the typing queue
+    if (window.typingQueue && window.typingQueue.length > 0) {
+      window.typingQueue.forEach((interval) => {
+        clearInterval(interval);
+      });
+      window.typingQueue = [];
+    }
+    addBotMessage("Welcome to Theramedic Rehab");
+  }
   // Handle close button
   closeButton?.addEventListener("click", function () {
     mainChatbot.style.display = "none";
     mainMessages.innerHTML = "";
+    stopTyping();
   });
 
   // Initialize chatbot functionality
@@ -51,24 +76,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const messagesContainer = mainMessages;
 
     // Move startInitialChat inside initializeChatbot
-    async function startInitialChat() {
+    const startInitialChat = () => {
       messagesContainer.innerHTML = "";
 
-      // First message with typing effect
-      await addBotMessage(
-        "Welcome to Theramedic Rehab! I'm here to assist you."
-      );
-
-      // Second message after first completes
-      await addBotMessage("How can I help you today?");
-
-      // Show options after messages complete
-
-      // await new Promise(resolve => setTimeout(resolve, 500));
-      // showOptions(BUTTON_OPTIONS.main);
-
-      await showOptions(BUTTON_OPTIONS.main);
-    }
+      // Chain promises for better performance
+      addBotMessage("Welcome to Theramedic Rehab")
+        .then(() => addBotMessage("How can I help you today?"))
+        .then(() => new Promise((resolve) => setTimeout(resolve, 300)))
+        .then(() => showOptions(BUTTON_OPTIONS.main))
+        .catch((err) => console.error("Error starting chat:", err));
+    };
 
     // Start chat immediately when initialized
     startInitialChat();
@@ -120,6 +137,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add typing indicator
     function showTypingIndicator() {
       return new Promise((resolve) => {
+        // Disable input, send button and option buttons while typing
+        const inputField = document.querySelector(
+          "#main-chatbot-container .pt-chatbot-input input"
+        );
+        const sendButton = document.querySelector(
+          "#main-chatbot-container .pt-send-button"
+        );
+        const optionButtons = document.querySelectorAll(".pt-option-button");
+
+        if (inputField) inputField.disabled = true;
+        if (sendButton) sendButton.disabled = true;
+        optionButtons.forEach((btn) => (btn.disabled = true));
+
         const indicator = document.createElement("div");
         indicator.className = "typing-indicator pt-bot-message";
         indicator.innerHTML = "<span></span><span></span><span></span>";
@@ -129,13 +159,35 @@ document.addEventListener("DOMContentLoaded", function () {
         // Remove typing indicator after random time between 1-2 seconds
         setTimeout(() => {
           indicator.remove();
+          // Re-enable input, send button and option buttons
+          if (inputField) inputField.disabled = false;
+          if (sendButton) sendButton.disabled = false;
+          optionButtons.forEach((btn) => (btn.disabled = false));
           resolve();
         }, Math.random() * 1000 + 1000);
       });
     }
 
     // Add bot message with typing effect
-    function addBotMessage(message, speed = 30) {
+    function addBotMessage(message, speed = 23) {
+      // Disable input, send button and option buttons while typing
+      const inputField = document.querySelector(
+        "#main-chatbot-container .pt-chatbot-input input"
+      );
+      const sendButton = document.querySelector(
+        "#main-chatbot-container .pt-send-button"
+      );
+      const optionButtons = document.querySelectorAll(".pt-option-button");
+
+      if (inputField) inputField.disabled = true;
+      if (sendButton) sendButton.disabled = true;
+      optionButtons.forEach((btn) => (btn.disabled = true));
+
+      // Store active intervals and message elements for the stopTyping function
+      if (!window.typingQueue) {
+        window.typingQueue = [];
+      }
+
       if (Array.isArray(message)) {
         let chainPromise = Promise.resolve();
         message.forEach((msg) => {
@@ -146,39 +198,94 @@ document.addEventListener("DOMContentLoaded", function () {
               messagesContainer.appendChild(messageElement);
 
               // Type out the message
-              typeText(messageElement, msg, speed).then(resolve);
+              typeText(messageElement, msg, speed)
+                .then(resolve)
+                .catch(() => {
+                  // Handle promise rejection when typing is stopped
+                  resolve();
+                });
             });
           });
         });
-        return chainPromise;
+        // Re-enable input, button and option buttons when all messages are done
+        return chainPromise.then(() => {
+          if (inputField) inputField.disabled = false;
+          if (sendButton) sendButton.disabled = false;
+          optionButtons.forEach((btn) => (btn.disabled = false));
+        });
       } else {
         return new Promise((resolve) => {
           const messageElement = document.createElement("div");
           messageElement.className = "pt-bot-message";
           messagesContainer.appendChild(messageElement);
 
-          // Type out the message
-          typeText(messageElement, message, speed).then(resolve);
+          // Type out the message and re-enable input when done
+          typeText(messageElement, message, speed)
+            .then(() => {
+              if (inputField) inputField.disabled = false;
+              if (sendButton) sendButton.disabled = false;
+              optionButtons.forEach((btn) => (btn.disabled = false));
+              resolve();
+            })
+            .catch(() => {
+              // Handle promise rejection when typing is stopped
+              if (inputField) inputField.disabled = false;
+              if (sendButton) sendButton.disabled = false;
+              optionButtons.forEach((btn) => (btn.disabled = false));
+              resolve();
+            });
         });
       }
     }
 
     // Type text effect
     function typeText(element, text, speed) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         let i = 0;
         const interval = setInterval(() => {
+          // Check if typing should be stopped
+          if (window.typingStopped) {
+            clearInterval(interval);
+            window.typingStopped = false;
+            const index = window.typingQueue.indexOf(interval);
+            if (index > -1) {
+              window.typingQueue.splice(index, 1);
+            }
+            reject(new Error("Typing stopped"));
+            return;
+          }
+
           if (i < text.length) {
             element.textContent += text.charAt(i);
             i++;
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
           } else {
             clearInterval(interval);
+            const index = window.typingQueue.indexOf(interval);
+            if (index > -1) {
+              window.typingQueue.splice(index, 1);
+            }
             resolve();
           }
         }, speed);
+
+        // Add this interval to the queue
+        window.typingQueue.push(interval);
       });
     }
+
+    // function stopTyping() {
+    //   // Set flag to stop ongoing typing
+    //   window.typingStopped = true;
+
+    //   // Clear all intervals in the typing queue
+    //   if (window.typingQueue && window.typingQueue.length > 0) {
+    //     window.typingQueue.forEach((interval) => {
+    //       clearInterval(interval);
+    //     });
+    //     window.typingQueue = [];
+    //   }
+    // }
 
     // Add user message to chat
     function addUserMessage(message) {
@@ -213,90 +320,84 @@ document.addEventListener("DOMContentLoaded", function () {
 
       return correctedText;
     }
-    // Enhanced pain detection function
+    // Optimized pain detection function
     function detectPainAreas(message) {
       const lowerMessage = message.toLowerCase();
       const detectedAreas = new Set();
 
-      // Common pain-related words
-      const painWords = ["pain", "ache", "hurt", "sore", "stiff", "discomfort"];
-      const hasGeneralPain = painWords.some((word) =>
-        lowerMessage.includes(word)
-      );
+      // Combined regex for pain-related terms
+      const painPattern = /\b(?:pain|ache|hurt|sore|stiff|discomfort)\b/i;
 
-      // Direct area mentions
-      Object.entries(PAIN_AREAS).forEach(([key, data]) => {
-        const searchTerms = [
-          key.replace("_", " "),
-          data.display.toLowerCase(),
-          ...data.treatments.map((t) => t.toLowerCase()),
-        ];
-        if (searchTerms.some((term) => lowerMessage.includes(term))) {
-          detectedAreas.add({ key, data });
-        }
-      });
-
-      // Specific condition mapping
-      const conditionMap = {
-        head_pain: ["headache", "migraine", "tmj", "jaw", "temple"],
-        shoulder_pain: [
-          "rotator cuff",
-          "frozen shoulder",
-          "impingement",
-          "shoulder strain",
-          "labral tear",
-          "deltoid",
-          "scapula",
-          "bursitis",
-        ],
-        back_pain: [
-          "sciatica",
-          "lumbar",
-          "spine",
-          "spinal",
-          "lower back",
-          "upper back",
-        ],
-        neck_pain: ["whiplash", "cervical", "tech neck", "shoulder"],
-        hand_wrist_pain: ["carpal", "tunnel", "wrist", "finger", "thumb"],
-        foot_ankle_pain: ["heel", "plantar", "fasciitis", "arch", "ankle"],
-        knee_pain: ["acl", "mcl", "meniscus", "patella", "runner"],
-        hip_pain: ["bursitis", "arthritis", "groin"],
-        elbow_pain: ["tennis elbow", "golfer", "tendonitis"],
-        pelvic_floor: ["incontinence", "bladder", "prolapse"],
+      // Create a single regex pattern for all conditions
+      const painAreaPatterns = {
+        head_pain: /\b(?:headache|migraine|tmj|jaw|temple|head)\b/i,
+        shoulder_pain:
+          /\b(?:rotator\s*cuff|frozen\s*shoulder|impingement|shoulder|deltoid|scapula|bursitis)\b/i,
+        back_pain:
+          /\b(?:sciatica|lumbar|spine|spinal|(?:lower|upper|mid)\s*back|back|herniated|disc|pinched\s*nerve|slipped\s*disc|bulging\s*disc|stenosis|scoliosis)\b/i,
+        neck_pain: /\b(?:whiplash|cervical|tech\s*neck|neck)\b/i,
+        hand_wrist_pain: /\b(?:carpal|tunnel|wrist|finger|thumb|hand|palm)\b/i,
+        foot_ankle_pain: /\b(?:heel|plantar|fasciitis|arch|ankle|foot|toe)\b/i,
+        knee_pain: /\b(?:acl|mcl|meniscus|patella|runner|knee)\b/i,
+        hip_pain: /\b(?:bursitis|arthritis|groin|hip)\b/i,
+        elbow_pain: /\b(?:tennis\s*elbow|golfer|tendonitis|elbow)\b/i,
+        pelvic_floor: /\b(?:incontinence|bladder|prolapse|pelvic|floor)\b/i,
       };
 
-      // Check for specific conditions
-      Object.entries(conditionMap).forEach(([key, terms]) => {
-        if (terms.some((term) => lowerMessage.includes(term))) {
-          detectedAreas.add({ key, data: PAIN_AREAS[key] });
-        }
-      });
+      // Test message against patterns
+      if (painPattern.test(lowerMessage)) {
+        // If general pain is mentioned, check specific areas
+        Object.entries(painAreaPatterns).forEach(([key, pattern]) => {
+          if (pattern.test(lowerMessage)) {
+            detectedAreas.add({ key, data: PAIN_AREAS[key] });
+          }
+        });
+      } else {
+        // Even if pain is not explicitly mentioned, check for specific conditions
+        Object.entries(painAreaPatterns).forEach(([key, pattern]) => {
+          if (pattern.test(lowerMessage)) {
+            detectedAreas.add({ key, data: PAIN_AREAS[key] });
+          }
+        });
+      }
 
       return Array.from(detectedAreas);
     }
-
-    // Add this after detectPainAreas function
+    // Optimized service detection function
     function detectServices(message) {
       const lowerMessage = message.toLowerCase();
       const detectedServices = new Set();
 
-      // Check all services in all categories
+      // Create a map of normalized terms to service info
+      const serviceTermMap = new Map();
+
       Object.entries(SERVICES).forEach(([category, categoryData]) => {
         Object.entries(categoryData.services).forEach(([key, service]) => {
-          // Check service name
-          if (lowerMessage.includes(service.name.toLowerCase())) {
-            detectedServices.add({ key, service, category });
-          }
-          // Check keywords if they exist
+          // Add service name
+          serviceTermMap.set(service.name.toLowerCase(), {
+            key,
+            service,
+            category,
+          });
+
+          // Add keywords if they exist
           if (service.keywords) {
             service.keywords.forEach((keyword) => {
-              if (lowerMessage.includes(keyword.toLowerCase())) {
-                detectedServices.add({ key, service, category });
-              }
+              serviceTermMap.set(keyword.toLowerCase(), {
+                key,
+                service,
+                category,
+              });
             });
           }
         });
+      });
+
+      // Check message against service terms
+      serviceTermMap.forEach((serviceInfo, term) => {
+        if (lowerMessage.includes(term)) {
+          detectedServices.add(serviceInfo);
+        }
       });
 
       return Array.from(detectedServices);
@@ -307,50 +408,112 @@ document.addEventListener("DOMContentLoaded", function () {
       const correctedMessage = correctSpelling(message);
       const lowerMessage = correctedMessage.toLowerCase();
 
+      // Check for services mentions first
+      const detectedServices = detectServices(lowerMessage);
+      if (detectedServices.length > 0 && !appointmentStage) {
+        handleServiceQuery(detectedServices);
+        return;
+      }
+       // Check for pain mentions seconds
+       const detectedPainAreas = detectPainAreas(lowerMessage);
+       if (detectedPainAreas.length > 0 && !appointmentStage) {
+         handlePainMessage(detectedPainAreas);
+         return;
+       }
+
       // Enhanced FAQ matching function
       function matchMultipleFAQs(message) {
         const matchedFAQs = [];
+        const lowerMessage = message.toLowerCase();
         const matchingRules = [
           {
-            key: 'treatmentPlan',
-            regex: /(?:treatment|therapy)\s*(?:plan|approach|details)|what.*(?:included|involves|in|is)/i
+            key: "treatmentPlan",
+            regex:
+              /(?:(?:plan|details|detials|deetails)\s*(?:of|for)\s*(?:treatment|therapy|therpy|tretment))|(?:treatment|therapy|therpy|tretment)\s*(?:plan|approach|detials|details|deetails)|what.*(?:included|involves|in|is)/i,
           },
           {
-            key: 'paymentPlans',
-            regex: /(?:payment\s*plan|financing|package|cost\s*option)/i
+            key: "paymentPlans",
+            regex:
+              /(?:pay?ment\s*plan|fin?anc?ing|pay|pack?age|cost\s*opt?ion|pyament|payement|plan)/i,
           },
           {
-            key: 'costQuery',
-            regex: /(?:cost|price|fee|how\s*much|charge|pricing)/i
+            key: "costQuery",
+            regex:
+              /\b(?:cost|price|fee|how\s+much|charge|session|visit|therapy|treatment|therpy|tretment)\b.*(?:cost|price|fee|charge|estimate|detail|information|query|be|will)|(?:cost|price|fee|charge)(?:\s+(?:of|for|per))?\b|(?:charges?|charging|cost(?:ing)?|pric(?:ing|e)|fee(?:s)?)\b/i,
           },
           {
-            key: 'insuranceQuery',
-            regex: /(?:insurance|covered|coverage|accept|pay)/i
+            key: "insuranceQuery",
+            regex:
+              /(?:insur(?:ance)?|covere?d|coverage|accept|pay|pays?|insurence|insureance)/i,
           },
           {
-            key: 'genericAppointment',
-            regex: /(?:book|schedule|appointment|visit)/i
+            key: "genericAppointment",
+            regex:
+              /(?:book|sched?ule|appoint?ment|apoint?ment|visit|booking|appointement)/i,
           },
           {
-            key: 'sessionLength',
-            regex: /(?:how\s*long|length|duration)\s*(?:session|appointment|visit)/i
+            key: "sessionLength",
+            regex:
+              /(?:how\s*long|length|duration|time|timing)\s*(?:is|for|of)?\s*(?:a|the)?\s*(?:session|appoint?ment|apoint?ment|visit|treatment|therapy|therpy|tretment)/i,
           },
           {
-            key: 'conditionsTreated',
-            regex: /(?:conditions?|problems?)\s*(?:treat|help|handle)/i
+            key: "conditionsTreated",
+            regex:
+              /(?:conditions?|problems?|issues?|problims?)\s*(?:treat|help|handle|fix|heel)/i,
           },
           {
-            key: 'startTreatment',
-            regex: /(?:how\s*soon|when|start|begin)\s*(?:treatment|therapy)/i
+            key: "startTreatment",
+            regex:
+              /(?:how\s*soon|when|start|begin|commense|comence)\s*(?:treatment|therapy|therpy|tretment)/i,
           },
           {
-            key: 'firstAppointment',
-            regex: /(?:first|initial)\s*(?:appointment|visit|session)|what\s*(?:bring|need)/i
+            key: "firstAppointment",
+            regex:
+              /(?:first|initial|1st)\s*(?:appointment|appointement|visit|session)|what\s*(?:bring|need|require)/i,
           },
-          
+          {
+            key: "referral",
+            regex:
+              /\b(?:re+f+e+r+a+l+|re+qu+i+re+d+|dr|docto?r|refferal|referal)\b/i,
+          },
+          {
+            key: "insurance",
+            regex:
+              /(insurance|insur|covered|accept|coverage|benefit|provider|network|insurence|insureance)/i,
+          },
+          {
+            key: "therapist",
+            regex:
+              /(certified|qualified|experience|expert|specialist|training|education|license|credential|degree|qualifications|therepist|physio)/i,
+          },
+          {
+            key: "CancellationAppointmentPolicy",
+            regex:
+              /(?:cancel|cancle|cancell?|reschedule|change|modify|update|postpone)\s*(?:my|an|the|this|that|scheduled|booked)?\s*(?:appointment|appointement|session|visit|booking|schedule|time|slot)|(?:how\s*(?:to|do|can|should|would))?\s*(?:cancel|cancle|cancell?|reschedule|change|modify|update|postpone)\s*(?:my|an|the|this|that|scheduled|booked)?\s*(?:appointment|appointement|session|visit|booking|schedule|time|slot)|(?:cancellation|cancelation|rescheduling)\s*(?:policy|procedure|process|fee|charge)|(?:reschedule|cancel|change)\b/i,
+          },
+          {
+            key: "parking",
+            regex:
+              /(?:parking|park|where\s*to\s*park|parking\s*available|car\s*park)/i,
+          },
+          {
+            key: "services",
+            regex:
+              /(?:service|what\s*do\s*you\s*do|what.*offer|what.*provide)/i,
+          },
+          {
+            key: "hours",
+            regex:
+              /(?:hour|time|open|close|when.*open|operating|business\s*hour)/i,
+          },
+          {
+            key: "locations",
+            regex:
+              /(?:location|address|where|direction|place|facility|clinic)/i,
+          },
         ];
 
-        matchingRules.forEach(rule => {
+        matchingRules.forEach((rule) => {
           if (rule.regex.test(message)) {
             matchedFAQs.push(rule.key);
           }
@@ -363,22 +526,60 @@ document.addEventListener("DOMContentLoaded", function () {
       const matchedFAQs = matchMultipleFAQs(correctedMessage);
       if (matchedFAQs.length > 0) {
         const faqLabels = {
-          treatmentPlan: '📋 Treatment Plan Details',
-          paymentPlans: '💰 Payment/Financing Options',
-          costQuery: '💲 Cost/Pricing Info',
-          insuranceQuery: '🏥 Insurance Coverage',
-          genericAppointment: '📆 Booking an Appointment',
-          sessionLength: '⏱️ Session Duration',
-          conditionsTreated: '🩺 Conditions We Treat',
-          startTreatment: '🚀 Starting Treatment',
-          firstAppointment: '🆕 About First Appointments'
+          treatmentPlan: "📋 Treatment Plan Details",
+          paymentPlans: "💰 Payment/Financing Options",
+          costQuery: "💲 Cost/Pricing Info",
+          insuranceQuery: "🏥 Insurance Coverage",
+          genericAppointment: "📆 Booking an Appointment",
+          sessionLength: "⏱️ Session Duration",
+          conditionsTreated: "🩺 Conditions We Treat",
+          startTreatment: "🚀 Starting Treatment",
+          firstAppointment: "🆕 About First Appointments",
+          referral: "👨‍⚕️ Referral Information",
+          insurance: "🏥 Insurance Information",
+          therapist: "👨‍⚕️ Our Therapists",
+          CancellationAppointmentPolicy: "❌ Cancellation Policy",
+          parking: "🅿️ Parking Information",
+          services: "🏥 Our Services",
+          hours: "⏰ Business Hours",
+          locations: "📍 Clinic Locations",
         };
 
         if (matchedFAQs.length === 1) {
           showTypingIndicator().then(() => {
-            addBotMessage(FAQs[matchedFAQs[0]]).then(() => {
-              startAppointmentScheduling();
-            });
+            const matchedKey = matchedFAQs[0];
+            if (matchedKey === "insurance") {
+              handleInsuranceQuery();
+            } 
+            
+            // else if (matchedKey === "cost") {
+            //   handleCostQuery();
+            // }
+            
+            else if (matchedKey === "hours") {
+              addBotMessage(FAQs.hours);
+            } else if (matchedKey === "CancellationAppointmentPolicy") {
+              addBotMessage(FAQs.CancellationAppointmentPolicy);
+            } else if (matchedKey === "therapist") {
+              handleTherapistQuery();
+            } else if (matchedKey === "services") {
+              showServiceCategories();
+            } else if (matchedKey === "locations") {
+              addBotMessage(FAQs.locations).then(() => {
+                const locationButtons = Object.entries(LOCATIONS).map(
+                  ([key, data]) => ({
+                    text: `📍 ${data.name}`,
+                    type: "location_details",
+                    location: key,
+                  })
+                );
+                showOptions(locationButtons);
+              });
+            } else {
+              addBotMessage(FAQs[matchedKey]).then(() => {
+                startAppointmentScheduling();
+              });
+            }
           });
           return;
         }
@@ -386,13 +587,13 @@ document.addEventListener("DOMContentLoaded", function () {
         showTypingIndicator().then(() => {
           addBotMessage([
             "I found multiple relevant topics.",
-            "Which would you like to know more about?"
+            "Which would you like to know more about?",
           ]).then(() => {
             showOptions(
-              matchedFAQs.map(faqKey => ({
+              matchedFAQs.map((faqKey) => ({
                 text: faqLabels[faqKey],
-                type: 'faq',
-                faq: faqKey
+                type: "faq",
+                faq: faqKey,
               }))
             );
           });
@@ -400,20 +601,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // Check for parking query by checking against spelling corrections
-      const parkingTerms = SPELLING_CORRECTIONS.parking;
-      const hasParkingTerm = parkingTerms.some((term) =>
-        lowerMessage.includes(term.toLowerCase())
-      );
-
-      if (hasParkingTerm) {
-        showTypingIndicator().then(() => {
-          addBotMessage(FAQs.parking).then(() => {
-            startAppointmentScheduling();
-          });
-        });
-        return;
-      }
 
       if (lowerMessage.includes("arthritis")) {
         showTypingIndicator().then(() => {
@@ -427,128 +614,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // // Check for treatment plan query
-      // if (
-      //   /(?:what.*(?:included|involves|in|is)|tell.*about|explain|details|info|process|plan|approach).+(?:treatment|therapy)(?:\s+plan)?|(?:treatment|therapy)(?:\s+plan)?(?:\s+(?:info|details|process|includes?|involved|approach))?/i.test(
-      //     message
-      //   )
-      // ) {
-      //   showTypingIndicator().then(() => {
-      //     addBotMessage(FAQs.treatmentPlan).then(() => {
-      //   startAppointmentScheduling();
-      //     });
-      //   });
-      //   return;
-      // }
-
-      // // Check for payment plans
-      // if (/(?:payment plan|package|financing|financial)/i.test(message)) {
-      //   showTypingIndicator().then(() => {
-      //     addBotMessage(FAQs.paymentPlans).then(() => {
-      //       startAppointmentScheduling();
-      //     });
-      //   });
-      //   return;
-      // }
-
-      // // Check for cost query
-      // if (/(?:cost|price|fee|how much|charge)/i.test(message)) {
-      //   showTypingIndicator().then(() => {
-      //     addBotMessage(FAQs.costQuery).then(() => {
-      //       startAppointmentScheduling();
-      //     });
-      //   });
-      //   return;
-      // }
-      // // Check for insurance query
-      // if (
-      //   /(do you (?:accept|take)|covered by|insurance) .+/i.test(message)
-      // ) {
-      //   showTypingIndicator().then(() => {
-      //     addBotMessage(FAQs.insuranceQuery).then(() => {
-      //       startAppointmentScheduling();
-      //     });
-      //   });
-      //   return;
-      // }
-
-      // // Check for specific appointment/treatment request
-      // if (/(?:book|schedule|appointment for|treatment for) .+/i.test(message)) {
-      //   showTypingIndicator().then(() => {
-      //     addBotMessage(FAQs.genericAppointment).then(() => {
-      //       startAppointmentScheduling();
-      //     });
-      //   });
-      //   return;
-      // }
-
-      // // Check for session length query
-      // if (
-      //   /(?:how long|length|duration) .*(session|appointment|visit)/i.test(
-      //     message
-      //   )
-      // ) {
-      //   showTypingIndicator().then(() => {
-      //     addBotMessage(FAQs.sessionLength).then(() => {
-      //       startAppointmentScheduling();
-      //     });
-      //   });
-      //   return;
-      // }
-
-      // // Check for conditions treated query
-      // if (
-      //   /(?:what|which) .*(?:conditions?|problems?) .*(?:treat|help)/i.test(
-      //     message
-      //   )
-      // ) {
-      //   showTypingIndicator().then(() => {
-      //     addBotMessage(FAQs.conditionsTreated).then(() => {
-      //       startAppointmentScheduling();
-      //     });
-      //   });
-      //   return;
-      // }
-
-      // // Check for treatment start query
-      // if (
-      //   /(?:how soon|when|how fast) .*(?:start|begin|treatment)/i.test(message)
-      // ) {
-      //   showTypingIndicator().then(() => {
-      //     addBotMessage(FAQs.startTreatment).then(() => {
-      //       startAppointmentScheduling();
-      //     });
-      //   });
-      //   return;
-      // }
-
-      // // Check for first appointment query
-      // if (
-      //   /(?:what|bring|need).+(?:first|initial).+(?:appointment|visit|session)/i.test(
-      //     message
-      //   )
-      // ) {
-      //   showTypingIndicator().then(() => {
-      //     addBotMessage(FAQs.firstAppointment).then(() => {
-      //       startAppointmentScheduling();
-      //     });
-      //   });
-      //   return;
-      // }
-
-      // Check for service-related queries first
-      const detectedServices = detectServices(lowerMessage);
-      if (detectedServices.length > 0 && !appointmentStage) {
-        handleServiceQuery(detectedServices);
-        return;
-      }
-
-      // Check for pain mentions first
-      const detectedPainAreas = detectPainAreas(lowerMessage);
-      if (detectedPainAreas.length > 0 && !appointmentStage) {
-        handlePainMessage(detectedPainAreas);
-        return;
-      }
+   
 
       // Handle appointment flow
       if (appointmentStage) {
@@ -563,74 +629,74 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // Handle FAQs
-      if (
-        lowerMessage.includes("service") ||
-        lowerMessage.includes("what do you do")
-        //  ||
-        // lowerMessage.includes("treat")
-      ) {
-        showServiceCategories();
-      } else if (
-        lowerMessage.includes("hour") ||
-        lowerMessage.includes("open")
-      ) {
-        addBotMessage(FAQs.hours);
-      } else if (
-        lowerMessage.includes("insurance") ||
-        lowerMessage.includes("pay")
-      ) {
-        addBotMessage(FAQs.insurance).then(() => startAppointmentScheduling());
-      } else if (
-        lowerMessage.includes("location") ||
-        lowerMessage.includes("address") ||
-        lowerMessage.includes("where")
-      ) {
-        addBotMessage(FAQs.locations).then(() => {
-          const locationButtons = Object.entries(LOCATIONS).map(
-            ([key, data]) => ({
-              text: `📍 ${data.name}`,
-              type: "location_details",
-              location: key,
-            })
-          );
-          showOptions(locationButtons);
-        });
-      } else if (
-        lowerMessage.includes("appointment") ||
-        lowerMessage.includes("schedule") ||
-        lowerMessage.includes("book")
-      ) {
-        startAppointmentScheduling();
-      } else if (
-        /\b(?:re+f+e+r+a+l+|re+qu+i+re+d+|dr|docto?r)\b/i.test(lowerMessage)
-      ) {
-        showTypingIndicator().then(() => {
-          addBotMessage(FAQs.referral).then(() => {
-            startAppointmentScheduling();
-          });
-        });
-      } else if (
-        /(insurance|insur|covered|accept|coverage|benefit|provider|network)/i.test(
-          lowerMessage
-        )
-      ) {
-        handleInsuranceQuery();
-            } else if (
-        /\b(?:cost|price|fee|how\s+much|charge|session|visit|therapy|treatment)\b.*(?:cost|price|fee|charge|estimate|detail|information|query|be|will)/i.test(
-          lowerMessage
-        ) || 
-        /\b(?:cost|price|fee|charge)(?:\s+(?:of|for|per))?\b/i.test(lowerMessage) ||
-        /\b(?:charges?|charging|cost(?:ing)?|pric(?:ing|e)|fee(?:s)?)\b/i.test(lowerMessage)
-            ) {
-        handleCostQuery();
-            } else if (
-        /(certified|qualified|experience|expert|specialist|training|education|license|credential|degree)/i.test(
-          lowerMessage
-        )
-      ) {
-        handleTherapistQuery();
-      } else if (
-        /(pain|hurt|ache|sore|discomfort|stiff|tight|tender|numb|tingling|burning|sharp|dull|chronic|suffer)/i.test(
+      // if (
+      //   lowerMessage.includes("service") ||
+      //   lowerMessage.includes("what do you do")
+      // ) {
+      //   showServiceCategories();
+      // } else if (
+      //   lowerMessage.includes("hour") ||
+      //   lowerMessage.includes("open")
+      // ) {
+      //   addBotMessage(FAQs.hours);
+      // } else if (
+      //   lowerMessage.includes("location") ||
+      //   lowerMessage.includes("address") ||
+      //   lowerMessage.includes("where")
+      // ) {
+      //   addBotMessage(FAQs.locations).then(() => {
+      //     const locationButtons = Object.entries(LOCATIONS).map(
+      //       ([key, data]) => ({
+      //         text: `📍 ${data.name}`,
+      //         type: "location_details",
+      //         location: key,
+      //       })
+      //     );
+      //     showOptions(locationButtons);
+      //   });
+      // }
+
+      // else if (
+      //   lowerMessage.includes("appointment") ||
+      //   lowerMessage.includes("schedule") ||
+      //   lowerMessage.includes("book")
+      // ) {
+      //   startAppointmentScheduling();
+      // } else if (
+      //   /\b(?:re+f+e+r+a+l+|re+qu+i+re+d+|dr|docto?r)\b/i.test(lowerMessage)
+      // ) {
+      //   showTypingIndicator().then(() => {
+      //     addBotMessage(FAQs.referral).then(() => {
+      //       startAppointmentScheduling();
+      //     });
+      //   });
+      // } else if (
+      //   /(insurance|insur|covered|accept|coverage|benefit|provider|network)/i.test(
+      //     lowerMessage
+      //   )
+      // ) {
+      //   handleInsuranceQuery();
+      // } else if (
+      //   /\b(?:cost|price|fee|how\s+much|charge|session|visit|therapy|treatment)\b.*(?:cost|price|fee|charge|estimate|detail|information|query|be|will)/i.test(
+      //     lowerMessage
+      //   ) ||
+      //   /\b(?:cost|price|fee|charge)(?:\s+(?:of|for|per))?\b/i.test(
+      //     lowerMessage
+      //   ) ||
+      //   /\b(?:charges?|charging|cost(?:ing)?|pric(?:ing|e)|fee(?:s)?)\b/i.test(
+      //     lowerMessage
+      //   )
+      // ) {
+      //   handleCostQuery();
+      // } else if (
+      //   /(certified|qualified|experience|expert|specialist|training|education|license|credential|degree|qualifications)/i.test(
+      //     lowerMessage
+      //   )
+      // ) {
+      //   handleTherapistQuery();
+      // }
+      else if (
+        /(pain|hurt|ache|sore|discomfort|stiff|tight|tender|numb|tingling|burning|sharp|dull|chronic|suffer|experience)/i.test(
           lowerMessage
         )
       ) {
@@ -676,6 +742,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 area: key,
               },
               { text: "🤔 I have other pain areas", type: "other_pain" },
+              { text: "⚙️ Explore our services", type: "service" },
             ]);
           });
         });
@@ -947,18 +1014,23 @@ document.addEventListener("DOMContentLoaded", function () {
         "🎉 Appointment Request Received!",
         `Name: ${data.name}`,
         `Phone: ${data.phone}`,
-        `Email: ${data.email.length > 20 
-          ? data.email.split('').reduce((acc, char, index) => {
-              if (index > 0 && index % 20 === 0) {
-                acc.push('\n       ' + char);
-              } else if (index === 0) {
-                acc.push(char);
-              } else {
-                acc[acc.length - 1] += char;
-              }
-              return acc;
-            }, []).join('')
-          : data.email}`,
+        `Email: ${
+          data.email.length > 20
+            ? data.email
+                .split("")
+                .reduce((acc, char, index) => {
+                  if (index > 0 && index % 20 === 0) {
+                    acc.push("\n       " + char);
+                  } else if (index === 0) {
+                    acc.push(char);
+                  } else {
+                    acc[acc.length - 1] += char;
+                  }
+                  return acc;
+                }, [])
+                .join("")
+            : data.email
+        }`,
         `Location: ${location.name}`,
       ];
 
@@ -1011,12 +1083,13 @@ document.addEventListener("DOMContentLoaded", function () {
       // Use the passed message instead of inputField.value
       const lowerMessage = message.toLowerCase();
 
-      if (
-        lowerMessage.includes("hello") ||
-        lowerMessage.includes("hi") ||
-        lowerMessage.includes("help") ||
-        lowerMessage.includes("hey")
-      ) {
+      const greetings = [
+        /\b(?:h(?:i|ello|ey)|good\s*(?:morning|afternoon|evening))\b/i,
+        /\b(?:help|assist(?:ance)?)\b/i,
+        /\b(?:what\s*(?:can|do)\s*you\s*(?:do|for)|your\s*purpose)\b/i,
+      ];
+
+      if (greetings.some((pattern) => pattern.test(lowerMessage))) {
         addBotMessage("👋 Hello! How can I help you today?").then(() => {
           showOptions(BUTTON_OPTIONS.main);
         });
@@ -1312,9 +1385,9 @@ document.addEventListener("DOMContentLoaded", function () {
           handleServiceMessage(option.service, option.category);
           break;
 
-        case "self_pay":
-          handleSelfPayOptions();
-          break;
+        // case "self_pay":
+        //   handleSelfPayOptions();
+        //   break;
 
         case "faq":
           showTypingIndicator().then(() => {
@@ -1335,41 +1408,41 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Handle insurance related queries
-    function handleInsuranceQuery() {
-      showTypingIndicator().then(() => {
-        addBotMessage([
-          "We accept most major insurance plans including:",
-          "• Blue Cross Blue Shield",
-          "• Aetna",
-          "• UnitedHealthcare",
-          "• Cigna",
-          "• Medicare",
-          "• Workers' Compensation",
-          "We offer a free insurance verification before your first visit. Would you like to check your coverage?",
-        ]).then(() => {
-          showOptions([
-            { text: "✅ Verify My Insurance", type: "appointment" },
-            { text: "💰 Self-Pay Options", type: "self_pay" },
-          ]);
-        });
-      });
-    }
+    // function handleInsuranceQuery() {
+    //   showTypingIndicator().then(() => {
+    //     addBotMessage([
+    //       "We accept most major insurance plans including:",
+    //       "• Blue Cross Blue Shield",
+    //       "• Aetna",
+    //       "• UnitedHealthcare",
+    //       "• Cigna",
+    //       "• Medicare",
+    //       "• Workers' Compensation",
+    //       "We offer a free insurance verification before your first visit. Would you like to check your coverage?",
+    //     ]).then(() => {
+    //       showOptions([
+    //         { text: "✅ Verify My Insurance", type: "appointment" },
+    //         { text: "💰 Self-Pay Options", type: "self_pay" },
+    //       ]);
+    //     });
+    //   });
+    // }
 
-    // Handle cost related queries
-    function handleCostQuery() {
-      showTypingIndicator().then(() => {
-        addBotMessage([
-          "With insurance, your cost is typically a copay of $20-$50 per session depending on your plan.",
-          "For self-pay patients, we offer competitive rates and package pricing options.",
-          "We provide a free cost estimate before starting treatment. Would you like to check your costs?",
-        ]).then(() => {
-          showOptions([
-            { text: "✅ Check My Costs", type: "appointment" },
-            { text: "❓ More Questions", type: "questions" },
-          ]);
-        });
-      });
-    }
+    // // Handle cost related queries
+    // function handleCostQuery() {
+    //   showTypingIndicator().then(() => {
+    //     addBotMessage([
+    //       "With insurance, your cost is typically as per session depending on your plan.",
+    //       "For self-pay patients, we offer competitive rates and package pricing options.",
+    //       "We provide a free cost estimate before starting treatment. Would you like to check your costs?",
+    //     ]).then(() => {
+    //       showOptions([
+    //         { text: "✅ Check My Costs", type: "appointment" },
+    //         { text: "❓ More Questions", type: "questions" },
+    //       ]);
+    //     });
+    //   });
+    // }
 
     // Handle therapist qualification queries
     function handleTherapistQuery() {
@@ -1388,24 +1461,24 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    // Self-pay options handler
-    function handleSelfPayOptions() {
-      showTypingIndicator().then(() => {
-        addBotMessage([
-          "For patients without insurance coverage, we offer:",
-          "• Initial evaluation: $120",
-          "• Follow-up sessions: $85-$100",
-          "• Package discounts available for prepaid sessions",
-          "• Payment plans for those who qualify",
-          "Would you like to discuss payment options with our staff?",
-        ]).then(() => {
-          showOptions([
-            { text: "📅 Schedule Consultation", type: "appointment" },
-            { text: "❓ More Questions", type: "questions" },
-          ]);
-        });
-      });
-    }
+    // // Self-pay options handler
+    // function handleSelfPayOptions() {
+    //   showTypingIndicator().then(() => {
+    //     addBotMessage([
+    //       "For patients without insurance coverage, we offer:",
+    //       "• Initial evaluation: $120",
+    //       "• Follow-up sessions: $85-$100",
+    //       "• Package discounts available for prepaid sessions",
+    //       "• Payment plans for those who qualify",
+    //       "Would you like to discuss payment options with our staff?",
+    //     ]).then(() => {
+    //       showOptions([
+    //         { text: "📅 Schedule Consultation", type: "appointment" },
+    //         { text: "❓ More Questions", type: "questions" },
+    //       ]);
+    //     });
+    //   });
+    // }
 
     // Add this new function to handle service queries
     function handleServiceQuery(detectedServices) {

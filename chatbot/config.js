@@ -35,7 +35,6 @@ export const SERVICES = {
           "physiotherapy",
           "physical rehab",
           "physio",
-          "rehabilitation",
         ],
         details: [
           "Personalized treatment plans",
@@ -44,8 +43,8 @@ export const SERVICES = {
           "Pain management",
           "Functional training",
         ],
-        duration: "45-60 minutes",
-        frequency: "2-3 sessions per week",
+        // duration: "45-60 minutes",
+        // frequency: "2-3 sessions per week",
       },
       occupational: {
         name: "Occupational Therapy",
@@ -134,60 +133,60 @@ export const SERVICES = {
         icon: "💉",
         description:
           "Dry Needling is a technique that involves inserting thin needles into trigger points within muscles to relieve pain and improve movement. This therapy is highly effective for reducing muscle tension, improving blood flow, and enhancing overall recovery.",
-        details: [
-          "Precise needle placement for pain relief",
-          "Trigger point therapy for muscle tension",
-          "Improved flexibility and mobility",
-          "Enhanced blood circulation for faster recovery",
-          "Relief for chronic pain and stiffness",
-        ],
-        duration: "30-45 minutes",
-        frequency: "1-2 sessions per week",
+        // details: [
+        //   "Precise needle placement for pain relief",
+        //   "Trigger point therapy for muscle tension",
+        //   "Improved flexibility and mobility",
+        //   "Enhanced blood circulation for faster recovery",
+        //   "Relief for chronic pain and stiffness",
+        // ],
+        // duration: "30-45 minutes",
+        // frequency: "1-2 sessions per week",
         // keywords: [],
       },
       cupping: {
         name: "Cupping Therapy",
         icon: "🔄",
         description: "Cupping Therapy is a healing technique that uses special cups to create suction on the skin, drawing blood to the surface and promoting deep tissue healing. This therapy is highly effective for reducing muscle tension, improving circulation, and enhancing recovery while releasing toxins from the body.",
-        details: [
-          "Strategic cup placement for optimal healing",
-          "Myofascial release through negative pressure",
-          "Improved circulation and lymphatic drainage",
-          "Enhanced recovery and reduced inflammation",
-          "Relief for chronic pain and muscle stiffness"
-        ],
-        duration: "30-45 minutes",
-        frequency: "1-2 sessions per week",
+        // details: [
+        //   "Strategic cup placement for optimal healing",
+        //   "Myofascial release through negative pressure",
+        //   "Improved circulation and lymphatic drainage",
+        //   "Enhanced recovery and reduced inflammation",
+        //   "Relief for chronic pain and muscle stiffness"
+        // ],
+        // duration: "30-45 minutes",
+        // frequency: "1-2 sessions per week",
         // keywords: []
       },
       paraffin: {
         name: "Paraffin Wax Therapy",
         icon: "🔥",
         description: "Paraffin Wax Therapy is a luxurious heat treatment that involves dipping the hands, feet, or other body parts into warm, soothing wax. This therapy provides deep, penetrating heat that helps improve circulation, relieve joint pain, and intensely moisturize and soften the skin.",
-        details: [
-          "Therapeutic warm wax application for deep heat penetration",
-          "Improved joint mobility and pain relief",
-          "Enhanced circulation to targeted areas", 
-          "Intensive skin hydration and softening",
-          "Relief for arthritis and stiff joints"
-        ],
-        duration: "15-20 minutes",
-        frequency: "1-2 sessions per week",
+        // details: [
+        //   "Therapeutic warm wax application for deep heat penetration",
+        //   "Improved joint mobility and pain relief",
+        //   "Enhanced circulation to targeted areas", 
+        //   "Intensive skin hydration and softening",
+        //   "Relief for arthritis and stiff joints"
+        // ],
+        // duration: "15-20 minutes",
+        // frequency: "1-2 sessions per week",
         // keywords: []
       },
       normatec: {
         name: "NormaTec Compression Therapy",
         icon: "🦿",
         description: "NormaTec Compression Therapy uses advanced pneumatic compression technology to enhance recovery and performance. This innovative system applies sequential pulse compression to your limbs, effectively flushing out metabolic waste and reducing muscle soreness while improving circulation.",
-        details: [
-          "Dynamic compression for enhanced recovery",
-          "Sequential pulse technology targeting specific muscle groups",
-          "Improved circulation and lymphatic drainage",
-          "Reduced muscle soreness and fatigue",
-          "Accelerated recovery between training sessions"
-        ],
-        duration: "20-30 minutes",
-        frequency: "2-3 sessions per week",
+        // details: [
+        //   "Dynamic compression for enhanced recovery",
+        //   "Sequential pulse technology targeting specific muscle groups",
+        //   "Improved circulation and lymphatic drainage",
+        //   "Reduced muscle soreness and fatigue",
+        //   "Accelerated recovery between training sessions"
+        // ],
+        // duration: "20-30 minutes",
+        // frequency: "2-3 sessions per week",
         // keywords: []
       }
     },
@@ -295,10 +294,10 @@ export const FAQs = {
     "Monday-Friday: 9:00 AM - 6:00 PM",
     "Weekends: Closed",
   ],
-  insurance: [
-    "We accept most major insurance plans including Blue Cross, Aetna, UnitedHealthcare, Cigna, and Medicare.",
-    "To check your coverage, I'll need a few quick details.",
-  ],
+  // insurance: [
+  //   "We accept most major insurance plans including Blue Cross, Aetna, UnitedHealthcare, Cigna, and Medicare.",
+  //   "To check your coverage, I'll need a few quick details.",
+  // ],
   locations: [
     "We have 4 convenient locations to serve you:",
     "🏢 STAFFORD/SUGAR LAND: 12603 Southwest Fwy, TX 77477",
@@ -320,7 +319,7 @@ export const FAQs = {
     "Thanks for asking! Insurance coverage can vary based on your plan and location. To provide accurate details, please share your information via the form below, our team will contact you shortly so we can assist you faster.",
   ],
   treatmentPlan: [
-    "Great question! Treatment plans are personalized to meet your unique needs and goals. To help us design the best approach for you, kindly share your details here, Our team will review your case and reach out with tailored recommendations!",
+    "Great question! Therapy programs are personalized to meet your unique needs and goals. To help us design the best approach for you, kindly share your details here, Our team will review your case and reach out with tailored recommendations!",
   ],
   paymentPlans: [
     "We appreciate you asking! We provide flexible options to suit different needs, and our team will gladly share details based on your situation. For a quick response, please fill out this short form:",
@@ -346,6 +345,9 @@ export const FAQs = {
   ],
   firstAppointment: [
     "Great question! We'll send you a personalized checklist based on your needs. Share your details here to get started:",
+  ],
+  CancellationAppointmentPolicy: [
+    "We kindly request you to call 833-733-6978 for any appointment changes, including cancellations or updates, as this service is not available through chat. Our team will be happy to assist you. Thank you for your understanding!",
   ],
 };
 
@@ -389,7 +391,6 @@ export const SPELLING_CORRECTIONS = {
     "manual",
     "therapeutic exercise",
     "movement",
-    "rehabilitation",
     "mobility",
     "exercise",
     "movement specialist",
@@ -397,6 +398,8 @@ export const SPELLING_CORRECTIONS = {
 
   // Occupational Therapy variations - Refactored to Array
   "occupational therapy": [
+    "ocupational",
+    "ocupational therapy program",
     "occupational therap",
     "occupational theraphy",
     "occupational therapi",
@@ -465,24 +468,24 @@ export const SPELLING_CORRECTIONS = {
     "aquatic",
     "aqua",
     // Added new conditions
-    "circulation",
-    "circulation problem",
-    "circulation issues",
-    "poor circulation",
-    "blood flow",
-    "heart disease",
-    "heart condition",
-    "cardiac rehab",
-    "cardiovascular",
-    "muscle spasm",
-    "muscle spasms",
-    "muscle cramp",
-    "muscle pain",
-    "neurological",
-    "neurological injury",
-    "nerve injury",
-    "nerve damage",
-    "neuro rehab",
+    // "circulation",
+    // "circulation problem",
+    // "circulation issues",
+    // "poor circulation",
+    // "blood flow",
+    // "heart disease",
+    // "heart condition",
+    // "cardiac rehab",
+    // "cardiovascular",
+    // "muscle spasm",
+    // "muscle spasms",
+    // "muscle cramp",
+    // "muscle pain",
+    // "neurological",
+    // "neurological injury",
+    // "nerve injury",
+    // "nerve damage",
+    // "neuro rehab",
   ],
 
   // Speech Therapy variations - Refactored to Array
@@ -822,6 +825,7 @@ export const SPELLING_CORRECTIONS = {
 
   // Dry Needling variations 
   "Dry Needling": [
+    "dry needling", // Included for completeness
     "dry needling therapy",
     "needling",
     "pinpoint",
@@ -844,6 +848,7 @@ export const SPELLING_CORRECTIONS = {
 
   // Cupping Therapy variations
   "Cupping Therapy": [
+    "cupping",
     "vacuum therapy",
     "vaccuum therapy", 
     "vacum therapy",
@@ -866,6 +871,7 @@ export const SPELLING_CORRECTIONS = {
 
   // Paraffin Wax Therapy variations
   "Paraffin Wax Therapy": [
+    "paraffin",
     "heat therapy",
     "wax therapy",
     "paraffin wxa therapy",
@@ -887,6 +893,7 @@ export const SPELLING_CORRECTIONS = {
 
   // Normatec Compression Therapy variations
   "NormaTec Compression Therapy": [
+    "NormaTec",
     "air compression",
     "air therapy",
     "compression therapy",
@@ -1117,9 +1124,6 @@ export const SPELLING_CORRECTIONS = {
     "wrist pain",
     "hand ache",
     "wrist ache",
-    // "carpal tunnel",
-    // "carpel tunnel",
-    // "carpal syndrome",
     "wrist tendonitis",
     "trigger finger",
     "wrist sprain",
@@ -1168,6 +1172,13 @@ export const SPELLING_CORRECTIONS = {
     "ankle ache",
     "ankleache",
     "foot ache",
+    "Foot",
+    "ankle",
+    "foot pain",
+    "ankle pain",
+    "foot injury",
+    "ankle injury",
+    "foot tendonitis",
   ],
 
   // Parking variations 
@@ -1231,6 +1242,7 @@ export const SPELLING_CORRECTIONS = {
   servics: "service",
   "therapy servce": "service",
   "rehab service": "service",
+  "Rehabilitation therapy": "service",
 
   // Insurance related (no array needed, direct mapping)
   insurance: "insurance",

@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         },
         "SOUTHFIELD": {
-            name: "SOUTHEAST, MI",
+            name: "SOUTHFIELD, MI",
             reviews: {
                 google: "https://g.page/r/CV9kjrUSYnBnEAI/review",
                 yelp: "https://www.yelp.com/biz/theramedic-southeast",
