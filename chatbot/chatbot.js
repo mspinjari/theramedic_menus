@@ -326,7 +326,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const detectedAreas = new Set();
 
       // Combined regex for pain-related terms
-      const painPattern = /\b(?:pain|ache|hurt|sore|stiff|discomfort)\b/i;
+      const painPattern = /\b(?:pain|ache|hurt|sore|stiff|discomfort|experience|treat)\b/i;
 
       // Create a single regex pattern for all conditions
       const painAreaPatterns = {
@@ -429,12 +429,12 @@ document.addEventListener("DOMContentLoaded", function () {
           {
             key: "treatmentPlan",
             regex:
-              /(?:(?:plan|details|detials|deetails)\s*(?:of|for)\s*(?:treatment|therapy|therpy|tretment))|(?:treatment|therapy|therpy|tretment)\s*(?:plan|approach|detials|details|deetails)|what.*(?:included|involves|in|is)/i,
+              /(?:(?:plan|details|detials|deetails|process)\s*(?:of|for)\s*(?:treatment|therapy|therpy|tretment))|(?:treatment|therapy|therpy|tretment)\s*(?:plan|approach|detials|details|deetails|process)|what.*(?:included|involves|in|is)|treatment\s*process\s*details/i,
           },
           {
             key: "paymentPlans",
             regex:
-              /(?:pay?ment\s*plan|fin?anc?ing|pay|pack?age|cost\s*opt?ion|pyament|payement|plan)/i,
+              /(?:pay?ment\s*plan|fin?anc?(?:e|ing|ial)|pay|pack?age|cost\s*opt?ion|pyament|payement|plan|finance)/i,
           },
           {
             key: "costQuery",
@@ -444,22 +444,21 @@ document.addEventListener("DOMContentLoaded", function () {
           {
             key: "insuranceQuery",
             regex:
-              /(?:insur(?:ance)?|covere?d|coverage|accept|pay|pays?|insurence|insureance)/i,
+              /(?:insur(?:ance)?|covere?d|coverage|accept|pay|pays?|insurence|insureance|(?:do\s*you\s*)?accept\s*insurance|blue\s*cross\s*blue\s*shield\s*(?:of\s*texas)?|aetna|united\s*healthcare|cigna|community\s*health\s*choice|molina\s*healthcare|ambetter\s*(?:from\s*superior\s*healthplan)?|oscar\s*health|humana|medicare|medicaid)/i,
           },
           {
             key: "genericAppointment",
             regex:
-              /(?:book|sched?ule|appoint?ment|apoint?ment|visit|booking|appointement)/i,
+              /(?:book|sched?ule|appoint?ment|apoint?ment|visit|booking|appointement|reservation)/i,
           },
           {
             key: "sessionLength",
             regex:
-              /(?:how\s*long|length|duration|time|timing)\s*(?:is|for|of)?\s*(?:a|the)?\s*(?:session|appoint?ment|apoint?ment|visit|treatment|therapy|therpy|tretment)/i,
+              /(?:how\s*long|length|duration|time|timing|typical)\s*(?:is|for|of|are|will\s*be)?\s*(?:a|the|your|my)?\s*(?:session|appointment|visit|treatment|therapy|consultation)|(?:session|appointment|visit)\s*(?:length|duration|time)/i,
           },
           {
             key: "conditionsTreated",
-            regex:
-              /(?:conditions?|problems?|issues?|problims?)\s*(?:treat|help|handle|fix|heel)/i,
+            regex: /(?:what|which)?\s*(?:(?:problems?|conditions?|services?|therap(?:y|ies)|treatments?|specialt(?:y|ies)|expertise|areas?)\s*(?:do\s*you|you\s*(?:guys?)?)?\s*(?:help|treat|handle|fix|work\s*with|speciali[sz]e\s*in|offer|provide|perform|do|available)|(?:what\s*(?:kind|type)\s*of\s*(?:therapy|treatment|service))|(?:what\s*do\s*you\s*(?:do|offer|provide|perform)(?:\s*for\s*(?:patients?|clients?|people))?)|service\s*offerings?)/i,
           },
           {
             key: "startTreatment",
@@ -479,12 +478,12 @@ document.addEventListener("DOMContentLoaded", function () {
           {
             key: "insurance",
             regex:
-              /(insurance|insur|covered|accept|coverage|benefit|provider|network|insurence|insureance)/i,
+              /(insurance|insur|covered|accept|coverage|benefit|provider|network|insurence|insureance|blue\s*cross\s*blue\s*shield\s*(?:of\s*texas)?|aetna|united\s*healthcare|cigna|community\s*health\s*choice|molina\s*healthcare|ambetter\s*(?:from\s*superior\s*healthplan)?|oscar\s*health|humana|medicare|medicaid|(?:do\s*you\s*)?accept\s*insurance)/i,
           },
           {
             key: "therapist",
             regex:
-              /(certified|qualified|experience|expert|specialist|training|education|license|credential|degree|qualifications|therepist|physio)/i,
+              /(therapist.*experience|experience.*therapist|certified|qualified|expert|specialist|training|education|license|credential|degree|qualifications|therepist|physio|background)/i,
           },
           {
             key: "CancellationAppointmentPolicy",
@@ -498,8 +497,7 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           {
             key: "services",
-            regex:
-              /(?:service|what\s*do\s*you\s*do|what.*offer|what.*provide)/i,
+            regex: /(?:what|which)?\s*(?:services?|therapy|treatments?|specialt(?:y|ies)|expertise|areas?)?\s*(?:do\s*you|you\s*guys?)?\s*(?:offer|provide|perform|do|available|speciali[sz]e\s*in)|(?:what\s*(?:kind\s*of|type\s*of)?\s*(?:therapy|treatment|service))|(?:what\s*(?:do\s*you\s*(?:do|offer|provide|perform)(?:\s*for\s*(?:patients?|clients?|people))?))|\b(?:service\s*offerings?)\b/i,
           },
           {
             key: "hours",
@@ -577,7 +575,11 @@ document.addEventListener("DOMContentLoaded", function () {
               });
             } else {
               addBotMessage(FAQs[matchedKey]).then(() => {
-                startAppointmentScheduling();
+                // startAppointmentScheduling();
+                showOptions([
+                  { text: "📅 Yes, schedule now", type: "appointment" },
+                  { text: "📞 I have more questions", type: "questions" },
+                ]);
               });
             }
           });
@@ -614,8 +616,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-   
-
       // Handle appointment flow
       if (appointmentStage) {
         handleAppointmentFlow(message);
@@ -628,73 +628,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // Handle FAQs
-      // if (
-      //   lowerMessage.includes("service") ||
-      //   lowerMessage.includes("what do you do")
-      // ) {
-      //   showServiceCategories();
-      // } else if (
-      //   lowerMessage.includes("hour") ||
-      //   lowerMessage.includes("open")
-      // ) {
-      //   addBotMessage(FAQs.hours);
-      // } else if (
-      //   lowerMessage.includes("location") ||
-      //   lowerMessage.includes("address") ||
-      //   lowerMessage.includes("where")
-      // ) {
-      //   addBotMessage(FAQs.locations).then(() => {
-      //     const locationButtons = Object.entries(LOCATIONS).map(
-      //       ([key, data]) => ({
-      //         text: `📍 ${data.name}`,
-      //         type: "location_details",
-      //         location: key,
-      //       })
-      //     );
-      //     showOptions(locationButtons);
-      //   });
-      // }
-
-      // else if (
-      //   lowerMessage.includes("appointment") ||
-      //   lowerMessage.includes("schedule") ||
-      //   lowerMessage.includes("book")
-      // ) {
-      //   startAppointmentScheduling();
-      // } else if (
-      //   /\b(?:re+f+e+r+a+l+|re+qu+i+re+d+|dr|docto?r)\b/i.test(lowerMessage)
-      // ) {
-      //   showTypingIndicator().then(() => {
-      //     addBotMessage(FAQs.referral).then(() => {
-      //       startAppointmentScheduling();
-      //     });
-      //   });
-      // } else if (
-      //   /(insurance|insur|covered|accept|coverage|benefit|provider|network)/i.test(
-      //     lowerMessage
-      //   )
-      // ) {
-      //   handleInsuranceQuery();
-      // } else if (
-      //   /\b(?:cost|price|fee|how\s+much|charge|session|visit|therapy|treatment)\b.*(?:cost|price|fee|charge|estimate|detail|information|query|be|will)/i.test(
-      //     lowerMessage
-      //   ) ||
-      //   /\b(?:cost|price|fee|charge)(?:\s+(?:of|for|per))?\b/i.test(
-      //     lowerMessage
-      //   ) ||
-      //   /\b(?:charges?|charging|cost(?:ing)?|pric(?:ing|e)|fee(?:s)?)\b/i.test(
-      //     lowerMessage
-      //   )
-      // ) {
-      //   handleCostQuery();
-      // } else if (
-      //   /(certified|qualified|experience|expert|specialist|training|education|license|credential|degree|qualifications)/i.test(
-      //     lowerMessage
-      //   )
-      // ) {
-      //   handleTherapistQuery();
-      // }
       else if (
         /(pain|hurt|ache|sore|discomfort|stiff|tight|tender|numb|tingling|burning|sharp|dull|chronic|suffer|experience)/i.test(
           lowerMessage

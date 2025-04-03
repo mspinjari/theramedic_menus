@@ -1,12 +1,8 @@
 
 document.addEventListener('DOMContentLoaded', function () {
-
-
-
     const thera_fab = document.querySelector('.thera_fab');
     const fabContainer = document.querySelector('.thera_fab-container');
     
-
     // Get all chatbot elements
     const reviewChatbot = document.querySelector('#review-chatbot-container .pt-chatbot');
     const mainChatbot = document.querySelector('#main-chatbot-container .pt-chatbot');

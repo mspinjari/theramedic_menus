@@ -30,12 +30,12 @@ export const SERVICES = {
         icon: "🏃‍♂️",
         description:
           "Physical Therapy (PT) is care that aims to ease pain and help you function, move, and live better. Your personal physical therapy begins with a comprehensive evaluation of functional limitations and areas of pain. Our team of expert physical therapists will design a treatment plan based on your work-related needs and goals.",
-        keywords: [
-          "pt",
-          "physiotherapy",
-          "physical rehab",
-          "physio",
-        ],
+        // keywords: [
+        //   "pt",
+        //   "physiotherapy",
+        //   "physical rehab",
+        //   "physio",
+        // ],
         details: [
           "Personalized treatment plans",
           "Manual therapy techniques", 
@@ -291,17 +291,13 @@ export const FAQs = {
   ],
   hours: [
     "⏰ We're here for you:",
-    "Monday-Friday: 9:00 AM - 6:00 PM",
+    "Monday-Friday: 9:00 AM - 6:00 PM", 
     "Weekends: Closed",
   ],
-  // insurance: [
-  //   "We accept most major insurance plans including Blue Cross, Aetna, UnitedHealthcare, Cigna, and Medicare.",
-  //   "To check your coverage, I'll need a few quick details.",
-  // ],
   locations: [
     "We have 4 convenient locations to serve you:",
     "🏢 STAFFORD/SUGAR LAND: 12603 Southwest Fwy, TX 77477",
-    "🏢 SPRING: 17320 Red Oak Dr, TX 77090", 
+    "🏢 SPRING: 17320 Red Oak Dr, TX 77090",
     "🏢 KATY: 24217 Kingsland Blvd, TX 77494",
     "🏢 SOUTHFIELD: 26400 W 12 Mile Rd, MI 48034",
     "Which is most convenient for you?",
@@ -309,14 +305,9 @@ export const FAQs = {
   parking: [
     "🅿️ Free parking should be available at all four locations",
     "STAFFORD/SUGAR LAND,\n\n SPRING,\n\n KATY,\n\n SOUTHFIELD",
-    // "All locations have accessible/handicap spots near entrance."
   ],
-  // painResponse: [
-  //   "Our therapists are highly trained to address your specific condition, utilizing evidence-based techniques to provide effective relief.",
-  //   "Let's schedule you with the right specialisst who can help you get relief quickly.",
-  // ],
   insuranceQuery: [
-    "Thanks for asking! Insurance coverage can vary based on your plan and location. To provide accurate details, please share your information via the form below, our team will contact you shortly so we can assist you faster.",
+    "Thanks for asking! We work with multiple insurance providers. Insurance coverage can vary based on your plan and location. To provide accurate details, please share your information via the form below, our team will contact you shortly so we can assist you faster.",
   ],
   treatmentPlan: [
     "Great question! Therapy programs are personalized to meet your unique needs and goals. To help us design the best approach for you, kindly share your details here, Our team will review your case and reach out with tailored recommendations!",
@@ -337,8 +328,8 @@ export const FAQs = {
     "Great question! Session length varies based on your needs, and we'll ensure it aligns with your recovery goals. To share specifics, kindly fill out this quick form:",  
   ],
   conditionsTreated: [
-    "Thanks for reaching out! We address a wide range of below conditions.",
-    "Your care plan will be personalized. To guide you better, share your concerns via the form below:",
+    "We treat a wide range of conditions including musculoskeletal injuries, chronic pain, post-surgery rehabilitation, sports injuries, neurological conditions, and more. Our expert team uses evidence-based treatments tailored to each patient's needs.",
+    "Would you like to discuss your specific condition? I'm happy to provide more details about how we can help.",
   ],
   startTreatment: [
     "We're eager to help you begin! To check availability and fast-track your first session, please share your details here:",
@@ -394,6 +385,8 @@ export const SPELLING_CORRECTIONS = {
     "mobility",
     "exercise",
     "movement specialist",
+    "physical rehab",
+          
   ],
 
   // Occupational Therapy variations - Refactored to Array
