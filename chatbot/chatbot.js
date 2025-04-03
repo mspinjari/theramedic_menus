@@ -62,7 +62,16 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       window.typingQueue = [];
     }
-    addBotMessage("Welcome to Theramedic Rehab");
+
+    // Clean up any empty message elements that might have been created
+    const emptyMessages = document.querySelectorAll(
+      ".pt-bot-message:empty, .pt-bot-message:not(:has(*))"
+    );
+    emptyMessages.forEach((msg) => {
+      if (msg.textContent.trim() === "") {
+        msg.parentNode.removeChild(msg);
+      }
+    });
   }
   // Handle close button
   closeButton?.addEventListener("click", function () {
@@ -70,6 +79,8 @@ document.addEventListener("DOMContentLoaded", function () {
     mainMessages.innerHTML = "";
     stopTyping();
   });
+
+  
 
   // Initialize chatbot functionality
   function initializeChatbot() {
@@ -188,22 +199,33 @@ document.addEventListener("DOMContentLoaded", function () {
         window.typingQueue = [];
       }
 
+      // Reset the typing stopped flag when starting new messages
+      window.typingStopped = false;
+
       if (Array.isArray(message)) {
         let chainPromise = Promise.resolve();
         message.forEach((msg) => {
           chainPromise = chainPromise.then(() => {
             return new Promise((resolve) => {
-              const messageElement = document.createElement("div");
-              messageElement.className = "pt-bot-message";
-              messagesContainer.appendChild(messageElement);
+              // Only create message element if not stopped
+              if (!window.typingStopped) {
+                const messageElement = document.createElement("div");
+                messageElement.className = "pt-bot-message";
+                messagesContainer.appendChild(messageElement);
 
-              // Type out the message
-              typeText(messageElement, msg, speed)
-                .then(resolve)
-                .catch(() => {
-                  // Handle promise rejection when typing is stopped
-                  resolve();
-                });
+                // Type out the message
+                typeText(messageElement, msg, speed)
+                  .then(resolve)
+                  .catch(() => {
+                    // If typing was stopped, remove empty message element
+                    if (messageElement.textContent.trim() === "") {
+                      messagesContainer.removeChild(messageElement);
+                    }
+                    resolve();
+                  });
+              } else {
+                resolve();
+              }
             });
           });
         });
@@ -215,25 +237,37 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       } else {
         return new Promise((resolve) => {
-          const messageElement = document.createElement("div");
-          messageElement.className = "pt-bot-message";
-          messagesContainer.appendChild(messageElement);
+          // Only create message element if not stopped
+          if (!window.typingStopped) {
+            const messageElement = document.createElement("div");
+            messageElement.className = "pt-bot-message";
+            messagesContainer.appendChild(messageElement);
 
-          // Type out the message and re-enable input when done
-          typeText(messageElement, message, speed)
-            .then(() => {
-              if (inputField) inputField.disabled = false;
-              if (sendButton) sendButton.disabled = false;
-              optionButtons.forEach((btn) => (btn.disabled = false));
-              resolve();
-            })
-            .catch(() => {
-              // Handle promise rejection when typing is stopped
-              if (inputField) inputField.disabled = false;
-              if (sendButton) sendButton.disabled = false;
-              optionButtons.forEach((btn) => (btn.disabled = false));
-              resolve();
-            });
+            // Type out the message and re-enable input when done
+            typeText(messageElement, message, speed)
+              .then(() => {
+                if (inputField) inputField.disabled = false;
+                if (sendButton) sendButton.disabled = false;
+                optionButtons.forEach((btn) => (btn.disabled = false));
+                resolve();
+              })
+              .catch(() => {
+                // If typing was stopped, remove empty message element
+                if (messageElement.textContent.trim() === "") {
+                  messagesContainer.removeChild(messageElement);
+                }
+                if (inputField) inputField.disabled = false;
+                if (sendButton) sendButton.disabled = false;
+                optionButtons.forEach((btn) => (btn.disabled = false));
+                resolve();
+              });
+          } else {
+            // Re-enable inputs if we're skipping the message entirely
+            if (inputField) inputField.disabled = false;
+            if (sendButton) sendButton.disabled = false;
+            optionButtons.forEach((btn) => (btn.disabled = false));
+            resolve();
+          }
         });
       }
     }
@@ -246,7 +280,6 @@ document.addEventListener("DOMContentLoaded", function () {
           // Check if typing should be stopped
           if (window.typingStopped) {
             clearInterval(interval);
-            window.typingStopped = false;
             const index = window.typingQueue.indexOf(interval);
             if (index > -1) {
               window.typingQueue.splice(index, 1);
@@ -273,7 +306,6 @@ document.addEventListener("DOMContentLoaded", function () {
         window.typingQueue.push(interval);
       });
     }
-
     // function stopTyping() {
     //   // Set flag to stop ongoing typing
     //   window.typingStopped = true;
@@ -326,7 +358,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const detectedAreas = new Set();
 
       // Combined regex for pain-related terms
-      const painPattern = /\b(?:pain|ache|hurt|sore|stiff|discomfort|experience|treat)\b/i;
+      const painPattern =
+        /\b(?:pain|ache|hurt|sore|stiff|discomfort|experience|treat)\b/i;
 
       // Create a single regex pattern for all conditions
       const painAreaPatterns = {
@@ -414,12 +447,12 @@ document.addEventListener("DOMContentLoaded", function () {
         handleServiceQuery(detectedServices);
         return;
       }
-       // Check for pain mentions seconds
-       const detectedPainAreas = detectPainAreas(lowerMessage);
-       if (detectedPainAreas.length > 0 && !appointmentStage) {
-         handlePainMessage(detectedPainAreas);
-         return;
-       }
+      // Check for pain mentions seconds
+      const detectedPainAreas = detectPainAreas(lowerMessage);
+      if (detectedPainAreas.length > 0 && !appointmentStage) {
+        handlePainMessage(detectedPainAreas);
+        return;
+      }
 
       // Enhanced FAQ matching function
       function matchMultipleFAQs(message) {
@@ -458,7 +491,8 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           {
             key: "conditionsTreated",
-            regex: /(?:what|which)?\s*(?:(?:problems?|conditions?|services?|therap(?:y|ies)|treatments?|specialt(?:y|ies)|expertise|areas?)\s*(?:do\s*you|you\s*(?:guys?)?)?\s*(?:help|treat|handle|fix|work\s*with|speciali[sz]e\s*in|offer|provide|perform|do|available)|(?:what\s*(?:kind|type)\s*of\s*(?:therapy|treatment|service))|(?:what\s*do\s*you\s*(?:do|offer|provide|perform)(?:\s*for\s*(?:patients?|clients?|people))?)|service\s*offerings?)/i,
+            regex:
+              /(?:what|which)?\s*(?:(?:problems?|conditions?|services?|therap(?:y|ies)|treatments?|specialt(?:y|ies)|expertise|areas?)\s*(?:do\s*you|you\s*(?:guys?)?)?\s*(?:help|treat|handle|fix|work\s*with|speciali[sz]e\s*in|offer|provide|perform|do|available)|(?:what\s*(?:kind|type)\s*of\s*(?:therapy|treatment|service))|(?:what\s*do\s*you\s*(?:do|offer|provide|perform)(?:\s*for\s*(?:patients?|clients?|people))?)|service\s*offerings?)/i,
           },
           {
             key: "startTreatment",
@@ -497,7 +531,8 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           {
             key: "services",
-            regex: /(?:what|which)?\s*(?:services?|therapy|treatments?|specialt(?:y|ies)|expertise|areas?)?\s*(?:do\s*you|you\s*guys?)?\s*(?:offer|provide|perform|do|available|speciali[sz]e\s*in)|(?:what\s*(?:kind\s*of|type\s*of)?\s*(?:therapy|treatment|service))|(?:what\s*(?:do\s*you\s*(?:do|offer|provide|perform)(?:\s*for\s*(?:patients?|clients?|people))?))|\b(?:service\s*offerings?)\b/i,
+            regex:
+              /(?:what|which)?\s*(?:services?|therapy|treatments?|specialt(?:y|ies)|expertise|areas?)?\s*(?:do\s*you|you\s*guys?)?\s*(?:offer|provide|perform|do|available|speciali[sz]e\s*in)|(?:what\s*(?:kind\s*of|type\s*of)?\s*(?:therapy|treatment|service))|(?:what\s*(?:do\s*you\s*(?:do|offer|provide|perform)(?:\s*for\s*(?:patients?|clients?|people))?))|\b(?:service\s*offerings?)\b/i,
           },
           {
             key: "hours",
@@ -548,12 +583,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const matchedKey = matchedFAQs[0];
             if (matchedKey === "insurance") {
               handleInsuranceQuery();
-            } 
-            
+            }
+
             // else if (matchedKey === "cost") {
             //   handleCostQuery();
             // }
-            
             else if (matchedKey === "hours") {
               addBotMessage(FAQs.hours);
             } else if (matchedKey === "CancellationAppointmentPolicy") {
@@ -603,7 +637,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-
       if (lowerMessage.includes("arthritis")) {
         showTypingIndicator().then(() => {
           addBotMessage([
@@ -626,9 +659,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (conversationState.currentFlow) {
         handleConversationFlow(message);
         return;
-      }
-
-      else if (
+      } else if (
         /(pain|hurt|ache|sore|discomfort|stiff|tight|tender|numb|tingling|burning|sharp|dull|chronic|suffer|experience)/i.test(
           lowerMessage
         )
