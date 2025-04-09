@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physical Therapy Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f8fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .chat-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+        
+        .chat-header {
+            background-color: #0078d7;
+            padding: 15px 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-header img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .chat-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            position: relative;
+            font-size: 14px;
+        }
+        
+        .bot-message {
+            background-color: #f0f2f5;
+            color: #000;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .user-message {
+            background-color: #0078d7;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #e6ecf0;
+            background-color: #fff;
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        #send-button {
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 0 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        #send-button:hover {
+            background-color: #0063b1;
+        }
+        
+        .loading-dots {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 10px 15px;
+            background-color: #f0f2f5;
+            border-radius: 18px;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            max-width: 60px;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: #666;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(0.7);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .link-button {
+            color: #0078d7;
+            text-decoration: underline;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            margin-top: 5px;
+            font-size: 14px;
+            display: block;
+        }
+        
+        .welcome-message {
+            text-align: center;
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0iI2ZmZiI+PHBhdGggZD0iTTI0IDRDMTIuOTU0IDQgNCAxMi45NTQgNCAyNHM4Ljk1NCAyMCAyMCAyMCAyMC04Ljk1NCAyMC0yMFMzNS4wNDYgNCAyNCA0em0wIDM2Yy04LjgzNyAwLTE2LTcuMTYzLTE2LTE2UzE1LjE2MyA4IDI0IDhzMTYgNy4xNjMgMTYgMTYtNy4xNjMgMTYtMTYgMTZ6Ii8+PHBhdGggZD0iTTI0IDEwYy03LjczMiAwLTE0IDYuMjY4LTE0IDE0czYuMjY4IDE0IDE0IDE0IDE0LTYuMjY4IDE0LTE0LTYuMjY4LTE0LTE0LTE0em0wIDI0Yy01LjUxNCAwLTEwLTQuNDg2LTEwLTEwczQuNDg2LTEwIDEwLTEwIDEwIDQuNDg2IDEwIDEwLTQuNDg2IDEwLTEwIDEweiIvPjxwYXRoIGQ9Ik0yNCAxOGMtMy4zMDkgMC02IDIuNjkxLTYgNnMyLjY5MSA2IDYgNiA2LTIuNjkxIDYtNi0yLjY5MS02LTYtNnoiLz48L3N2Zz4=" alt="PT Assistant">
+            <h2>Physical Therapy Assistant</h2>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="welcome-message">Start a conversation with our PT Assistant</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type your question here..." autocomplete="off">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // API key for Google Gemini
+        const API_KEY = "AIzaSyBDlTN4Bf4Nw_9DE4jtqavsCwFqlESP74M";  
+        const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+        
+        // PT practice information database
+        const ptInfo = {
+            services: {
+                'orthopedic': {
+                    description: 'Our orthopedic physical therapy treats musculoskeletal injuries and conditions affecting joints, muscles, and bones.',
+                    link: '/services/orthopedic'
+                },
+                'sports': {
+                    description: 'Our sports rehabilitation helps athletes recover from injuries and improve performance.',
+                    link: '/services/sports-rehabilitation'
+                },
+                'neurological': {
+                    description: 'Our neurological rehabilitation helps patients with neurological conditions like stroke, Parkinson\'s, or MS improve function and mobility.',
+                    link: '/services/neurological'
+                },
+                'pediatric': {
+                    description: 'Our pediatric physical therapy helps children develop motor skills and treat developmental delays or injuries.',
+                    link: '/services/pediatric'
+                },
+                'geriatric': {
+                    description: 'Our geriatric physical therapy focuses on addressing age-related conditions and improving mobility for older adults.',
+                    link: '/services/geriatric'
+                },
+                'vestibular': {
+                    description: 'Our vestibular rehabilitation treats balance disorders and dizziness.',
+                    link: '/services/vestibular'
+                },
+                'aquatic': {
+                    description: 'Our aquatic therapy utilizes water resistance for low-impact rehabilitation.',
+                    link: '/services/aquatic'
+                },
+                'manual': {
+                    description: 'Our manual therapy includes hands-on techniques to manipulate joints and soft tissues.',
+                    link: '/services/manual'
+                }
+            },
+            faq: {
+                'insurance': 'We accept most major insurance plans including Blue Cross Blue Shield, Aetna, Cigna, Medicare, and UnitedHealthcare. Please contact our office to verify your specific coverage.',
+                'appointment': 'You can schedule an appointment by calling our office at +1 (833) 733-6978 or using our online booking system on the Appointments page.',
+                'first visit': 'During your first visit, you\'ll complete paperwork about your medical history, undergo an evaluation by a physical therapist, and receive an initial treatment plan. Please wear comfortable clothing that allows access to the area being treated.',
+                'referral': 'Some insurance plans require a referral from your doctor, while others allow direct access to physical therapy. We recommend checking with your insurance provider beforehand.',
+                'session length': 'Initial evaluations typically last 60 minutes, while follow-up treatment sessions are usually 45-60 minutes depending on your specific needs.',
+                'treatment frequency': 'Treatment frequency varies based on your condition and goals. Most patients attend 2-3 sessions per week initially, with frequency decreasing as you progress.',
+                'location': 'Our main clinic is located at 12603 Southwest Fwy, Ste 101, Stafford TX 77477. Visit our Locations page for specific addresses and directions.',
+                'telehealth': 'Yes, we offer telehealth physical therapy sessions for appropriate conditions. These virtual appointments allow you to receive professional guidance from the comfort of your home.',
+                'covid': 'We follow all CDC guidelines including enhanced cleaning procedures, staff vaccination, health screenings, and mask requirements when appropriate to ensure everyone\'s safety.'
+            },
+            contact: {
+                'phone': '+1 (833) 733-6978',
+                'email': 'contactus@theramedicrehab.com',
+                'hours': 'Mon - Friday: 9AM - 6PM Saturday: Closed, Sunday: Closed',
+                'address': '12603 Southwest Fwy, Ste 101, Stafford TX 77477'
+            },
+            team: {
+                'dr smith': 'Dr. Smith is our clinical director with 15 years of experience specializing in orthopedic and sports rehabilitation. She holds a Doctorate in Physical Therapy and is certified in manual therapy.',
+                'dr jones': 'Dr. Jones specializes in neurological rehabilitation with 10 years of experience working with stroke and Parkinson\'s patients. He has advanced certification in vestibular rehabilitation.',
+                'dr patel': 'Dr. Patel focuses on pediatric physical therapy with specialized training in developmental delays and sensory integration. She has worked with children for over 12 years.'
+            }
+        };
+
+        // Chat history to maintain context for the Gemini API
+        let chatHistory = [
+            {
+                role: "system",
+                parts: [{
+                    text: `You are a helpful assistant for a physical therapy practice. 
+                    Answer questions about physical therapy treatments, rehabilitation exercises, injury recovery, 
+                    and general health questions related to physical therapy.
+                    Be professional, concise, and helpful. If asked medical questions beyond physical therapy scope, 
+                    remind users to consult their healthcare provider. Never claim to diagnose conditions or prescribe treatments.
+                    If you don't know an answer, say so and suggest they contact the clinic directly.
+                    Always maintain patient privacy and confidentiality. and your responses should be in 10 words maximum.`
+                }]
+            }
+        ];
+
+        // DOM elements
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+
+        // Function to add a message to the chat
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageDiv.innerHTML = content;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Add loading indicator
+        function showLoading() {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('loading-dots');
+            loadingDiv.id = 'loading-indicator';
+            
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                loadingDiv.appendChild(dot);
+            }
+            
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Remove loading indicator
+        function hideLoading() {
+            const loadingIndicator = document.getElementById('loading-indicator');
+            if (loadingIndicator) {
+                loadingIndicator.remove();
+            }
+        }
+
+        // Process user input locally before sending to Gemini API
+        function processLocalQuery(query) {
+            const lowercaseQuery = query.toLowerCase();
+            
+            // Check for specific service inquiries
+            for (const [service, info] of Object.entries(ptInfo.services)) {
+                if (lowercaseQuery.includes(service)) {
+                    return {
+                        response: `${info.description} <button class="link-button" onclick="window.open('${info.link}', '_blank')">Learn more about our ${service} therapy</button>`,
+                        handled: true
+                    };
+                }
+            }
+            
+            // Check for FAQ matches
+            for (const [keyword, answer] of Object.entries(ptInfo.faq)) {
+                if (lowercaseQuery.includes(keyword)) {
+                    return {
+                        response: answer,
+                        handled: true
+                    };
+                }
+            }
+            
+            // Check for contact information requests
+            if (lowercaseQuery.includes('contact') || lowercaseQuery.includes('phone') || 
+                lowercaseQuery.includes('email') || lowercaseQuery.includes('address') ||
+                lowercaseQuery.includes('location') || lowercaseQuery.includes('hours')) {
+                
+                return {
+                    response: `You can reach us at:<br>
+                        Phone: ${ptInfo.contact.phone}<br>
+                        Email: ${ptInfo.contact.email}<br>
+                        Address: ${ptInfo.contact.address}<br>
+                        Hours: ${ptInfo.contact.hours}`,
+                    handled: true
+                };
+            }
+            
+            // Check for staff/team inquiries
+            for (const [name, bio] of Object.entries(ptInfo.team)) {
+                if (lowercaseQuery.includes(name)) {
+                    return {
+                        response: bio,
+                        handled: true
+                    };
+                }
+            }
+            
+            // General service inquiry
+            if (lowercaseQuery.includes('service') || lowercaseQuery.includes('offer') || 
+                lowercaseQuery.includes('provide') || lowercaseQuery.includes('treatment')) {
+                
+                let response = "We offer the following physical therapy services:<br><ul>";
+                for (const [service, info] of Object.entries(ptInfo.services)) {
+                    response += `<li>${service.charAt(0).toUpperCase() + service.slice(1)} Therapy - <button class="link-button" onclick="window.open('${info.link}', '_blank')">Learn more</button></li>`;
+                }
+                response += "</ul>";
+                
+                return {
+                    response: response,
+                    handled: true
+                };
+            }
+            
+            return {
+                handled: false
+            };
+        }
+
+        // Send message to Gemini API
+        async function sendToGeminiAPI(query) {
+            // First check if we can handle this query locally
+            const localResult = processLocalQuery(query);
+            if (localResult.handled) {
+                return localResult.response;
+            }
+            
+            try {
+                // Add the user's message to chat history
+                chatHistory.push({
+                    role: "user",
+                    parts: [{ text: query }]
+                });
+                
+                // Call the actual Gemini API
+                const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [
+                            {
+                                parts: [{ 
+                                    text: `As a physical therapy assistant, answer this question professionally: ${query}
+                                    Focus only on physical therapy information and avoid any diagnosis.words
+                                    If unsure, suggest contacting the clinic for personalized advice. and your responses should be in 50 to 80 maximum.` 
+                                }]
+                            }
+                        ],
+                        generationConfig: {
+                            temperature: 0.1,
+                            topP: 0.2,
+                            topK: 20,
+                            maxOutputTokens: 300
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Handle API response
+                if (data.error) {
+                    console.error("API Error:", data.error);
+                    return "I'm sorry, I'm having trouble connecting to my knowledge system. Please try again later or contact our clinic directly at " + ptInfo.contact.phone;
+                }
+                
+                // Extract the response text
+                const aiResponse = data.candidates[0].content.parts[0].text;
+                
+                // Add the AI response to chat history
+                chatHistory.push({
+                    role: "model",
+                    parts: [{ text: aiResponse }]
+                });
+                
+                // Keep chat history limited in size
+                if (chatHistory.length > 10) {
+                    // Keep the system message and the last 9 exchanges
+                    chatHistory = [chatHistory[0], ...chatHistory.slice(-9)];
+                }
+                
+                return aiResponse;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                return "I'm sorry, I'm having trouble processing your request right now. Please try again later or contact us directly at " + ptInfo.contact.phone;
+            }
+        }
+
+        // Send message function
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (message === '') return;
+            
+            // Add user message to chat
+            addMessage(message, true);
+            userInput.value = '';
+            
+            // Show loading indicator
+            showLoading();
+            
+            try {
+                // Get response from Gemini API
+                const response = await sendToGeminiAPI(message);
+                
+                // Hide loading indicator
+                hideLoading();
+                
+                // Add bot response to chat
+                addMessage(response);
+            } catch (error) {
+                console.error('Error:', error);
+                hideLoading();
+                addMessage("I'm sorry, I encountered an error. Please try again or contact us directly.");
+            }
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initial bot message
+        addMessage("Hello! I'm your Physical Therapy Assistant. How can I help you today? You can ask me about our services, appointment information, or any physical therapy questions you may have.");
+    </script>
+</body>
+</html>
