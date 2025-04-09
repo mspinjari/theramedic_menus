@@ -256,21 +256,6 @@
             }
         };
 
-        // Chat history to maintain context for the Gemini API
-        let chatHistory = [
-            {
-                role: "system",
-                parts: [{
-                    text: `You are a helpful assistant for a physical therapy practice. 
-                    Answer questions about physical therapy treatments, rehabilitation exercises, injury recovery, 
-                    and general health questions related to physical therapy.
-                    Be professional, concise, and helpful. If asked medical questions beyond physical therapy scope, 
-                    remind users to consult their healthcare provider. Never claim to diagnose conditions or prescribe treatments.
-                    If you don't know an answer, say so and suggest they contact the clinic directly.
-                    Always maintain patient privacy and confidentiality. and your responses should be in 10 words maximum.`
-                }]
-            }
-        ];
 
         // DOM elements
         const chatMessages = document.getElementById('chat-messages');
@@ -381,6 +366,22 @@
             };
         }
 
+        
+        // Chat history to maintain context for the Gemini API
+        let chatHistory = [
+            {
+                role: "system",
+                parts: [{
+                    text: `You are a helpful assistant for a physical therapy practice. 
+                    Answer questions about physical therapy treatments, rehabilitation exercises, injury recovery, 
+                    and general health questions related to physical therapy.
+                    Be professional, concise, and helpful. If asked medical questions beyond physical therapy scope, 
+                    remind users to consult their healthcare provider. Never claim to diagnose conditions or prescribe treatments.
+                    If you don't know an answer, say so and suggest they contact the clinic directly.
+                    Always maintain patient privacy and confidentiality.`
+                }]
+            }
+        ];
         // Send message to Gemini API
         async function sendToGeminiAPI(query) {
             // First check if we can handle this query locally
@@ -408,7 +409,7 @@
                                 parts: [{ 
                                     text: `As a physical therapy assistant, answer this question professionally: ${query}
                                     Focus only on physical therapy information and avoid any diagnosis.words
-                                    If unsure, suggest contacting the clinic for personalized advice. and your responses should be in 50 to 80 maximum.` 
+                                    If unsure, suggest contacting the clinic for personalized advice. and your responses should be in 50 to 80 maximum. Also, reply in the same language that you received the message.` 
                                 }]
                             }
                         ],
