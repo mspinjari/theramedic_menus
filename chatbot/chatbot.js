@@ -648,7 +648,7 @@ document.addEventListener("DOMContentLoaded", function () {
           {
             key: "sessionLength",
             regex:
-              /(?:how\slong|length|duration|time|timing|typical)\s(?:is|for|of|are|will\sbe)?\s(?:a|the|your|my|each)?\s(?:session|appointment|visit|treatment|therapy|consultation)|(?:session|appointment|visit)\s(?:length|duration|time)/i,
+              /(?:how\slong|length|duration|time|timing|typical|sessionlength)\s(?:is|for|of|are|will\sbe)?\s(?:a|the|your|my|each)?\s(?:session|appointment|visit|treatment|therapy|consultation)|(?:session|appointment|visit)\s(?:length|duration|time)/i,
           },
           {
             key: "paymentPlans",
@@ -701,7 +701,7 @@ document.addEventListener("DOMContentLoaded", function () {
               /(?:parking|park|where\s*to\s*park|parking\s*available|car\s*park)/i,
           },
           {
-            key: "our_Services",
+            key: "ourServices",
             regex:
               /^(?!.*\bpain\b)(?:(?:rehab(?:ilitation)?\s*(?:services?|programs?)|therap(?:y|eutic)?\s*services?|service\s*offerings?|specialit(?:y|ies))|do\s*you\s*have\s*any\s*services\??|i\s*want\s*to\s*(?:know|learn\s*more\s*about)\s*your\s*(?:services\??|massage\s*therapy\s*services)|tell\s*me\s*about\s*your\s*(?:specialties\??|rehabilitation\s*programs\??)|what(?:['']?s|[\s\-]+is|[\s\-]+are)?\s*your\s*(?:services?|specialt(?:y|ies))|what\s*types\s*of\s*massage\s*do\s*you\s*offer\??|(?:i\s*have\s*)?\s*questions\s*about\s*your\s*orthopedic\s*therapy|can\s*you\s*tell\s*me\s*about\s*your\s*rehabilitation\s*programs|(?:i\s*want\s*to\s*)?learn\s*more\s*about\s*your\s*massage\s*therapy\s*services|interested\s*in\s*post-surgical\s*rehabilitation|services?\b|servi[cs]e?s|srvices?|(?:offer|provide|have).*\s(?:services?|treatments?)|available\s*(?:services?|treatments?))/i,
           },
@@ -718,7 +718,7 @@ document.addEventListener("DOMContentLoaded", function () {
           {
             key: "treatmentPlan",
             regex:
-              /^(?!.*\b(?:pain|ache|hurt|sore|stiff|discomfort|experience)\b)(?:(?:explain|tell\s*me\s*about|what\s*is|how\s*is|describe)\s*(?:the|your)?\s*(?:treatment|therapy)\s*(?:plan|approach)|(?:plan\s*(?:for|of)\s*(?:therapy|treatment))|(?:rehab(?:ilitation)?\s*services?|therap(?:y|eutic)?\s*services?|service\s*offerings?|specialit(?:y|ies))|do\s*you\s*have\s*any\s*services\??|i\s*want\s*to\s*know\s*your\s*services\??|tell\s*me\s*about\s*your\s*specialties\??|what(?:['']?s|[\s\-]+is|[\s\-]+are)?\s*your\s*(?:services?|specialt(?:y|ies))|services?\b|servi[cs]e?s|srvices?|(?:offer|provide|have).*\s(?:services?|treatments?)|available\s*(?:services?|treatments?))/i,
+              /^(?!.*\b(?:pain|ache|hurt|sore|stiff)\b)(?:(?:explain|tell\s*me\s*about|what\s*is|how\s*is|describe|give\s*me)\s*(?:the|your)?\s*(?:treatment|therapy|therapeutic)\s*(?:plan\s*(?:info|information|details)?|approach|process(?:\s*details)?|method|strategy)|(?:plan|method|strategy)\s*(?:for|of|to|info\s*on)\s*(?:therapy|treatment|rehab)|(?:rehab(?:ilitation)?\s*services?|therap(?:y|eutic)?\s*services?|service\s*offerings?|specialit(?:y|ies))|do\s*you\s*have\s*any\s*(?:plan|info)\??|(?:therapy|treatment)\s*plan\s*(?:info|information|details)|(?:info|information|details)\s*(?:on|about|of)\s*(?:the\s*)?(?:therapy|treatment)\s*plan|i\s*want\s*(?:to\s*see|know)\s*the\s*plan\s*info|what(?:['’]s|[\s\-]+is|[\s\-]+are)?\s*the\s*(?:plan|info)\s*for\s*(?:therapy|treatment)|(?:explain|describe)\s*the\s*plan\s*(?:info|details)|(?:therapy|therapeutic)\s*approach|approach\s*(?:to|for)\s*(?:therapy|treatment)|(?:what\s*are\s*the\s*(?:steps|methods|components))\s*(?:of\s*the\s*)?(?:treatment|therapy)\s*plan)/i,
           },
           {
             key: "generalServiceQuery",
@@ -753,7 +753,7 @@ document.addEventListener("DOMContentLoaded", function () {
           parking: "🅿️ Parking Information",
           hours: "⏰ Business Hours",
           locations: "📍 Clinic Locations",
-          our_Services: "🏥 Our Services",
+          ourServices: "🏥 Our Services",
           generalServiceQuery: "🎯 More Services Information",
         };
 
@@ -770,7 +770,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ),
               CancellationAppointmentPolicy: () =>
                 addBotMessage(FAQs.CancellationAppointmentPolicy),
-              our_Services: () => showServiceCategories(),
+              ourServices: () => showServiceCategories(),
               locations: () =>
                 addBotMessage(FAQs.locations).then(() => {
                   const locationButtons = Object.entries(LOCATIONS).map(
@@ -814,7 +814,7 @@ document.addEventListener("DOMContentLoaded", function () {
               generalServiceQuery: {
                 type: "moreServices",
               },
-              our_Services: { type: "service" },
+              ourServices: { type: "service" },
               hours: { type: "faq", faq: "hours" },
               locations: { type: "locations" },
 
@@ -857,7 +857,7 @@ document.addEventListener("DOMContentLoaded", function () {
         handleConversationFlow(message);
         return;
       } else if (
-        /(pain|hurt|ache|sore|discomfort|stiff|tight|tender|numb|tingling|burning|sharp|dull|chronic|suffer|experience)/i.test(
+        /(pain|hurt|ache|sore|discomfort|stiff|tight|tender|numb|tingling|burning|sharp|dull|chronic|suffer|experience|uncomfortable)/i.test(
           lowerMessage
         )
       ) {
@@ -1532,15 +1532,6 @@ document.addEventListener("DOMContentLoaded", function () {
           });
           break;
 
-        case "expect":
-          conversationState.currentFlow = "expect";
-          handleConversationFlow();
-          break;
-
-        case "thanks":
-          conversationState.currentFlow = "thanks";
-          handleConversationFlow();
-          break;
 
         case "back_to_main":
           showTypingIndicator().then(() => {
