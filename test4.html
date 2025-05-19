@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Pain Management Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #FFDAD0;
+            /* Light peach background color */
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .svg-container {
+            flex: 1;
+            min-width: 300px;
+            max-width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .pain-management-container {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            align-items: start;
+        }
+
+        .left-column,
+        .middle-column,
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 200px;
+        }
+
+        /* .middle-column {
+            max-width: 200px;
+        } */
+
+        .pain-button-div {
+            background-color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 15px 15px;
+            margin: 10px;
+            cursor: pointer;
+            width: 150px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease-in-out;
+            height: 22px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pain-button {
+            width: 100%;
+            background: transparent;
+            border: none;
+            font-size: 16px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pain-button-sub-text {
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.4;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            padding: 0 10px;
+        }
+
+        .pain-button-div.expanded {
+            background-color: #E1F5FE;
+            /* Light blue when expanded */
+            height: auto;
+        }
+
+        .pain-button-div.expanded .pain-button-sub-text {
+            opacity: 1;
+        }
+
+        .arrow {
+            margin-left: 5px;
+            margin-bottom: 5px;
+        }
+
+        /* For the interactive body SVG */
+        svg a circle {
+            transition: fill 0.3s ease;
+            cursor: pointer;
+        }
+
+        svg a:hover circle {
+            fill: #ffe0b2;
+        }
+
+        .page-title {
+            text-align: center;
+            color: #203861;
+            margin: 20px 0;
+            font-size: 28px;
+        }
+
+        .instructions {
+            text-align: center;
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container">
+        <div class="pain-management-container">
+            <div class="left-column">
+                <div class="pain-button-div" id="headButton">
+                    <a class="pain-button">Head<span class="arrow">→</span></a>
+                    <p class="pain-button-sub-text">Effective treatments for headaches, migraines, and tension-related
+                        head pain with targeted therapies.</p>
+                </div>
+                <div class="pain-button-div" id="backButton">
+                    <a class="pain-button">Back <span class="arrow">→</span></a>
+                    <p class="pain-button-sub-text">Relieve back pain with our specialized treatments focusing on spine
+                        alignment and muscle relaxation.</p>
+                </div>
+
+                <div class="pain-button-div" id="elbowButton">
+                    <a class="pain-button">Elbow <span class="arrow">→</span></a>
+                    <p class="pain-button-sub-text">Tennis elbow or golfer's elbow? Our therapies restore mobility and
+                        reduce inflammation.</p>
+                </div>
+
+                <div class="pain-button-div" id="footButton">
+                    <a class="pain-button">Foot/Ankle <span class="arrow">→</span></a>
+                    <p class="pain-button-sub-text">From plantar fasciitis to sprains, we get you back on your feet with
+                        targeted treatments.</p>
+                </div>
+            </div>
+
+            <div class="middle-column">
+                <div class="pain-button-div" id="handButton">
+                    <a class="pain-button">Hand/Wrist <span class="arrow">→</span></a>
+                    <p class="pain-button-sub-text">Carpal tunnel or wrist injury shouldn't limit you. Our targeted
+                        treatments improve circulation, grip strength, and eliminate pain.</p>
+                </div>
+
+                <div class="pain-button-div" id="hipButton">
+                    <a class="pain-button">Hip <span class="arrow">→</span></a>
+                    <p class="pain-button-sub-text">Restore hip mobility and reduce pain with our comprehensive
+                        treatment approach.</p>
+                </div>
+
+                <div class="pain-button-div" id="kneeButton">
+                    <a class="pain-button">Knee <span class="arrow">→</span></a>
+                    <p class="pain-button-sub-text">Address knee pain, improve stability, and enhance range of motion
+                        with our specialized therapies.</p>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="pain-button-div" id="neckButton">
+                    <a class="pain-button">Neck <span class="arrow">→</span></a>
+                    <p class="pain-button-sub-text">Relief from tension, stiffness, and chronic neck pain through
+                        targeted therapies.</p>
+                </div>
+
+                <div class="pain-button-div" id="pelvicButton">
+                    <a class="pain-button">Pelvic Floor <span class="arrow">→</span></a>
+                    <p class="pain-button-sub-text">Strengthen your core and address pelvic floor dysfunction with our
+                        specialized programs.</p>
+                </div>
+
+                <div class="pain-button-div" id="shoulderButton">
+                    <a class="pain-button">Shoulder <span class="arrow">→</span></a>
+                    <p class="pain-button-sub-text">From rotator cuff injuries to frozen shoulder, our treatments
+                        restore mobility and function.</p>
+                </div>
+            </div>
+        </div>
+        <div class="svg-container">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="362.563"
+                height="1048.931" viewBox="0 0 362.563 1048.931">
+                <defs>
+                    <filter id="Ellipse_30" x="179.118" y="698.79" width="116.429" height="116.428"
+                        filterUnits="userSpaceOnUse">
+                        <feOffset dy="10" input="SourceAlpha" />
+                        <feGaussianBlur stdDeviation="12.5" result="blur" />
+                        <feFlood flood-opacity="0.341" />
+                        <feComposite operator="in" in2="blur" />
+                        <feComposite in="SourceGraphic" />
+                    </filter>
+                    <filter id="Ellipse_30-2" x="119.412" y="312.53" width="116.429" height="116.429"
+                        filterUnits="userSpaceOnUse">
+                        <feOffset dy="10" input="SourceAlpha" />
+                        <feGaussianBlur stdDeviation="12.5" result="blur-2" />
+                        <feFlood flood-opacity="0.341" />
+                        <feComposite operator="in" in2="blur-2" />
+                        <feComposite in="SourceGraphic" />
+                    </filter>
+                    <filter id="Ellipse_30-3" x="38.992" y="159" width="116.429" height="116.429"
+                        filterUnits="userSpaceOnUse">
+                        <feOffset dy="10" input="SourceAlpha" />
+                        <feGaussianBlur stdDeviation="12.5" result="blur-3" />
+                        <feFlood flood-opacity="0.341" />
+                        <feComposite operator="in" in2="blur-3" />
+                        <feComposite in="SourceGraphic" />
+                    </filter>
+                    <filter id="Ellipse_30-4" x="118.912" y="0" width="116.429" height="116.429"
+                        filterUnits="userSpaceOnUse">
+                        <feOffset dy="10" input="SourceAlpha" />
+                        <feGaussianBlur stdDeviation="12.5" result="blur-4" />
+                        <feFlood flood-opacity="0.341" />
+                        <feComposite operator="in" in2="blur-4" />
+                        <feComposite in="SourceGraphic" />
+                    </filter>
+                    <filter id="Ellipse_30-5" x="119.412" y="423.412" width="116.429" height="116.428"
+                        filterUnits="userSpaceOnUse">
+                        <feOffset dy="10" input="SourceAlpha" />
+                        <feGaussianBlur stdDeviation="12.5" result="blur-5" />
+                        <feFlood flood-opacity="0.341" />
+                        <feComposite operator="in" in2="blur-5" />
+                        <feComposite in="SourceGraphic" />
+                    </filter>
+                    <filter id="Ellipse_30-6" x="0" y="353.958" width="116.429" height="116.428"
+                        filterUnits="userSpaceOnUse">
+                        <feOffset dy="10" input="SourceAlpha" />
+                        <feGaussianBlur stdDeviation="12.5" result="blur-6" />
+                        <feFlood flood-opacity="0.341" />
+                        <feComposite operator="in" in2="blur-6" />
+                        <feComposite in="SourceGraphic" />
+                    </filter>
+                    <filter id="Ellipse_30-7" x="67.017" y="932.502" width="116.429" height="116.428"
+                        filterUnits="userSpaceOnUse">
+                        <feOffset dy="10" input="SourceAlpha" />
+                        <feGaussianBlur stdDeviation="12.5" result="blur-7" />
+                        <feFlood flood-opacity="0.341" />
+                        <feComposite operator="in" in2="blur-7" />
+                        <feComposite in="SourceGraphic" />
+                    </filter>
+                    <filter id="Ellipse_30-8" x="74.328" y="503.832" width="116.429" height="116.428"
+                        filterUnits="userSpaceOnUse">
+                        <feOffset dy="10" input="SourceAlpha" />
+                        <feGaussianBlur stdDeviation="12.5" result="blur-8" />
+                        <feFlood flood-opacity="0.341" />
+                        <feComposite operator="in" in2="blur-8" />
+                        <feComposite in="SourceGraphic" />
+                    </filter>
+                    <filter id="Ellipse_30-9" x="246.134" y="545.261" width="116.429" height="116.428"
+                        filterUnits="userSpaceOnUse">
+                        <feOffset dy="10" input="SourceAlpha" />
+                        <feGaussianBlur stdDeviation="12.5" result="blur-9" />
+                        <feFlood flood-opacity="0.341" />
+                        <feComposite operator="in" in2="blur-9" />
+                        <feComposite in="SourceGraphic" />
+                    </filter>
+                    <filter id="Ellipse_30-10" x="147.436" y="122.446" width="116.429" height="116.429"
+                        filterUnits="userSpaceOnUse">
+                        <feOffset dy="10" input="SourceAlpha" />
+                        <feGaussianBlur stdDeviation="12.5" result="blur-10" />
+                        <feFlood flood-opacity="0.341" />
+                        <feComposite operator="in" in2="blur-10" />
+                        <feComposite in="SourceGraphic" />
+                    </filter>
+                </defs>
+                <g id="New_2D_Human_Structure" data-name="New 2D Human Structure"
+                    transform="translate(7224.778 4518.151)">
+                    <path id="Path_7643" data-name="Path 7643"
+                        d="M2.685,363.392c2.922-6.522,5.619-21.826,3.826-31.948S2.685,270.018,8.3,256.521s-1.129-38.471,13.948-62.993,49.5-23.619,49.5-23.619,32.4-10.574,36.89-17.1,2.245-34.871,2.245-34.871c-8.767-6.522-9.671-25.652-9.671-25.652s-.678,3.374-4.052,1.129-4.5-24.974-3.6-26.993,4.729-1.355,4.729-1.355-5.393-29.7,3.826-44.993S133.161,2.53,141.716,2.53s30.367,2.245,39.6,17.548,3.826,44.993,3.826,44.993,3.826-.678,4.729,1.355-.226,24.748-3.6,26.993-4.052-1.129-4.052-1.129-.9,19.129-9.671,25.652c0,0-2.245,28.348,2.245,34.871s36.89,17.1,36.89,17.1,34.433-.889,49.5,23.619,8.329,49.5,13.948,62.993,3.6,64.8,1.793,74.923.9,25.426,3.826,31.948-6.071,113.393-4.729,128.019,6.071,54,4.278,57.374-13.722,33.53-26.1,35.322c0,0-8.993,6.522-12.155,4.5s.678-6.522.678-6.522a4.981,4.981,0,0,1-4.052-1.129c-1.581-1.567,11.929-14.626,11.929-14.626s-6.748,2.922-8.993.226,17.322-13.045,20.7-20.7-1.129-12.593-1.129-12.593l-5.619,2.7s-5.407,17.774-9.219,18-6.3.226-3.148-20.7c0,0-4.5-15.529-.9-22.5s7.652-8.767,7.652-16.193-11.026-46.122-14.626-67.5,3.148-62.993-.452-71.1-7.878-27.233-8.1-40.955-3.826-31.948-7.2-36.452,1.482,26.1-6.014,45.671-2.315,53.548,1.285,68.174,15.515,96.749,16.645,126.664-7.426,140.838-6.3,156.805,8.767,38.471,8.767,84.367-7.652,49.723-14.174,68.838-13.045,68.838-12.367,78.071c0,0,3.967,6.522,4.122,10.348s-.071,8.555,1.285,13.271,15.078,38.019,11.026,42.748-27.9,5.181-36.226,4.5c0,0-2.019,3.826-10.348,2.471s-7.2-30.607-4.729-45.9-4.729-19.115-2.471-28.8,6.522-13.948,6.974-18.226,3.826-54-2.033-78.071-4.941-60.748.678-76.941-2.7-25.2-8.781-44.767-9.219-67.045-9.219-87.967-6.974-35.548-10.348-47.69-2.922-29.7-2.922-29.7l-2.7-1.158-2.7,1.158s.452,17.548-2.922,29.7-10.348,26.767-10.348,47.69-3.148,68.4-9.219,87.967-14.4,28.574-8.781,44.767,6.522,52.871.678,76.941-2.471,73.793-2.033,78.071,4.729,8.541,6.974,18.226-4.955,13.5-2.471,28.8,3.6,44.555-4.729,45.9-10.348-2.471-10.348-2.471c-8.329.678-32.174.226-36.226-4.5s9.671-38.019,11.026-42.748,1.129-9.445,1.285-13.271,4.122-10.348,4.122-10.348c.678-9.219-5.845-58.941-12.367-78.071s-14.174-22.941-14.174-68.838,7.652-68.4,8.767-84.367S50.813,549,51.942,519.082,64.987,407.044,68.587,392.418s8.781-48.593,1.285-68.174-2.64-50.174-6.014-45.671-6.974,22.715-7.2,36.452-4.5,32.852-8.1,40.955,3.148,49.723-.452,71.1-14.626,60.071-14.626,67.5,4.052,9.219,7.652,16.193-.9,22.5-.9,22.5c3.148,20.922.678,20.922-3.148,20.7s-9.219-18-9.219-18l-5.619-2.7s-4.5,4.955-1.129,12.593,22.941,18,20.7,20.7-8.993-.226-8.993-.226,13.5,13.045,11.929,14.626a4.981,4.981,0,0,1-4.052,1.129s3.826,4.5.678,6.522-12.141-4.5-12.141-4.5C16.86,582.3,4.93,552.16,3.123,548.786S6.045,506.038,7.4,491.412s-7.652-121.5-4.729-128.019Z"
+                        transform="translate(-7189.362 -4481.796)" fill="#203861" />
+
+                    <g id="Group_3437" data-name="Group 3437" class="body-part" data-target="kneeButton">
+                        <g transform="matrix(1, 0, 0, 1, -7224.78, -4518.15)" filter="url(#Ellipse_30)">
+                            <circle id="Ellipse_30-11" data-name="Ellipse 30" cx="20.714" cy="20.714" r="20.714"
+                                transform="translate(216.62 726.29)" fill="#fff" />
+                        </g>
+                        <circle id="Ellipse_29" data-name="Ellipse 29" cx="8.529" cy="8.529" r="8.529"
+                            transform="translate(-6995.975 -3779.677)" fill="#ff4500" />
+                    </g>
+                    <g id="Group_2836" data-name="Group 2836" transform="translate(-7067.866 -4178.122)"
+                        class="body-part" data-target="backButton">
+                        <g transform="matrix(1, 0, 0, 1, -156.91, -340.03)" filter="url(#Ellipse_30-2)">
+                            <circle id="Ellipse_30-12" data-name="Ellipse 30" cx="20.714" cy="20.714" r="20.714"
+                                transform="translate(156.91 340.03)" fill="#fff" />
+                        </g>
+                        <circle id="Ellipse_29-2" data-name="Ellipse 29" cx="8.529" cy="8.529" r="8.529"
+                            transform="translate(12.185 12.185)" fill="#ff4500" />
+                    </g>
+                    <g id="Group_2841" data-name="Group 2841" transform="translate(-7148.286 -4331.651)"
+                        class="body-part" data-target="shoulderButton">
+                        <g transform="matrix(1, 0, 0, 1, -76.49, -186.5)" filter="url(#Ellipse_30-3)">
+                            <circle id="Ellipse_30-13" data-name="Ellipse 30" cx="20.714" cy="20.714" r="20.714"
+                                transform="translate(76.49 186.5)" fill="#fff" />
+                        </g>
+                        <circle id="Ellipse_29-3" data-name="Ellipse 29" cx="8.529" cy="8.529" r="8.529"
+                            transform="translate(12.185 12.185)" fill="#ff4500" />
+                    </g>
+                    <g id="Group_3435" data-name="Group 3435" transform="translate(-7068.366 -4490.651)"
+                        class="body-part" data-target="headButton">
+                        <g transform="matrix(1, 0, 0, 1, -156.41, -27.5)" filter="url(#Ellipse_30-4)">
+                            <circle id="Ellipse_30-14" data-name="Ellipse 30" cx="20.714" cy="20.714" r="20.714"
+                                transform="translate(156.41 27.5)" fill="#fff" />
+                        </g>
+                        <circle id="Ellipse_29-4" data-name="Ellipse 29" cx="8.529" cy="8.529" r="8.529"
+                            transform="translate(12.185 12.185)" fill="#ff4500" />
+                    </g>
+                    <g id="Group_2840" data-name="Group 2840" transform="translate(-7067.866 -4067.239)"
+                        class="body-part" data-target="pelvicButton">
+                        <g transform="matrix(1, 0, 0, 1, -156.91, -450.91)" filter="url(#Ellipse_30-5)">
+                            <circle id="Ellipse_30-15" data-name="Ellipse 30" cx="20.714" cy="20.714" r="20.714"
+                                transform="translate(156.91 450.91)" fill="#fff" />
+                        </g>
+                        <circle id="Ellipse_29-5" data-name="Ellipse 29" cx="8.529" cy="8.529" r="8.529"
+                            transform="translate(12.185 12.185)" fill="#ff4500" />
+                    </g>
+                    <g id="Group_2837" data-name="Group 2837" transform="translate(-7187.278 -4136.693)"
+                        class="body-part" data-target="elbowButton">
+                        <g transform="matrix(1, 0, 0, 1, -37.5, -381.46)" filter="url(#Ellipse_30-6)">
+                            <circle id="Ellipse_30-16" data-name="Ellipse 30" cx="20.714" cy="20.714" r="20.714"
+                                transform="translate(37.5 381.46)" fill="#fff" />
+                        </g>
+                        <circle id="Ellipse_29-6" data-name="Ellipse 29" cx="8.529" cy="8.529" r="8.529"
+                            transform="translate(12.185 12.185)" fill="#ff4500" />
+                    </g>
+                    <g id="Group_2838" data-name="Group 2838" transform="translate(-7120.261 -3558.149)"
+                        class="body-part" data-target="footButton">
+                        <g transform="matrix(1, 0, 0, 1, -104.52, -960)" filter="url(#Ellipse_30-7)">
+                            <circle id="Ellipse_30-17" data-name="Ellipse 30" cx="20.714" cy="20.714" r="20.714"
+                                transform="translate(104.52 960)" fill="#fff" />
+                        </g>
+                        <circle id="Ellipse_29-7" data-name="Ellipse 29" cx="8.529" cy="8.529" r="8.529"
+                            transform="translate(12.185 12.185)" fill="#ff4500" />
+                    </g>
+                    <g id="Group_2842" data-name="Group 2842" transform="translate(-7112.95 -3986.819)"
+                        class="body-part" data-target="hipButton">
+                        <g transform="matrix(1, 0, 0, 1, -111.83, -531.33)" filter="url(#Ellipse_30-8)">
+                            <circle id="Ellipse_30-18" data-name="Ellipse 30" cx="20.714" cy="20.714" r="20.714"
+                                transform="translate(111.83 531.33)" fill="#fff" />
+                        </g>
+                        <circle id="Ellipse_29-8" data-name="Ellipse 29" cx="8.529" cy="8.529" r="8.529"
+                            transform="translate(12.185 12.185)" fill="#ff4500" />
+                    </g>
+                    <g id="Group_2839" data-name="Group 2839" transform="translate(-6941.144 -3945.391)"
+                        class="body-part" data-target="handButton">
+                        <g transform="matrix(1, 0, 0, 1, -283.63, -572.76)" filter="url(#Ellipse_30-9)">
+                            <circle id="Ellipse_30-19" data-name="Ellipse 30" cx="20.714" cy="20.714" r="20.714"
+                                transform="translate(283.63 572.76)" fill="#fff" />
+                        </g>
+                        <circle id="Ellipse_29-9" data-name="Ellipse 29" cx="8.529" cy="8.529" r="8.529"
+                            transform="translate(12.185 12.185)" fill="#ff4500" />
+                    </g>
+                    <g id="Group_3436" data-name="Group_3436" class="body-part" data-target="neckButton">
+                        <g transform="matrix(1, 0, 0, 1, -7224.78, -4518.15)" filter="url(#Ellipse_30-10)">
+                            <circle id="Ellipse_30-20" data-name="Ellipse 30" cx="20.714" cy="20.714" r="20.714"
+                                transform="translate(184.94 149.95)" fill="#fff" />
+                        </g>
+                        <circle id="Ellipse_29-10" data-name="Ellipse 29" cx="8.529" cy="8.529" r="8.529"
+                            transform="translate(-7027.656 -4356.021)" fill="#ff4500" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+
+    </div>
+
+    <script>
+        // Get all pain button divs
+        const painButtons = document.querySelectorAll('.pain-button-div');
+        const bodyParts = document.querySelectorAll('.body-part');
+
+        // Function to collapse all buttons
+        function collapseAllButtons() {
+            painButtons.forEach(button => {
+                button.classList.remove('expanded');
+            });
+        }
+
+        // Add click event listener to each button
+        painButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.stopPropagation(); // Prevent bubbling
+
+                // If this button is already expanded, just collapse it
+                if (this.classList.contains('expanded')) {
+                    this.classList.remove('expanded');
+                    return;
+                }
+
+                // Collapse all buttons first
+                collapseAllButtons();
+
+                // Then expand this one
+                this.classList.add('expanded');
+            });
+        });
+
+        // Add click event listener to each body part in the SVG
+        bodyParts.forEach(part => {
+            part.addEventListener('click', function (e) {
+                e.stopPropagation(); // Prevent bubbling
+
+                // Get the target button ID
+                const targetId = this.getAttribute('data-target');
+                const targetButton = document.getElementById(targetId);
+
+                if (targetButton) {
+                    // If target button is already expanded, just collapse it
+                    if (targetButton.classList.contains('expanded')) {
+                        targetButton.classList.remove('expanded');
+                        return;
+                    }
+
+                    // Collapse all buttons first
+                    collapseAllButtons();
+
+                    // Expand the target button
+                    targetButton.classList.add('expanded');
+
+                    // Animate scroll to the button
+                    targetButton.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }
+            });
+        });
+
+        // Add click event listener to document to collapse all when clicking outside
+        document.addEventListener('click', function () {
+            collapseAllButtons();
+        });
+    </script>
