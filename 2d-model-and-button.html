@@ -99,7 +99,7 @@
         .pain-button-div.expanded {
             background-color: #E1F5FE;
             /* Light blue when expanded */
-            height: auto;
+            height: 200px;
         }
 
         .pain-button-div.expanded .pain-button-sub-text {
@@ -398,21 +398,29 @@
         const painButtons = document.querySelectorAll('.pain-button-div');
         const bodyParts = document.querySelectorAll('.body-part');
 
-        // Function to collapse all buttons
+        // Function to collapse all buttons and reset SVG circles
         function collapseAllButtons() {
             painButtons.forEach(button => {
                 button.classList.remove('expanded');
+            });
+            // Reset all SVG circles to original size
+            document.querySelectorAll('[id^="Ellipse_30-"]').forEach(circle => {
+                circle.setAttribute('r', '20.714');
+            });
+            document.querySelectorAll('[id^="Ellipse_29"]').forEach(circle => {
+                circle.setAttribute('r', '8.529');
             });
         }
 
         // Add click event listener to each button
         painButtons.forEach(button => {
             button.addEventListener('click', function (e) {
-                e.stopPropagation(); // Prevent bubbling
+                e.stopPropagation();
 
-                // If this button is already expanded, just collapse it
+                // If this button is already expanded, collapse it
                 if (this.classList.contains('expanded')) {
                     this.classList.remove('expanded');
+                    collapseAllButtons();
                     return;
                 }
 
@@ -421,32 +429,39 @@
 
                 // Then expand this one
                 this.classList.add('expanded');
+
+                // Find corresponding SVG part and increase circle sizes
+                const buttonId = this.id;
+                const svgPart = document.querySelector(`.body-part[data-target="${buttonId}"]`);
+                if (svgPart) {
+                    svgPart.querySelector('[id^="Ellipse_30-"]').setAttribute('r', '25.714');
+                    svgPart.querySelector('[id^="Ellipse_29"]').setAttribute('r', '18.529');
+                }
             });
         });
 
         // Add click event listener to each body part in the SVG
         bodyParts.forEach(part => {
             part.addEventListener('click', function (e) {
-                e.stopPropagation(); // Prevent bubbling
+                e.stopPropagation();
 
-                // Get the target button ID
                 const targetId = this.getAttribute('data-target');
                 const targetButton = document.getElementById(targetId);
 
                 if (targetButton) {
-                    // If target button is already expanded, just collapse it
                     if (targetButton.classList.contains('expanded')) {
                         targetButton.classList.remove('expanded');
+                        collapseAllButtons();
                         return;
                     }
 
-                    // Collapse all buttons first
                     collapseAllButtons();
 
-                    // Expand the target button
                     targetButton.classList.add('expanded');
+                    // Increase circle sizes for this part
+                    this.querySelector('[id^="Ellipse_30-"]').setAttribute('r', '25.714');
+                    this.querySelector('[id^="Ellipse_29"]').setAttribute('r', '18.529');
 
-                    // Animate scroll to the button
                     targetButton.scrollIntoView({
                         behavior: 'smooth',
                         block: 'center'
