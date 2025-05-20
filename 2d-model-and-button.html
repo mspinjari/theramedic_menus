@@ -404,9 +404,9 @@
                 button.classList.remove('expanded');
             });
             // Reset all SVG circles to original size
-            document.querySelectorAll('[id^="Ellipse_30-"]').forEach(circle => {
-                circle.setAttribute('r', '20.714');
-            });
+            // document.querySelectorAll('[id^="Ellipse_30-"]').forEach(circle => {
+            //     circle.setAttribute('r', '20.714');
+            // });
             document.querySelectorAll('[id^="Ellipse_29"]').forEach(circle => {
                 circle.setAttribute('r', '8.529');
             });
@@ -419,7 +419,7 @@
 
                 // If this button is already expanded, collapse it
                 if (this.classList.contains('expanded')) {
-                    this.classList.remove('expanded');
+                    this.classList.remove('expanded');443
                     collapseAllButtons();
                     return;
                 }
@@ -434,8 +434,8 @@
                 const buttonId = this.id;
                 const svgPart = document.querySelector(`.body-part[data-target="${buttonId}"]`);
                 if (svgPart) {
-                    svgPart.querySelector('[id^="Ellipse_30-"]').setAttribute('r', '25.714');
-                    svgPart.querySelector('[id^="Ellipse_29"]').setAttribute('r', '18.529');
+                    // svgPart.querySelector('[id^="Ellipse_30-"]').setAttribute('r', '20.714');
+                    svgPart.querySelector('[id^="Ellipse_29"]').setAttribute('r', '15.529');
                 }
             });
         });
@@ -459,8 +459,8 @@
 
                     targetButton.classList.add('expanded');
                     // Increase circle sizes for this part
-                    this.querySelector('[id^="Ellipse_30-"]').setAttribute('r', '25.714');
-                    this.querySelector('[id^="Ellipse_29"]').setAttribute('r', '18.529');
+                    // this.querySelector('[id^="Ellipse_30-"]').setAttribute('r', '25.714');
+                    this.querySelector('[id^="Ellipse_29"]').setAttribute('r', '15.529');
 
                     targetButton.scrollIntoView({
                         behavior: 'smooth',
