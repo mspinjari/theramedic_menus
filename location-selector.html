@@ -1,0 +1,165 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        height: 100vh;
+    }
+
+    .sidebar {
+        background-color: #1a365d;
+        color: white;
+        width: 300px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .location-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .location-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .location-item.active {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .location-name {
+        font-size: 16px;
+        transition: color 0.3s ease;
+    }
+
+    .location-item.active .location-name {
+        color: #ff6b35;
+    }
+
+    .location-item:not(.active) .location-name {
+        color: white;
+    }
+
+    .arrow {
+        transition: all 0.5s ease;
+
+    }
+
+    .location-item.active .arrow {
+        color: #ff6b35;
+        transform: rotate(45deg);
+
+    }
+
+    .location-item:not(.active) .arrow {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .map-container {
+        flex-grow: 1;
+        position: relative;
+    }
+
+    #map {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Removed special case for Stafford since we now handle active styling dynamically */
+</style>
+
+<div class="sidebar">
+    <div class="location-item" data-location="Stafford, TX">
+        <span class="location-name stafford">Stafford, TX</span>
+        <span class="arrow">→</span>
+    </div>
+    <div class="location-item" data-location="Katy, TX">
+        <span class="location-name">Katy, TX</span>
+        <span class="arrow">→</span>
+    </div>
+    <div class="location-item" data-location="Spring, TX">
+        <span class="location-name">Spring, TX</span>
+        <span class="arrow">→</span>
+    </div>
+    <div class="location-item" data-location="Southfield, MI">
+        <span class="location-name">Southfield, MI</span>
+        <span class="arrow">→</span>
+    </div>
+</div>
+
+<div class="map-container">
+    <div id="map"></div>
+</div>
+
+<script>
+    // Initialize the map when Google Maps API loads
+    function initMap() {
+        // Default location (Southfield, MI)
+        const defaultLocation = { lat: 42.4733, lng: -83.2218 };
+
+        // Create the map centered on the default location
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 13,
+            center: defaultLocation,
+        });
+
+        // Define location coordinates
+        const locations = {
+            "Stafford, TX": { lat: 29.6163, lng: -95.5577 },
+            "Katy, TX": { lat: 29.7858, lng: -95.8244 },
+            "Spring, TX": { lat: 30.0799, lng: -95.4173 },
+            "Southfield, MI": { lat: 42.4733, lng: -83.2218 }
+        };
+
+        // Create markers for each location
+        const markers = {};
+
+        for (const [locationName, coords] of Object.entries(locations)) {
+            markers[locationName] = new google.maps.Marker({
+                position: coords,
+                map: null, // Don't show markers initially
+                title: locationName
+            });
+        }
+
+        // Add click event listeners to location items
+        const locationItems = document.querySelectorAll('.location-item');
+
+        locationItems.forEach(item => {
+            item.addEventListener('click', function () {
+                const locationName = this.getAttribute('data-location');
+                const coords = locations[locationName];
+
+                // Hide all markers
+                Object.values(markers).forEach(marker => marker.setMap(null));
+
+                // Show only the selected marker
+                markers[locationName].setMap(map);
+
+                // Center the map on the selected location
+                map.setCenter(coords);
+
+                // Update active class
+                locationItems.forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Trigger click on the first location
+        locationItems[0].click();
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap&v=weekly" defer></script>
