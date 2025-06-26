@@ -708,17 +708,22 @@ document.addEventListener("DOMContentLoaded", function () {
           {
             key: "hours",
             regex:
-              /^(?!.*\b(?:pain|ache|hurt|sore|stiff|discomfort|experience|treat)\b)(?:hour|time|open|close|when.*open|operating|business\s*hour)/i,
+              /^(?!.*\b(?:pain|ache|hurt|sore|stiff|discomfort|experience|treat)\b)(?:hour|time|open|close|when.*(?:open|close)|operating|business\s*hour|when\s+do\s+you\s+(?:open|close)|until\s+what\s+time|how\s+late|how\s+early)/i,
           },
           {
             key: "locations",
             regex:
-              /^(?!.*\b(?:pain|ache|hurt|sore|stiff|discomfort|experience|treat)\b)(?:location|address|where|direction|place|facility|clinic|(?:what|where|can\s*you\s*tell\s*me|could\s*you\s*tell\s*me|please\s*tell\s*me|give\s*me|share|provide)\s*(?:is|are|about)?\s*(?:the|your|office|clinic)?\s*(?:location|address|place|whereabout|where\s*you\s*(?:are|located)|where\s*(?:is|are)\s*you|where\s*to\s*find\s*you))/i,
+              /^(?!.*\b(?:pain|ache|hurt|sore|stiff|discomfort|experience|treat)\b)(?:location|address|where|direction|place|facility|clinic|(?:what|where|can\s*you\s*tell\s*me|could\s*you\s*tell\s*me|please\s*tell\s*me|give\s*me|share|provide)\s*(?:is|are|about)?\s*(?:the|your|office|clinic)?\s*(?:location|address|place|whereabout|where\s*you\s*(?:are|located)|where\s*(?:is|are)\s*you|where\s*to\s*find\s*you)|your\s+location|yours\s+location)/i,
           },
           {
             key: "treatmentPlan",
             regex:
               /^(?!.*\b(?:pain|ache|hurt|sore|stiff)\b)(?:(?:explain|tell\s*me\s*about|what\s*is|how\s*is|describe|give\s*me)\s*(?:the|your)?\s*(?:treatment|therapy|therapeutic)\s*(?:plan\s*(?:info|information|details)?|approach|process(?:\s*details)?|method|strategy)|(?:plan|method|strategy)\s*(?:for|of|to|info\s*on)\s*(?:therapy|treatment|rehab)|(?:rehab(?:ilitation)?\s*services?|therap(?:y|eutic)?\s*services?|service\s*offerings?|specialit(?:y|ies))|do\s*you\s*have\s*any\s*(?:plan|info)\??|(?:therapy|treatment)\s*plan\s*(?:info|information|details)|(?:info|information|details)\s*(?:on|about|of)\s*(?:the\s*)?(?:therapy|treatment)\s*plan|i\s*want\s*(?:to\s*see|know)\s*the\s*plan\s*info|what(?:['’]s|[\s\-]+is|[\s\-]+are)?\s*the\s*(?:plan|info)\s*for\s*(?:therapy|treatment)|(?:explain|describe)\s*the\s*plan\s*(?:info|details)|(?:therapy|therapeutic)\s*approach|approach\s*(?:to|for)\s*(?:therapy|treatment)|(?:what\s*are\s*the\s*(?:steps|methods|components))\s*(?:of\s*the\s*)?(?:treatment|therapy)\s*plan)/i,
+          },
+          {
+            key: "theramedic",
+            regex:
+              /^(?!.*\b(?:pain|ache|hurt|sore|stiff)\b).*\b(?:theramedic\s*rehab|theramedicrehab|theramedic|rehab|thera\s*rehab)\b/i,
           },
           {
             key: "generalServiceQuery",
@@ -785,7 +790,8 @@ document.addEventListener("DOMContentLoaded", function () {
               default: (key) =>
                 addBotMessage(FAQs[key]).then(() => {
                   showOptions([
-                    { text: "📅 Yes, schedule now", type: "appointment" },
+                    // { text: "📅 Yes, schedule now", type: "appointment" },
+                    { text: "📅 15 Min Free Consultation", type: "appointment" },
                     { text: "📞 I have more questions", type: "questions" },
                   ]);
                 }),
@@ -889,7 +895,8 @@ document.addEventListener("DOMContentLoaded", function () {
           ]).then(() => {
             showOptions([
               {
-                text: `📅 Schedule for ${data.display}`,
+                // text: `📅 Schedule for ${data.display}`,
+                text: `📅 15 Min Free Consultation`,
                 type: "appointment",
                 area: key,
               },
@@ -944,7 +951,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (service.details) {
           messages.push("We provide:");
-          messages.push(...service.details.map((detail) => `• ${detail}`));
+          messages.push(...service.details.map((detail) => `${detail}`));
         }
 
         if (service.duration) {
@@ -960,7 +967,8 @@ document.addEventListener("DOMContentLoaded", function () {
         addBotMessage(messages).then(() => {
           showOptions([
             {
-              text: `📅 Schedule ${service.name}`,
+              // text: `📅 Schedule ${service.name}`,
+              text: `📅 15 Min Free Consultation`,
               type: "appointment",
               service: serviceType,
             },
@@ -1173,22 +1181,21 @@ document.addEventListener("DOMContentLoaded", function () {
         "🎉 Appointment Request Received!",
         `Name: ${data.name}`,
         `Phone: ${data.phone}`,
-        `Email: ${
-          data.email.length > 20
-            ? data.email
-                .split("")
-                .reduce((acc, char, index) => {
-                  if (index > 0 && index % 20 === 0) {
-                    acc.push("\n       " + char);
-                  } else if (index === 0) {
-                    acc.push(char);
-                  } else {
-                    acc[acc.length - 1] += char;
-                  }
-                  return acc;
-                }, [])
-                .join("")
-            : data.email
+        `Email: ${data.email.length > 20
+          ? data.email
+            .split("")
+            .reduce((acc, char, index) => {
+              if (index > 0 && index % 20 === 0) {
+                acc.push("\n       " + char);
+              } else if (index === 0) {
+                acc.push(char);
+              } else {
+                acc[acc.length - 1] += char;
+              }
+              return acc;
+            }, [])
+            .join("")
+          : data.email
         }`,
         `Location: ${location.name}`,
       ];
@@ -1236,8 +1243,8 @@ document.addEventListener("DOMContentLoaded", function () {
       appointmentStage = null;
     }
 
-    // Handle random input with enhanced detection and Gemini API integration
-    function handleRandomInput(message) {
+     // Handle random input with enhanced detection and Gemini API integration
+     function handleRandomInput(message) {
       // Use the passed message instead of inputField.value
       const lowerMessage = message.toLowerCase();
       // API key for Google Gemini
@@ -1344,6 +1351,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // }
     }
 
+
     // Show response options as buttons
     function showOptions(options) {
       const optionsContainer = document.createElement("div");
@@ -1382,10 +1390,11 @@ document.addEventListener("DOMContentLoaded", function () {
             addBotMessage([
               "Our therapists are all licensed professionals with specialized training.",
               "Would you like to schedule a consultation with one of our experts?",
-              "15 mins free consultation",
+              // "15 mins free consultation",
             ]).then(() => {
               showOptions([
-                { text: "📅 Yes, schedule now", type: "appointment" },
+                // { text: "📅 Yes, schedule now", type: "appointment" },
+                { text: "📅 15 Min Free Consultation", type: "appointment" },
                 { text: "📞 I have more questions", type: "questions" },
               ]);
             });
@@ -1606,6 +1615,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
           });
           break;
+
 
         case "back_to_main":
           showTypingIndicator().then(() => {

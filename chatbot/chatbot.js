@@ -708,17 +708,22 @@ document.addEventListener("DOMContentLoaded", function () {
           {
             key: "hours",
             regex:
-              /^(?!.*\b(?:pain|ache|hurt|sore|stiff|discomfort|experience|treat)\b)(?:hour|time|open|close|when.*open|operating|business\s*hour)/i,
+              /^(?!.*\b(?:pain|ache|hurt|sore|stiff|discomfort|experience|treat)\b)(?:hour|time|open|close|when.*(?:open|close)|operating|business\s*hour|when\s+do\s+you\s+(?:open|close)|until\s+what\s+time|how\s+late|how\s+early)/i,
           },
           {
             key: "locations",
             regex:
-              /^(?!.*\b(?:pain|ache|hurt|sore|stiff|discomfort|experience|treat)\b)(?:location|address|where|direction|place|facility|clinic|(?:what|where|can\s*you\s*tell\s*me|could\s*you\s*tell\s*me|please\s*tell\s*me|give\s*me|share|provide)\s*(?:is|are|about)?\s*(?:the|your|office|clinic)?\s*(?:location|address|place|whereabout|where\s*you\s*(?:are|located)|where\s*(?:is|are)\s*you|where\s*to\s*find\s*you))/i,
+              /^(?!.*\b(?:pain|ache|hurt|sore|stiff|discomfort|experience|treat)\b)(?:location|address|where|direction|place|facility|clinic|(?:what|where|can\s*you\s*tell\s*me|could\s*you\s*tell\s*me|please\s*tell\s*me|give\s*me|share|provide)\s*(?:is|are|about)?\s*(?:the|your|office|clinic)?\s*(?:location|address|place|whereabout|where\s*you\s*(?:are|located)|where\s*(?:is|are)\s*you|where\s*to\s*find\s*you)|your\s+location|yours\s+location)/i,
           },
           {
             key: "treatmentPlan",
             regex:
               /^(?!.*\b(?:pain|ache|hurt|sore|stiff)\b)(?:(?:explain|tell\s*me\s*about|what\s*is|how\s*is|describe|give\s*me)\s*(?:the|your)?\s*(?:treatment|therapy|therapeutic)\s*(?:plan\s*(?:info|information|details)?|approach|process(?:\s*details)?|method|strategy)|(?:plan|method|strategy)\s*(?:for|of|to|info\s*on)\s*(?:therapy|treatment|rehab)|(?:rehab(?:ilitation)?\s*services?|therap(?:y|eutic)?\s*services?|service\s*offerings?|specialit(?:y|ies))|do\s*you\s*have\s*any\s*(?:plan|info)\??|(?:therapy|treatment)\s*plan\s*(?:info|information|details)|(?:info|information|details)\s*(?:on|about|of)\s*(?:the\s*)?(?:therapy|treatment)\s*plan|i\s*want\s*(?:to\s*see|know)\s*the\s*plan\s*info|what(?:['’]s|[\s\-]+is|[\s\-]+are)?\s*the\s*(?:plan|info)\s*for\s*(?:therapy|treatment)|(?:explain|describe)\s*the\s*plan\s*(?:info|details)|(?:therapy|therapeutic)\s*approach|approach\s*(?:to|for)\s*(?:therapy|treatment)|(?:what\s*are\s*the\s*(?:steps|methods|components))\s*(?:of\s*the\s*)?(?:treatment|therapy)\s*plan)/i,
+          },
+          {
+            key: "theramedic",
+            regex:
+              /^(?!.*\b(?:pain|ache|hurt|sore|stiff)\b).*\b(?:theramedic\s*rehab|theramedicrehab|theramedic|rehab|thera\s*rehab)\b/i,
           },
           {
             key: "generalServiceQuery",
@@ -763,6 +768,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Define handler map for different FAQ types
             const faqHandlers = {
+              // theramedic: () => addBotMessage(FAQs.theramedic),
               hours: () => addBotMessage(FAQs.hours),
               generalServiceQuery: () =>
                 addBotMessage(FAQs.generalServiceQuery).then(() =>
@@ -785,7 +791,11 @@ document.addEventListener("DOMContentLoaded", function () {
               default: (key) =>
                 addBotMessage(FAQs[key]).then(() => {
                   showOptions([
-                    { text: "📅 Yes, schedule now", type: "appointment" },
+                    // { text: "📅 Yes, schedule now", type: "appointment" },
+                    {
+                      text: "📅 15 Min Free Consultation",
+                      type: "appointment",
+                    },
                     { text: "📞 I have more questions", type: "questions" },
                   ]);
                 }),
@@ -889,7 +899,8 @@ document.addEventListener("DOMContentLoaded", function () {
           ]).then(() => {
             showOptions([
               {
-                text: `📅 Schedule for ${data.display}`,
+                // text: `📅 Schedule for ${data.display}`,
+                text: `📅 15 Min Free Consultation`,
                 type: "appointment",
                 area: key,
               },
@@ -944,7 +955,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (service.details) {
           messages.push("We provide:");
-          messages.push(...service.details.map((detail) => `• ${detail}`));
+          messages.push(...service.details.map((detail) => `${detail}`));
         }
 
         if (service.duration) {
@@ -960,7 +971,8 @@ document.addEventListener("DOMContentLoaded", function () {
         addBotMessage(messages).then(() => {
           showOptions([
             {
-              text: `📅 Schedule ${service.name}`,
+              // text: `📅 Schedule ${service.name}`,
+              text: `📅 15 Min Free Consultation`,
               type: "appointment",
               service: serviceType,
             },
@@ -1236,112 +1248,38 @@ document.addEventListener("DOMContentLoaded", function () {
       appointmentStage = null;
     }
 
-    // Handle random input with enhanced detection and Gemini API integration
+    // Handle random input with enhanced detection
     function handleRandomInput(message) {
+      // Add message parameter
       // Use the passed message instead of inputField.value
       const lowerMessage = message.toLowerCase();
-      // API key for Google Gemini
-      const API_KEY = "AIzaSyBDlTN4Bf4Nw_9DE4jtqavsCwFqlESP74M";
-      const API_URL =
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
 
-      // const greetings = [
-      //   /\b(?:h(?:i|ello|ey)|good\s*(?:morning|afternoon|evening))\b/i,
-      //   /\b(?:help|assist(?:ance)?)\b/i,
-      //   /\b(?:what\s*(?:can|do)\s*you\s*(?:do|for)|your\s*purpose)\b/i,
-      // ];
+      const greetings = [
+        /\b(?:h(?:i|ello|ey)|good\s*(?:morning|afternoon|evening))\b/i,
+        /\b(?:help|assist(?:ance)?)\b/i,
+        /\b(?:what\s*(?:can|do)\s*you\s*(?:do|for)|your\s*purpose)\b/i,
+      ];
 
-      // if (greetings.some((pattern) => pattern.test(lowerMessage))) {
-      //   addBotMessage("👋 Hello! How can I help you today?").then(() => {
-      //     showOptions(BUTTON_OPTIONS.main);
-      //   });
-      // } else if (
-      //   lowerMessage.includes("thanks") ||
-      //   lowerMessage.includes("thank you")
-      // ) {
-      //   addBotMessage(
-      //     "You're welcome! Is there anything else I can help you with today?"
-      //   );
-      // } else {
-      // Show typing indicator
-      showTypingIndicator();
-
-      // Direct call to Gemini API
-      fetch(`${API_URL}?key=${API_KEY}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              // parts: [{
-              //   text: `As a physical therapy assistant, answer this question professionally: ${message}
-              //   Focus only on physical therapy information and avoid any diagnosis.
-              //   If unsure, suggest contacting the clinic for personalized advice. Your responses should be in 50 to 80 words maximum. Also,
-              //   reply in the same language that you received the message.`
-              // }]
-
-              parts: [
-                {
-                  text: `As a Theramedic Rehab physical therapy assistant, answer this question professionally: ${message}
-            Focus only on physical therapy information and avoid any diagnosis.
-            If unsure, suggest contacting the clinic and fill the form for personalized advice. Your responses should be in 40 to words maximum.`,
-                },
-              ],
-            },
-          ],
-          generationConfig: {
-            temperature: 0.1,
-            topP: 0.2,
-            topK: 20,
-            maxOutputTokens: 300,
-          },
-        }),
-      })
-        .then((response) => response.json())
-
-        .then((data) => {
-          if (data.error) {
-            console.error("API Error:", data.error);
-            addBotMessage(
-              "I'm sorry, I'm having trouble connecting to my knowledge system. Please try again later or contact our clinic directly at " +
-                ptInfo.contact.phone
-            );
-            return;
-          }
-
-          if (
-            data.candidates &&
-            data.candidates[0] &&
-            data.candidates[0].content &&
-            data.candidates[0].content.parts &&
-            data.candidates[0].content.parts[0]
-          ) {
-            const aiResponse = data.candidates[0].content.parts[0].text;
-            // addBotMessage(aiResponse)
-
-            addBotMessage(aiResponse)
-            .then(() => new Promise((resolve) => setTimeout(resolve, 500)))
-            .then(() => startAppointmentScheduling());
-            
-          } else {
-            console.error("Unexpected API response structure:", data);
-            addBotMessage(
-              "I'm sorry, I couldn't process your question. Please contact our clinic for assistance."
-            );
-          }
-        })
-        
-        .catch((error) => {
-          console.error("Error:", error);
-
-          addBotMessage([
-            "I'm having trouble processing your request. Please fill out the below form, and our team will get back to you soon!",
-          ]);
+      if (greetings.some((pattern) => pattern.test(lowerMessage))) {
+        addBotMessage("👋 Hello! How can I help you today?").then(() => {
+          showOptions(BUTTON_OPTIONS.main);
+        });
+      } else if (
+        lowerMessage.includes("thanks") ||
+        lowerMessage.includes("thank you")
+      ) {
+        addBotMessage(
+          "You're welcome! Is there anything else I can help you with today?"
+        );
+      } else {
+        // Default response with helpful options
+        addBotMessage([
+          "I didn't quite get that. Please fill out the below form, our team will get back to you soon!",
+        ]).then(() => {
+          // showOptions(BUTTON_OPTIONS.main);
           startAppointmentScheduling();
         });
-      // }
+      }
     }
 
     // Show response options as buttons
@@ -1382,10 +1320,11 @@ document.addEventListener("DOMContentLoaded", function () {
             addBotMessage([
               "Our therapists are all licensed professionals with specialized training.",
               "Would you like to schedule a consultation with one of our experts?",
-              "15 mins free consultation",
+              // "15 mins free consultation",
             ]).then(() => {
               showOptions([
-                { text: "📅 Yes, schedule now", type: "appointment" },
+                // { text: "📅 Yes, schedule now", type: "appointment" },
+                { text: "📅 15 Min Free Consultation", type: "appointment" },
                 { text: "📞 I have more questions", type: "questions" },
               ]);
             });

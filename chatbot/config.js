@@ -360,7 +360,9 @@ export const FAQs = {
   generalServiceQuery: [
     "We offer a variety of therapy services and recovery programs tailored to different needs. Our team can guide you to the most suitable option based on your condition and goals.",
   ],
-  
+  theramedic: [
+    "At Theramedic Rehab we are committed to providing top-quality physical therapy services to our patients. Our team of professionals takes their time to understand and target the source of your pain and ensuring a speedy recovery. To schedule a consultation with one of our experts please share your information via the form below our team will contact you shortly.",
+  ],
 };
 
 export const SPELLING_CORRECTIONS = {
