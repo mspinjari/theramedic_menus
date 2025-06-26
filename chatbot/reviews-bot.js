@@ -140,15 +140,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const platforms = {
                 google: {
-                    icon: 'http://zystamatic-com.stackstaging.com/theramedicrehab/wp-content/uploads/2025/03/google.png',
+                    icon: 'https://theramedic.theramedicrehab.com/wp-content/uploads/2025/03/google.png',
                     text: 'Google Review'
                 },
                 yelp: {
-                    icon: 'http://zystamatic-com.stackstaging.com/theramedicrehab/wp-content/uploads/2025/03/yelp.png',
+                    icon: 'https://theramedic.theramedicrehab.com/wp-content/uploads/2025/03/yelp.png',
                     text: 'Yelp Review'
                 },
                 facebook: {
-                    icon: 'http://zystamatic-com.stackstaging.com/theramedicrehab/wp-content/uploads/2025/03/facebook.png',
+                    icon: 'https://theramedic.theramedicrehab.com/wp-content/uploads/2025/03/facebook.png',
                     text: 'Facebook Review'
                 }
             };
