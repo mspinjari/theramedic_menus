@@ -1,0 +1,1541 @@
+<style>
+  :root {
+    --primary-color: #ff6e31;
+    --blue-color: #1d3559;
+    --white-color: #ffffff;
+    --light-gray: #adadad;
+  }
+  .header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    /* background: var(--white-color); */
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 500;
+    border-radius: 100px;
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+  }
+
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo img {
+    height: 60px;
+  }
+
+  .nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .icon-btn {
+    width: 30px;
+    height: 30px;
+    padding: 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.5s ease;
+  }
+
+  .icon-btn.location {
+    background-color: var(--white-color);
+    color: var(--blue-color);
+    border: 1px solid var(--blue-color);
+    font-size: 12px;
+  }
+
+  .icon-btn.location:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: 1px solid var(--white-color);
+  }
+
+  .pay-btn {
+    background-color: var(--blue-color);
+    color: var(--white-color) !important;
+    border: none;
+    border-radius: 25px;
+    padding: 8px 15px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    font-size: 12px;
+  }
+
+  .pay-btn:hover {
+    background-color: #152a48;
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 25px;
+    height: 20px;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  .hamburger span {
+    width: 100%;
+    height: 3px;
+    background-color: var(--blue-color);
+    transition: all 0.5s ease;
+  }
+
+  .book-btn {
+    display: inline-block;
+    background-color: var(--blue-color);
+    color: var(--white-color);
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.5s ease;
+  }
+
+  .book-btn:hover {
+    background-color: var(--primary-color);
+  }
+
+  .navigation {
+    padding: 20px 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* padding: 0px 20px; */
+  }
+
+  .nav-item {
+    position: relative;
+  }
+
+  .nav-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 20px;
+    /* border-bottom: 1px solid #eee; */
+  }
+
+  .dropdown-toggle {
+    display: flex;
+    align-items: center;
+  }
+
+  .dropdown-toggle i {
+    margin-left: 10px;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .dropdown-menu {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 40px;
+    background-color: var(--blue-color);
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+
+    /* margin-right: 5px; */
+  }
+
+  .dropdown-menu.active {
+    overflow: hidden;
+    background-color: #112850;
+    max-height: 1500px;
+    /* Adjust based on your content */
+    padding: 20px 40px;
+    opacity: 1;
+    /* -webkit-overflow-scrolling: touch; */
+    margin-top: 10px;
+  }
+
+  /* Scrollbar track */
+  /* .dropdown-menu::-webkit-scrollbar-track {
+             background-color: #F5F5F5;
+             border-radius: 26px;
+             margin: 2px 0;
+         } */
+
+  /* Scrollbar itself */
+  /* Slightly wider width for better touch target */
+  /* .dropdown-menu::-webkit-scrollbar {
+             width: 8px;
+             background-color: transparent;
+             -webkit-appearance: none;
+         } */
+
+  /* Scrollbar thumb */
+  /* Creates padding effect border*/
+  /* .dropdown-menu::-webkit-scrollbar-thumb {
+             background-color: #203861;
+             border-radius: 26px;
+             border: 2px solid #F5F5F5;
+         } */
+
+  .dropdown-link {
+    color: var(--white-color);
+    text-decoration: none;
+    display: block;
+    padding: 10px 0;
+    font-size: 16px;
+  }
+
+  .nested-dropdown.toggle-active .nested-dropdown-toggle {
+    color: var(--primary-color);
+  }
+
+  .toggle-active .dropdown-toggle i.fa-chevron-down {
+    /* content: "\f077"; */
+    /* fa chevron down */
+    transform: rotate(-180deg);
+    color: var(--primary-color);
+  }
+
+  .toggle-active .dropdown-toggle {
+    color: var(--primary-color);
+    /* border-bottom: 1px solid var(--primary-color); */
+  }
+
+  .toggle-active .dropdown-toggle {
+    color: var(--primary-color);
+  }
+
+  .social-links {
+    display: flex;
+    gap: 15px;
+    margin: 40px 20px;
+  }
+
+  .social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--white-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white-color);
+    text-decoration: none;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .social-icon:hover {
+    background-color: var(--blue-color);
+    color: var(--primary-color);
+  }
+
+  .locations {
+    margin-top: 40px;
+    margin-left: 20px;
+  }
+
+  .locations h4 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-weight: 500;
+  }
+
+  .location-links {
+    display: flex;
+    flex-wrap: wrap;
+    /* gap: 15px; */
+    margin-top: 20px;
+    justify-content: space-between;
+    padding-right: 30px;
+  }
+
+  .location-link {
+    color: var(--white-color);
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  /* Mobile menu */
+  .mobile-menu {
+    position: fixed;
+    /* top: -100%; */
+    bottom: -120%;
+    right: 0;
+    width: 100%;
+    /* max-width: 400px; */
+    height: 100vh;
+    background-color: var(--blue-color);
+    padding: 110px 20px 100px;
+    overflow-y: auto;
+    /* transition: top 1s ease; */
+    /* transition: bottom 1s ease; */
+    transition: all 0.7s cubic-bezier(0.25, 1, 0.25, 1);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    z-index: 20;
+  }
+
+  .mobile-menu.active {
+    /* top: 0%; */
+    /* padding: 150px 20px 100px; */
+    bottom: -5%;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    top: 100%;
+    width: 100%;
+    height: 100%;
+    background-color: #1d3559e5;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in, all 0.6s ease-out;
+  }
+
+  .overlay.active {
+    top: 0;
+    animation-delay: 500ms;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+  }
+
+  .close-btn:before,
+  .close-btn:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: var(--blue-color);
+    top: 50%;
+    left: 0;
+  }
+
+  .close-btn:before {
+    transform: rotate(45deg);
+  }
+
+  .close-btn:after {
+    transform: rotate(-45deg);
+  }
+
+  /* Hamburger animation */
+  .hamburger.active span:nth-child(1) {
+    transform: translateY(8.5px) rotate(45deg);
+  }
+
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active span:nth-child(3) {
+    transform: translateY(-8.5px) rotate(-45deg);
+  }
+
+  /* Desktop styles */
+  @media (min-width: 1024px) {
+    .mobile-only {
+      display: none;
+    }
+
+    .desktop-only {
+      display: block;
+    }
+
+    .hamburger {
+      display: none;
+    }
+
+    .mobile-menu {
+      display: none;
+    }
+
+    .navbar {
+      padding: 10px 5%;
+    }
+
+    .nav-buttons {
+      gap: 15px;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 5%;
+    }
+
+    .nav-links {
+      flex-direction: row;
+      gap: 30px;
+    }
+
+    .nav-link {
+      border-bottom: none;
+      padding: 20px 0;
+    }
+
+    .social-links {
+      margin: 0;
+    }
+
+    .locations {
+      margin-top: 0;
+    }
+
+    .hamburger,
+    .mobile-menu,
+    .overlay {
+      display: none;
+    }
+
+    .desktop-navigation {
+      display: block;
+    }
+  }
+
+  /* Mobile styles */
+  @media (max-width: 1024px) {
+    .desktop-only {
+      display: none !important;
+    }
+
+    .header {
+      background-color: var(--white-color);
+      border-radius: 0;
+    }
+
+    .hamburger {
+      display: flex;
+    }
+
+    .navigation {
+      display: none;
+    }
+
+    .book-btn {
+      padding: 8px 20px;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+
+    .desktop-navigation {
+      display: none;
+    }
+  }
+
+  /* Desktop Navigation Styles */
+  .desktop-navigation {
+    /* display: none; */
+    /* background: var(--white-color); */
+    padding: 0px 5%;
+    /* border-top: 1px solid #eee; */
+  }
+
+  .desktop-nav-links {
+    display: flex;
+    list-style: none;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .desktop-nav-links > li > a {
+    color: var(--blue-color);
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    /* gap: 5px; */
+    padding: 15px 0;
+  }
+
+  .desktop-dropdown {
+    position: relative;
+    display: inline-block;
+    /* padding:  20px 0px 0px 0px; */
+  }
+
+  .desktop-dropdown:hover > a {
+    color: var(--primary-color);
+  }
+
+  /* Add these styles to create the mega menu effect */
+
+  /* Update the desktop dropdown menu styles */
+  .desktop-dropdown-menu {
+    position: fixed;
+    left: 0;
+    background: #112850f1;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 1240px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* opacity: 0; */
+    display: none;
+    visibility: hidden;
+    transform: translateY(-50px);
+    transition: all 0.5s ease-in-out;
+    z-index: 1000;
+    border-radius: 10px;
+    margin: 0px auto;
+    /* right: 0; */
+  }
+
+  /* Ensure proper centering and positioning of the mega menu */
+  .desktop-nav-links {
+    position: relative;
+    /* padding:  10px 0px 0px 0px; */
+  }
+
+  /* Style for the mega menu columns */
+  .mega-menu-column a {
+    color: var(--white-color);
+    text-decoration: none;
+    padding: 10px 0;
+    display: block;
+    font-size: 14px;
+    transition: all 0.5s;
+    border-left: 3px solid transparent;
+    /* width: 25%; */
+  }
+
+  .mega-menu-column a:hover {
+    color: var(--primary-color);
+    /* padding-left: 10px; */
+    /* border-left: 3px solid var(--primary-color); */
+  }
+
+  /* Ensure the mega menu container has proper spacing */
+  .mega-menu-container {
+    /* margin: 0 auto; */
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1240px;
+    display: flex;
+    padding: 50px 50px 0px 50px;
+  }
+
+  .desktop-dropdown:hover::after {
+    content: "";
+    position: absolute;
+    top: 40px;
+    left: 30%;
+    width: 0;
+    height: 0;
+    border-left: 17px solid transparent;
+    border-right: 17px solid transparent;
+    border-top: 17px solid var(--blue-color);
+    transform: rotate(180deg);
+  }
+
+  /* .mega-menu-container::after {
+             content: '';
+             position: absolute;
+             top: -16px;
+             left: 45%;
+             width: 0;
+             height: 0;
+             border-left: 17px solid transparent;
+             border-right: 17px solid transparent;
+             border-top: 17px solid var(--blue-color);
+             transform: rotate(180deg);
+         } */
+
+  .mega-menu-container-2 {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0px 0px 50px 0px;
+    margin: 0px;
+  }
+
+  /* Make sure dropdown hovers still work */
+  .desktop-dropdown:hover .desktop-dropdown-menu {
+    /* opacity: 1; */
+    display: block;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nested-dropdown {
+    position: relative;
+    /* color: var(--white-color); */
+  }
+
+  .nested-dropdown-toggle {
+    display: flex !important;
+    justify-content: left;
+    align-items: center;
+  }
+
+  .nested-dropdown.toggle-active {
+    color: var(--primary-color);
+    /* border-top: 2px solid var(--primary-color); */
+  }
+
+  .nested-dropdown-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+    padding-left: 30px;
+    opacity: 0;
+    background-color: #071c3f;
+  }
+
+  .nested-dropdown-menu.active {
+    opacity: 1;
+    max-height: 200px;
+    padding: 10px 20px 10px 30px;
+  }
+
+  .nested-dropdown.toggle-active .fa-chevron-down {
+    /* content: "\f077"; */
+    transform: rotate(-180deg);
+    color: var(--primary-color);
+    transition: transform 0.5s ease-in-out;
+  }
+
+  /* Add these styles to your existing CSS */
+  .desktop-nested-dropdown {
+    position: relative;
+    text-align: left;
+  }
+
+  .desktop-nested-dropdown:hover > a {
+    color: var(--primary-color);
+  }
+
+  .desktop-nested-toggle {
+    display: flex !important;
+    justify-content: left;
+    align-items: center;
+    /* text-align: center; */
+  }
+
+  .desktop-nested-menu {
+    display: none;
+    /* justify-content: space-between; */
+    /* display: flex; */
+    flex-direction: column;
+    width: 100%;
+    color: var(--white-color);
+    transition: all 0.5s ease-in-out;
+  }
+
+  .desktop-nested-menu div:nth-child(1) {
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    border-top: 2px solid var(--light-gray);
+  }
+
+  .desktop-nested-menu div:nth-child(1) h5 {
+    color: var(--light-gray);
+    font-weight: 500;
+    padding: 30px 0px 00px 0px;
+  }
+
+  .desktop-nested-menu div:nth-child(2) {
+    padding: 20px 200px 0px 00px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  .desktop-nested-menu.active {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  .desktop-nested-toggle.active {
+    color: var(--primary-color);
+  }
+
+  .desktop-nested-menu a {
+    color: var(--white-color);
+    text-decoration: none;
+  }
+
+  .desktop-nested-menu a:hover {
+    color: var(--primary-color);
+  }
+</style>
+<header class="header">
+  <div class="navbar">
+    <a href="#" class="logo">
+      <img
+        src="/wp-content/uploads/2025/02/WEBP_Theramedic-Logo-2025-scaled.webp"
+        alt="Theramedic Rehab"
+      />
+    </a>
+    <nav class="desktop-navigation">
+      <ul class="desktop-nav-links">
+        <!-- <li><a href="#">Home</a></li> -->
+        <!-- <li><a href="#">About Us</a></li> -->
+        <li class="desktop-dropdown">
+          <a href="/about-us/">About Us</a>
+          <div class="desktop-dropdown-menu">
+            <div class="mega-menu-container" style="padding-bottom: 30px">
+              <div class="mega-menu-column">
+                <a href="/about-us/">
+                  <h3 style="margin-bottom: 20px; font-size: 16px">About Us</h3>
+                </a>
+              </div>
+              <div class="mega-menu-column">
+                <a href="/about-us/careers/">
+                  <h3 style="margin-bottom: 20px; font-size: 16px">Careers</h3>
+                </a>
+              </div>
+              <div class="mega-menu-column">
+                <a href="/blogs/">
+                  <h3 style="margin-bottom: 20px; font-size: 16px">Blogs</h3>
+                </a>
+              </div>
+              <div class="mega-menu-column">
+                <a href="/about-us/contact-us/">
+                  <h3 style="margin-bottom: 20px; font-size: 16px">
+                    Contact Us
+                  </h3>
+                </a>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="desktop-dropdown">
+          <a href="#">Services</a>
+          <div class="desktop-dropdown-menu">
+            <div class="mega-menu-container">
+              <div class="mega-menu-column">
+                <a href="/therapy-services/">
+                  <h3
+                    style="
+                      color: var(--primary-color);
+                      margin-bottom: 20px;
+                      font-size: 16px;
+                      text-decoration: underline;
+                    "
+                  >
+                    Therapy Services
+                  </h3>
+                </a>
+                <ul style="list-style: none; padding: 0">
+                  <li class="desktop-nested-dropdown">
+                    <a
+                      href="#"
+                      class="desktop-nested-toggle"
+                      id="sub-menus-items-1"
+                    >
+                      Physical Therapy&nbsp;&nbsp;
+                      <i class="fas fa-chevron-down"></i>
+                    </a>
+                  </li>
+                  <li class="desktop-nested-dropdown">
+                    <a
+                      href="#"
+                      class="desktop-nested-toggle"
+                      id="sub-menus-items-2"
+                    >
+                      Aquatic Therapy&nbsp;&nbsp;
+                      <i class="fas fa-chevron-down"></i>
+                    </a>
+                  </li>
+
+                  <li class="desktop-nested-dropdown">
+                    <a
+                      href="#"
+                      class="desktop-nested-toggle"
+                      id="sub-menus-items-3"
+                    >
+                      Pediatric Therapy&nbsp;&nbsp;
+                      <i class="fas fa-chevron-down"></i>
+                    </a>
+                  </li>
+
+                  <li class="desktop-nested-dropdown">
+                    <a
+                      href="#"
+                      class="desktop-nested-toggle"
+                      id="sub-menus-items-4"
+                    >
+                      Tele-Rehab&nbsp;&nbsp;
+                      <i class="fas fa-chevron-down"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="mega-menu-column">
+                <a href="/rehab-solutions/">
+                  <h3
+                    style="
+                      color: var(--primary-color);
+                      margin-bottom: 20px;
+                      font-size: 16px;
+                      text-decoration: underline;
+                    "
+                  >
+                    Rehab Solutions
+                  </h3>
+                </a>
+                <ul style="list-style: none; padding: 0">
+                  <li><a href="/auto-injury/">Auto Injury Rehab</a></li>
+                  <li><a href="/work-injury/">Work Injury</a></li>
+                  <li><a href="/sports-injury/">Sports Injury</a></li>
+                  <li><a href="/traumatic-brain-injury/">Traumatic Brain Injury</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu-column" style="margin-left: -75px">
+                <h3
+                  style="
+                    color: var(--primary-color);
+                    margin-bottom: 40px;
+                    font-size: 16px;
+                  "
+                >
+                  &nbsp;
+                </h3>
+
+                <ul style="list-style: none; padding: 0">
+                  <li><a href="/vestibular-rehab/">Vestibular Rehab</a></li>
+                  <li><a href="/fce/">FCE</a></li>
+                  <li><a href="/stroke-rehab/">Stroke Rehab</a></li>
+                  <li><a href="/cognitive-rehab/">Cognitive Rehab</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu-column">
+                <a href="/recovery-programs/">
+                  <h3
+                    style="
+                      color: var(--primary-color);
+                      margin-bottom: 20px;
+                      font-size: 16px;
+                      text-decoration: underline;
+                    "
+                  >
+                    Recovery Programs
+                  </h3>
+                </a>
+                <ul style="list-style: none; padding: 0">
+                  <li><a href="/dry-needling/">Dry Needling Therapy</a></li>
+                  <li><a href="/cupping-therapy/">Cupping Therapy</a></li>
+                  <li><a href="/paraffin-wax-therapy/">Paraffin Wax Therapy</a></li>
+                  <li><a href="/normatec-compression-therapy/">Normatech Compression Therapy</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mega-menu-container">
+              <div class="mega-menu-container-2">
+                <div
+                  class="desktop-nested-menu sub-menus-items"
+                  id="sub-menus-items-1"
+                >
+                  <div>
+                    <a href="/physical-therapy/"><h5>Physical Therapy</h5></a>
+                  </div>
+
+                  <div>
+                    <a href="#">1Back Pain</a>
+                    <a href="#">Joint Pain</a>
+                    <a href="#">knee Pain</a>
+                    <a href="#">elbow Pain</a>
+                  </div>
+                </div>
+
+                <div
+                  class="desktop-nested-menu sub-menus-items"
+                  id="sub-menus-items-2"
+                >
+                  <div>
+                    <a href="/aquatic-therapy/"><h5>Aquatic Therapy</h5></a>
+                  </div>
+
+                  <div>
+                    <a href="#">2Back Pain</a>
+                    <a href="#">Joint Pain</a>
+                    <a href="#">knee Pain</a>
+                    <a href="#">elbow Pain</a>
+                  </div>
+                </div>
+
+                <div
+                  class="desktop-nested-menu sub-menus-items"
+                  id="sub-menus-items-3"
+                >
+                  <div>
+                    <a href="/pediatric-therapy/"> <h5>Pediatric Therapy</h5></a>
+                  </div>
+
+                  <div>
+                    <a href="#">3Back Pain</a>
+                    <a href="#">Joint Pain</a>
+                    <a href="#">knee Pain</a>
+                    <a href="#">elbow Pain</a>
+                  </div>
+                </div>
+
+                <div
+                  class="desktop-nested-menu sub-menus-items"
+                  id="sub-menus-items-4"
+                >
+                  <div>
+                    <a href="/tele-rehab/"><h5>Tele - Rehab</h5></a>
+                  </div>
+
+                  <div>
+                    <a href="#">4Back Pain</a>
+                    <a href="#">Joint Pain</a>
+                    <a href="#">knee Pain</a>
+                    <a href="#">elbow Pain</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="desktop-dropdown">
+          <a href="#">Pain Area</a>
+          <div class="desktop-dropdown-menu">
+            <div class="mega-menu-container" style="padding-bottom: 80px">
+              <div class="mega-menu-column">
+                <h3
+                  style="
+                    color: var(--primary-color);
+                    margin-bottom: 40px;
+                    font-size: 16px;
+                  "
+                >
+                  Area of Pain
+                </h3>
+
+                <ul style="list-style: none; padding: 0">
+                  <li><a href="/head-pain/">Head Pain</a></li>
+                  <li><a href="/neck-pain/">Neck Pain</a></li>
+                  <li><a href="/back-pain/">Back Pain</a></li>
+                  <li><a href="/shoulder-pain/">Shoulder Pain</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu-column">
+                <h3
+                  style="
+                    color: var(--primary-color);
+                    margin-bottom: 40px;
+                    font-size: 16px;
+                  "
+                >
+                  &nbsp;
+                </h3>
+
+                <ul style="list-style: none; padding: 0">
+                  <li><a href="/elbow-pain/">Elbow Pain</a></li>
+                  <li><a href="/hip-pain/">Hip Pain</a></li>
+                  <li><a href="/pelvic-floor-pain/">Pelvic Floor</a></li>
+                  <li><a href="/hand-wrist-pain/">Hand/Wrist Pain</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu-column">
+                <h3
+                  style="
+                    color: var(--primary-color);
+                    margin-bottom: 40px;
+                    font-size: 16px;
+                  "
+                >
+                  &nbsp;
+                </h3>
+
+                <ul style="list-style: none; padding: 0">
+                  <li><a href="/knee-pain/">Knee Pain</a></li>
+                  <li><a href="/foot-ankle-pain/">Foot/Ankle Pain</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu-column" style="width: 30%">
+                <h3
+                  style="
+                    color: var(--primary-color);
+                    margin-bottom: 40px;
+                    font-size: 16px;
+                  "
+                >
+                  &nbsp;
+                </h3>
+
+                <p style="color: var(--light-gray)">
+                  Every pain has a place — let us know where yours is by
+                  selecting from the list of body parts. This helps us
+                  understand your symptoms and create a care plan just for you.
+                </p>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="desktop-dropdown">
+          <a href="#">Patient Center</a>
+          <div class="desktop-dropdown-menu">
+            <div class="mega-menu-container" style="padding-bottom: 30px">
+              <div class="mega-menu-column">
+                <a href="#">
+                  <h3 style="margin-bottom: 20px; font-size: 16px">
+                    Patient Center
+                  </h3>
+                </a>
+                <a href="/theramedicrehab/about-us/contact-us/">
+                  <h3 style="margin-bottom: 20px; font-size: 16px">
+                    Book Appointment
+                  </h3>
+                </a>
+              </div>
+              <div class="mega-menu-column">
+                <a href="#">
+                  <h3 style="margin-bottom: 20px; font-size: 16px">
+                    Insurance Information
+                  </h3>
+                </a>
+                <a href="/about-us/our-locations/">
+                  <h3 style="margin-bottom: 20px; font-size: 16px">
+                    Locations
+                  </h3>
+                </a>
+              </div>
+              <div class="mega-menu-column">
+                <a href="#">
+                  <h3 style="margin-bottom: 20px; font-size: 16px">
+                    Refer-a-Friend
+                  </h3>
+                </a>
+              </div>
+              <div class="mega-menu-column">
+                <a href="/about-us/leave-a-review/">
+                  <h3 style="margin-bottom: 20px; font-size: 16px">
+                    Leave a Review
+                  </h3>
+                </a>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <a href="#" style="color: var(--e-global-color-secondary)">More</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="nav-buttons">
+      <!-- <a href="#" class="book-btn elementor-animation-bob desktop-only">Book
+                     Appointment</a> -->
+      <div
+        class="elementor-element elementor-element-7ae2e86 elementor-widget elementor-widget-button desktop-only"
+        data-id="7ae2e86"
+        data-element_type="widget"
+        data-widget_type="button.default"
+      >
+        <a
+          class="elementor-button elementor-button-link elementor-size-sm elementor-animation-bob"
+          href="https://www.theramedicrehab.com/paytx/"
+        >
+          <span class="elementor-button-content-wrapper">
+            <span class="elementor-button-text">Book Appointment</span>
+          </span>
+        </a>
+      </div>
+      <div class="icon-btn location elementor-animation-bob mobile-only">
+        <i class="fas fa-phone"></i>
+      </div>
+      <div class="icon-btn location elementor-animation-bob mobile-only">
+        <i class="fas fa-map-marker-alt"></i>
+      </div>
+      <a class="pay-btn elementor-animation-bob mobile-only">Pay Your Bill</a>
+
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <div class="close-btn"></div>
+  <div class="nav-links">
+    <!-- <div class="nav-item" style="margin-top: 50px;">
+                 <a href="#" class="nav-link">Home</a>
+             </div> -->
+    <!-- <div class="nav-item">
+                 <a href="#" class="nav-link">About Us</a>
+             </div> -->
+    <div class="nav-item dropdown" style="margin-top: 100px">
+      <a href="#" class="nav-link dropdown-toggle">
+        About Us
+        <i class="fas fa-chevron-down"></i>
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-link" href="/about-us/">About Us</a>
+        <a class="dropdown-link" href="/about-us/contact-us/">Contact Us</a>
+        <a class="dropdown-link" href="/about-us/careers/">Careers</a>
+        <a class="dropdown-link" href="/blogs/">Blogs</a>
+      </div>
+    </div>
+    <div class="nav-item dropdown">
+      <a href="#" class="nav-link dropdown-toggle">
+        Services
+        <i class="fas fa-chevron-down"></i>
+      </a>
+      <div class="dropdown-menu">
+        <a
+          href="/therapy-services/"
+          class="nav-link"
+          style="
+            margin-left: -20px;
+            text-decoration: underline;
+            font-size: 20px;
+          "
+          >Therapy Services</a
+        >
+
+        <div class="nav-item nested-dropdown">
+          <a href="/physical-therapy/" class="dropdown-link nested-dropdown-toggle">
+            Physical Therapy&nbsp;&nbsp;&nbsp;
+            <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="nested-dropdown-menu">
+            <a href="#" class="dropdown-link">1-Athletic Recovery</a>
+            <a href="#" class="dropdown-link">2-Senior Rehabilitation</a>
+          </div>
+        </div>
+        <div class="nav-item nested-dropdown">
+          <a href="/aquatic-therapy/" class="dropdown-link nested-dropdown-toggle">
+            Aquatic Therapy&nbsp;&nbsp;&nbsp;
+            <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="nested-dropdown-menu">
+            <a href="#" class="dropdown-link">1-Athletic Recovery</a>
+            <a href="#" class="dropdown-link">2-Senior Rehabilitation</a>
+          </div>
+        </div>
+        <div class="nav-item nested-dropdown">
+          <a href="/pediatric-therapy/" class="dropdown-link nested-dropdown-toggle">
+            Pediatric Therapy&nbsp;&nbsp;&nbsp;
+            <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="nested-dropdown-menu">
+            <a href="#" class="dropdown-link">1-Athletic Recovery</a>
+            <a href="#" class="dropdown-link">2-Senior Rehabilitation</a>
+          </div>
+        </div>
+        <div class="nav-item nested-dropdown">
+          <a href="/tele-rehab/" class="dropdown-link nested-dropdown-toggle">
+            Tele-Rehab&nbsp;&nbsp;&nbsp;
+            <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="nested-dropdown-menu">
+            <a href="#" class="dropdown-link">1-Athletic Recovery</a>
+            <a href="#" class="dropdown-link">2-Senior Rehabilitation</a>
+          </div>
+        </div>
+
+        <a
+          href="/rehab-solutions/"
+          class="nav-link"
+          style="
+            margin-left: -20px;
+            margin-top: 20px;
+            text-decoration: underline;
+            font-size: 20px;
+          "
+          >Rehab Solutions</a
+        >
+        <a href="/rehab-solutions/" class="dropdown-link">Rehab Solutions</a>
+        <a href="/auto-injury/" class="dropdown-link">Auto Injury Rehab</a>
+        <a href="/work-injury/" class="dropdown-link">Work Injury</a>
+        <a href="/sports-injury/" class="dropdown-link">Sports Injury</a>
+        <a href="/traumatic-brain-injury/" class="dropdown-link">Traumatic Brain Injury</a>
+        <a href="/vestibular-rehab/" class="dropdown-link">Vestibular Rehab</a>
+        <a href="/fce/" class="dropdown-link">FCE</a>
+        <a href="/stroke-rehab/" class="dropdown-link">Stroke Rehab</a>
+        <a href="/cognitive-rehab/" class="dropdown-link">Cognitive Rehab</a>
+
+        <a
+          href="/recovery-programs/"
+          class="nav-link"
+          style="
+            margin-left: -20px;
+            margin-top: 20px;
+            text-decoration: underline;
+            font-size: 20px;
+          "
+          >Recovery Programs</a
+        >
+        <a href="/dry-needling/" class="dropdown-link">Dry Needling Therapy</a>
+        <a href="/cupping-therapy/" class="dropdown-link">Cupping Therapy</a>
+        <a href="/paraffin-wax-therapy/" class="dropdown-link">Paraffin Wax Therapy</a>
+        <a href="/normatec-compression-therapy/" class="dropdown-link">Normatech Compression Therapy</a>
+      </div>
+    </div>
+    <div class="nav-item dropdown">
+      <a href="#" class="nav-link dropdown-toggle">
+        Pain Area
+        <i class="fas fa-chevron-down"></i>
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-link" href="/head-pain/">Head Pain</a>
+        <a class="dropdown-link" href="/neck-pain/">Neck Pain</a>
+        <a class="dropdown-link" href="/back-pain/">Back Pain</a>
+        <a class="dropdown-link" href="/shoulder-pain/">Shoulder Pain</a>
+        <a class="dropdown-link" href="/elbow-pain/">Elbow Pain</a>
+        <a class="dropdown-link" href="/hip-pain/">Hip Pain</a>
+        <a class="dropdown-link" href="/foot-ankle-pain/">Pelvic Floor</a>
+        <a class="dropdown-link" href="/hand-wrist-pain/">Hand/Wrist Pain</a>
+        <a class="dropdown-link" href="/knee-pain/">Knee Pain</a>
+        <a class="dropdown-link" href="/foot-ankle-pain/">Foot/Ankle Pain</a>
+      </div>
+    </div>
+
+    <!-- <div class="nav-item dropdown">
+                 <a href="#" class="nav-link dropdown-toggle">
+                     Recovery Program
+                     <i class="fas fa-chevron-down"></i>
+                 </a>
+                 <div class="dropdown-menu">
+                     <a href="#" class="dropdown-link">Post-Surgery Rehabilitation</a>
+                     <a href="#" class="dropdown-link">Sports Injury Recovery</a>
+                     <div class="nav-item nested-dropdown">
+                         <a href="#" class="dropdown-link nested-dropdown-toggle">
+                             Chronic Pain Management&nbsp;&nbsp;&nbsp;
+                             <i class="fas fa-chevron-down"></i>
+                         </a>
+                         <div class="nested-dropdown-menu">
+                             <a href="index-4.html" class="dropdown-link">Back Pain</a>
+                             <a href="index-4.html" class="dropdown-link">Joint Pain</a>
+                         </div>
+                     </div>
+                     <div class="nav-item nested-dropdown">
+                         <a href="#" class="dropdown-link nested-dropdown-toggle">
+                             Specialized Programs&nbsp;&nbsp;&nbsp;
+                             <i class="fas fa-chevron-down"></i>
+                         </a>
+                         <div class="nested-dropdown-menu">
+                             <a href="#" class="dropdown-link">Athletic Recovery</a>
+                             <a href="#" class="dropdown-link">Senior Rehabilitation</a>
+                         </div>
+                     </div>
+                 </div>
+             </div> -->
+    <div class="nav-item dropdown">
+      <a href="#" class="nav-link dropdown-toggle">
+        Patient Center
+        <i class="fas fa-chevron-down"></i>
+      </a>
+      <div class="dropdown-menu">
+        <a href="#" class="dropdown-link">Patient Center</a>
+        <a href="#" class="dropdown-link">Insurance Information</a>
+        <a href="#" class="dropdown-link">Refer-a-Friend</a>
+        <a href="/about-us/leave-a-review/" class="dropdown-link">Leave a Review</a>
+        <a href="/theramedicrehab/about-us/contact-us/" class="dropdown-link"
+          >Book Appointment</a
+        >
+        <a href="/about-us/our-locations/" class="dropdown-link">Locations</a>
+      </div>
+    </div>
+
+    <div class="nav-item dropdown">
+      <a href="#" class="nav-link dropdown-toggle">
+        More
+        <i class="fas fa-chevron-down"></i>
+      </a>
+      <div class="dropdown-menu">
+        <a href="#" class="dropdown-link">FAQ</a>
+        <a href="/blogs/" class="dropdown-link">Blog</a>
+        <a href="/about-us/careers/" class="dropdown-link">Careers</a>
+        <a href="/about-us/contact-us/" class="dropdown-link">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="social-links">
+    <a href="#" class="social-icon elementor-animation-bob">
+      <i class="fab fa-facebook-f"></i>
+    </a>
+    <a href="#" class="social-icon elementor-animation-bob">
+      <i class="fab fa-linkedin-in"></i>
+    </a>
+    <a href="#" class="social-icon elementor-animation-bob">
+      <i class="fab fa-instagram"></i>
+    </a>
+  </div>
+
+  <div class="locations">
+    <h4>Locations</h4>
+    <div class="location-links">
+      <a href="https://maps.app.goo.gl/hkPNVzJzyXeL4pbw6" class="location-link elementor-animation-bob">Stafford</a>
+      <a href="https://maps.app.goo.gl/LJYKvdtrczzt5EdV7" class="location-link elementor-animation-bob">Spring</a>
+      <a href="https://maps.app.goo.gl/3De3cHYwvQmu5SC96" class="location-link elementor-animation-bob">Katy</a>
+      <a href="https://maps.app.goo.gl/4V2UpvtbBPLTUn2W8" class="location-link elementor-animation-bob">Southfield</a>
+    </div>
+  </div>
+</div>
+
+<div class="overlay"></div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const hamburger = document.querySelector(".hamburger");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    const closeBtn = document.querySelector(".close-btn");
+    const overlay = document.querySelector(".overlay");
+    const dropdownToggles = document.querySelectorAll(".dropdown-toggle");
+    const desktopDropdown = document.querySelector(".desktop-dropdown");
+
+    // Function to close all mobile dropdowns
+    function closeAllMobileDropdowns() {
+      // Close all dropdown menus
+      document.querySelectorAll(".dropdown-toggle").forEach((toggle) => {
+        const parent = toggle.parentElement;
+        const dropdown = toggle.nextElementSibling;
+        parent.classList.remove("toggle-active");
+        dropdown?.classList.remove("active");
+
+        // Close any nested dropdowns within this dropdown
+        const nestedDropdowns = dropdown?.querySelectorAll(".nested-dropdown");
+        nestedDropdowns?.forEach((nested) => {
+          nested.classList.remove("toggle-active");
+          nested
+            .querySelector(".nested-dropdown-menu")
+            ?.classList.remove("active");
+        });
+      });
+
+      // Close all nested dropdowns
+      document.querySelectorAll(".nested-dropdown-toggle").forEach((toggle) => {
+        const parent = toggle.parentElement;
+        const nestedDropdown = toggle.nextElementSibling;
+        parent.classList.remove("toggle-active");
+        nestedDropdown?.classList.remove("active");
+      });
+    }
+
+    // Toggle mobile menu
+    hamburger.addEventListener("click", function () {
+      hamburger.classList.toggle("active");
+      mobileMenu.classList.toggle("active");
+      overlay.classList.toggle("active");
+      document.body.style.overflow = mobileMenu.classList.contains("active")
+        ? "hidden"
+        : "";
+
+      // If menu is being closed, close all dropdowns
+      if (!mobileMenu.classList.contains("active")) {
+        closeAllMobileDropdowns();
+      }
+    });
+
+    // Close mobile menu
+    closeBtn.addEventListener("click", function () {
+      hamburger.classList.remove("active");
+      mobileMenu.classList.remove("active");
+      overlay.classList.remove("active");
+      document.body.style.overflow = "";
+      closeAllMobileDropdowns();
+    });
+
+    overlay.addEventListener("click", function () {
+      hamburger.classList.remove("active");
+      mobileMenu.classList.remove("active");
+      overlay.classList.remove("active");
+      document.body.style.overflow = "";
+      closeAllMobileDropdowns();
+    });
+
+    // Toggle dropdown menus
+    dropdownToggles.forEach((toggle) => {
+      toggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        const parent = this.parentElement;
+        const dropdown = this.nextElementSibling;
+
+        // If this dropdown is already active, close it and its nested dropdowns
+        if (parent.classList.contains("toggle-active")) {
+          parent.classList.remove("toggle-active");
+          dropdown.classList.remove("active");
+
+          // Close all nested dropdowns within this dropdown
+          const nestedDropdowns = dropdown.querySelectorAll(".nested-dropdown");
+          nestedDropdowns.forEach((nested) => {
+            nested.classList.remove("toggle-active");
+            nested
+              .querySelector(".nested-dropdown-menu")
+              ?.classList.remove("active");
+          });
+        } else {
+          // Close other dropdowns and their nested dropdowns
+          dropdownToggles.forEach((otherToggle) => {
+            if (otherToggle !== this) {
+              const otherParent = otherToggle.parentElement;
+              const otherDropdown = otherToggle.nextElementSibling;
+              otherParent.classList.remove("toggle-active");
+              otherDropdown.classList.remove("active");
+
+              // Close nested dropdowns in other dropdowns
+              const nestedDropdowns =
+                otherDropdown?.querySelectorAll(".nested-dropdown");
+              nestedDropdowns?.forEach((nested) => {
+                nested.classList.remove("toggle-active");
+                nested
+                  .querySelector(".nested-dropdown-menu")
+                  ?.classList.remove("active");
+              });
+            }
+          });
+
+          // Open this dropdown
+          parent.classList.add("toggle-active");
+          dropdown.classList.add("active");
+        }
+      });
+    });
+
+    // Add handler for nested dropdowns
+    const nestedDropdownToggles = document.querySelectorAll(
+      ".nested-dropdown-toggle"
+    );
+
+    nestedDropdownToggles.forEach((toggle) => {
+      toggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const parent = this.parentElement;
+        const nestedDropdown = this.nextElementSibling;
+
+        parent.classList.toggle("toggle-active");
+        nestedDropdown.classList.toggle("active");
+
+        const siblings =
+          parent.parentElement.querySelectorAll(".nested-dropdown");
+        siblings.forEach((sibling) => {
+          if (sibling !== parent) {
+            sibling.classList.remove("toggle-active");
+            sibling
+              .querySelector(".nested-dropdown-menu")
+              ?.classList.remove("active");
+          }
+        });
+      });
+    });
+
+    // Desktop nested toggle functionality
+    const desktopNestedToggles = document.querySelectorAll(
+      ".desktop-nested-toggle"
+    );
+
+    desktopNestedToggles.forEach((toggle) => {
+      toggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const toggleId = this.id;
+        const submenu = document.querySelector(`.sub-menus-items#${toggleId}`);
+        if (!submenu) return;
+
+        const chevronIcon = this.querySelector("i.fas");
+
+        document.querySelectorAll(".sub-menus-items").forEach((menu) => {
+          if (menu !== submenu) {
+            menu.classList.remove("active");
+            const otherToggle = document.querySelector(`#${menu.id}`);
+            if (otherToggle) {
+              otherToggle.classList.remove("active");
+              const otherIcon = otherToggle.querySelector("i.fas");
+              if (otherIcon) {
+                otherIcon.style.transform = "rotate(0deg)";
+              }
+            }
+          }
+        });
+
+        submenu.classList.toggle("active");
+        this.classList.toggle("active");
+
+        if (chevronIcon) {
+          chevronIcon.style.transition = "transform 0.5s ease-in-out";
+          chevronIcon.style.transform = submenu.classList.contains("active")
+            ? "rotate(-180deg)"
+            : "rotate(0deg)";
+        }
+      });
+    });
+
+    // Close any open submenu when clicking outside
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".desktop-nested-dropdown")) {
+        document.querySelectorAll(".sub-menus-items").forEach((menu) => {
+          menu.classList.remove("active");
+          const toggle = document.querySelector(`#${menu.id}`);
+          if (toggle) {
+            toggle.classList.remove("active");
+            const icon = toggle.querySelector("i.fas");
+            if (icon) {
+              icon.style.transform = "rotate(0deg)";
+            }
+          }
+        });
+      }
+    });
+
+    // Close all dropdown menus when hovering out from the desktop-dropdown
+    desktopDropdown.addEventListener("mouseleave", function () {
+      document.querySelectorAll(".sub-menus-items").forEach((menu) => {
+        menu.classList.remove("active");
+        const toggle = document.querySelector(`#${menu.id}`);
+        if (toggle) {
+          toggle.classList.remove("active");
+          const icon = toggle.querySelector("i.fas");
+          if (icon) {
+            icon.style.transform = "rotate(0deg)";
+          }
+        }
+      });
+    });
+  });
+</script>
